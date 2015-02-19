@@ -463,9 +463,12 @@ function game:update(dt)
 
 	if shiphitbox:collidesWith(playerhitbox) then
     	--shipyes = true
-    	PlayerSpeed = 250
+    	PlayerSpeed = 400
     	ShipX = game.PlayerX
     	ShipY = game.PlayerY
+		for i, o in ipairs(game.Bullets) do
+		o.Speed = 900
+		end
 	end
 
 
