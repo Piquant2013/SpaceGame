@@ -232,7 +232,9 @@ function game:keypressed(key)
 
 
 
-
+	if key == "e" and shipyes == true then
+		PlayerSpeed = 250
+	end
 
 
 
@@ -459,9 +461,15 @@ function game:update(dt)
 
 
 
-	--if shiphitbox:collidesWith(playerhitbox) then
-    	
-	--end
+	if shiphitbox:collidesWith(playerhitbox) then
+    	--shipyes = true
+    	PlayerSpeed = 250
+    	ShipX = game.PlayerX
+    	ShipY = game.PlayerY
+	end
+
+
+
 
 
     Collider:update(dt)
@@ -727,10 +735,12 @@ function game:draw()
 
 
 	love.graphics.draw(Ship, ShipX, ShipY)
-	--shiphitbox:draw('line')
+	shiphitbox:draw('line')
 
-	--playerhitbox:draw('line')
+	playerhitbox:draw('line')
 	playerhitbox:moveTo(game.PlayerX, game.PlayerY)
+	shiphitbox:moveTo(ShipX, ShipY)
+
 
 
 

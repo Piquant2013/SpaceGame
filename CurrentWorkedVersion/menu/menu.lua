@@ -14,8 +14,10 @@ local options = require 'menu/options'
 function menu:init()
 	
 
+	eggtimer = 0
 	colorgoeshere = love.audio.newSource("audio/colorgoeshere.ogg")
 	egg = 0
+	eggcount = 0
 
 	MenuTimer = 0
 	Restart = true
@@ -281,15 +283,28 @@ function menu:update(dt)
 
 
 
-	if egg == 5 then
+	if egg == true then
 		love.audio.play(colorgoeshere)
 		colorgoeshere:setLooping(true)
 		love.audio.stop(MenuMusic)
+		eggtimer = 0
+		eggcount = 0
 	end
 
-	if egg == 0 then
+	if egg == false then
 		love.audio.stop(colorgoeshere)
 	end
+
+	eggtimer = eggtimer + dt
+
+	if eggtimer > 4 then
+		eggtimer = 0
+		eggcount = 0
+	end
+
+
+
+
 
 
 end
@@ -319,7 +334,7 @@ function menu:mousepressed(mx, my, button)
 
 
 		paused = false
-		egg = 0
+		egg = false
 		
 
 
@@ -418,7 +433,7 @@ function menu:keypressed(key)
 
 
 
-		egg = 0
+		egg = false
 		paused = false
 
 
@@ -463,9 +478,25 @@ function menu:keypressed(key)
 
 
 
+
+
+
 	if key == "c" then
-		egg = egg + 1
+		eggcount = eggcount + 1
+		eggtimer = 0
 	end
+
+	if key == "g" and eggcount == 1 and eggtimer < 2 then
+		eggcount = eggcount + 1
+	end
+
+	if key == "h" and eggcount == 2 and eggtimer < 4 then
+		egg = true
+		eggcount = 0
+	end
+
+
+
 
 
 
