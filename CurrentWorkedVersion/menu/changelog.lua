@@ -51,7 +51,7 @@ function changelog:update(dt)
 
 	-- MOUSE OUT OF AREA
 	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() < (changelog.ChgArrowX + 771) then
+	if love.mouse.getX() > (changelog.ChgArrowX + 326) then
 		changelog.MouseBackArea = false
 		changelog.MouseOnBtn = false
 	end
@@ -75,7 +75,7 @@ function changelog:update(dt)
 	-- MOUSE BUTTON AREAS
 	-- Mouse area of the back button
 	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > changelog.ChgArrowX and love.mouse.getX() < (changelog.ChgArrowX + 291) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
+	if love.mouse.getX() > changelog.ChgArrowX and love.mouse.getX() < (changelog.ChgArrowX + 326) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
 		changelog.MouseBackArea = true
 		changelog.MouseOnBtn = true
 		changelog.MouseDetect = changelog.MouseDetect + 1

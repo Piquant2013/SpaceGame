@@ -51,7 +51,7 @@ function credits:update(dt)
 
 	-- MOUSE OUT OF AREA
 	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() < (credits.CrdArrowX + 771) then
+	if love.mouse.getX() > (credits.CrdArrowX + 326) then
 		credits.MouseBackArea = false
 		credits.MouseOnBtn = false
 	end
@@ -75,7 +75,7 @@ function credits:update(dt)
 	-- MOUSE BUTTON AREAS
 	-- Mouse area of the back button
 	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > credits.CrdArrowX and love.mouse.getX() < (credits.CrdArrowX + 291) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
+	if love.mouse.getX() > credits.CrdArrowX and love.mouse.getX() < (credits.CrdArrowX + 326) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
 		credits.MouseBackArea = true
 		credits.MouseOnBtn = true
 		credits.MouseDetect = credits.MouseDetect + 1

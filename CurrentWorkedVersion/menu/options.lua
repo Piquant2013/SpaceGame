@@ -282,7 +282,7 @@ function options:update(dt)
 
 
 	-- MOUSE OUT OF AREA
-	if love.mouse.getX() < (options.OptArrowX + 816) then
+	if love.mouse.getX() > (options.OptArrowX + 416) then
 		options.MouseOnBtn = false
 		options.MouseFPSArea = false
 		options.MouseMuteArea = false
@@ -326,7 +326,7 @@ function options:update(dt)
 	-- MOUSE BUTTON AREAS
 	
 	-- Mouse area of the FPS button
-	if love.mouse.getY() > options.MouseFPSY and love.mouse.getY() < options.MouseMuteY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 381) then
+	if love.mouse.getY() > options.MouseFPSY and love.mouse.getY() < options.MouseMuteY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
 		options.OptArrowY = options.FPSBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = true
@@ -342,7 +342,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the mute button
-	if love.mouse.getY() > options.MouseMuteY and love.mouse.getY() < options.MouseChgY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 381) then
+	if love.mouse.getY() > options.MouseMuteY and love.mouse.getY() < options.MouseChgY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
 		options.OptArrowY = options.MuteBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -358,7 +358,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the change button
-	if love.mouse.getY() > options.MouseChgY and love.mouse.getY() < options.MouseCrdY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 381) then
+	if love.mouse.getY() > options.MouseChgY and love.mouse.getY() < options.MouseCrdY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
 		options.OptArrowY = options.ChgBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -374,7 +374,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the credits button
-	if love.mouse.getY() > options.MouseCrdY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 381) then
+	if love.mouse.getY() > options.MouseCrdY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
 		options.OptArrowY = options.CrdBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -390,7 +390,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the back button
-	if love.mouse.getY() > options.MouseBackY and love.mouse.getY() < options.MouseBackYTop and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 381) then
+	if love.mouse.getY() > options.MouseBackY and love.mouse.getY() < options.MouseBackYTop and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
 		options.OptArrowY = options.BackBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -411,49 +411,6 @@ function options:update(dt)
 end
 
 function options:mousepressed(mx, my, button)
-
-	-- Move mouse away from button if user tries to use scroll for selection
-	if button == "wu" and options.MouseOnBtn == true then
-		love.mouse.setX(817)
-	end
-
-	-- Move mouse away from button if user tries to use scroll for selection
-	if button == "wd" and options.MouseOnBtn == true then
-		love.mouse.setX(817)
-	end
-
-	------ SELECT BUTTONS ------
-	-- Allows scrolling through menu states
-	if button == "wu" then
-		options.MouseOnBtn = false
-		options.OptArrowY = options.OptArrowY - 115
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		love.audio.play(options.Select1)
-		love.audio.play(options.Select2)
-		love.audio.play(options.Select3)
-		love.audio.play(options.Select4)
-		love.audio.play(options.Select5)
-	end
-
-	if button == "wd" then
-		options.MouseOnBtn = false
-		options.OptArrowY = options.OptArrowY + 115
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		love.audio.play(options.Select1)
-		love.audio.play(options.Select2)
-		love.audio.play(options.Select3)
-		love.audio.play(options.Select4)
-		love.audio.play(options.Select5)
-	end
-	------ SELECT BUTTONS ------
 
 	------ ACTIVATE BUTTONS ------
 	-- If the mouse is on FPS and return is true then move FPS On & Off arrow
@@ -503,11 +460,11 @@ function options:keypressed(key)
 	
 	-- Move mouse away from button if user tries to use arrows for selection
 	if key == "up" and options.MouseOnBtn == true or key == "w" and options.MouseOnBtn == true then
-		love.mouse.setX(817)
+		love.mouse.setX(851)
 	end
 
 	if key == "down" and options.MouseOnBtn == true or key == "s" and options.MouseOnBtn == true then
-		love.mouse.setX(817)
+		love.mouse.setX(851)
 	end
 
 	------ SELECT BUTTONS ------
