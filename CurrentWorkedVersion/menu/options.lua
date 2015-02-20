@@ -216,7 +216,6 @@ function options:update(dt)
 	-- Sets Mute to Off
 	if options.MuteArrowX == options.MuteBtnX - 118 then
 		SetMute = false
-		love.audio.play(MenuMusic)
 	end
 
 	-- Sets Mute to On

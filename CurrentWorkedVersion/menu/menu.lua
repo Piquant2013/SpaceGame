@@ -14,7 +14,8 @@ local options = require 'menu/options'
 function menu:init()
 	
 
-
+	colorgoeshere = love.audio.newSource("audio/colorgoeshere.ogg")
+	egg = 0
 
 	MenuTimer = 0
 	Restart = true
@@ -280,6 +281,15 @@ function menu:update(dt)
 
 
 
+	if egg == 5 then
+		love.audio.play(colorgoeshere)
+		colorgoeshere:setLooping(true)
+		love.audio.stop(MenuMusic)
+	end
+
+	if egg == 0 then
+		love.audio.stop(colorgoeshere)
+	end
 
 
 end
@@ -309,7 +319,7 @@ function menu:mousepressed(mx, my, button)
 
 
 		paused = false
-
+		egg = 0
 		
 
 
@@ -320,6 +330,7 @@ function menu:mousepressed(mx, my, button)
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
+		love.audio.stop(colorgoeshere)
 	end
 
 
@@ -407,7 +418,7 @@ function menu:keypressed(key)
 
 
 
-
+		egg = 0
 		paused = false
 
 
@@ -418,6 +429,7 @@ function menu:keypressed(key)
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
+		love.audio.stop(colorgoeshere)
 	end
 
 
@@ -447,6 +459,18 @@ function menu:keypressed(key)
 		Gamestate.push(options)
 	end
 	------ ACTIVATE BUTTONS ------
+
+
+
+
+	if key == "c" then
+		egg = egg + 1
+	end
+
+
+
+
+
 end
 
 function menu:draw()
