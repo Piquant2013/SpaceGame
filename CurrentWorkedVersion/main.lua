@@ -8,9 +8,6 @@ local logo = require 'logo'
 function love.load()
 	
 	------ CURSOR ------
-	-- Lock mouse to game window
-	love.mouse.setGrabbed(true)
-	
 	-- Load cursors
 	cursor = love.mouse.newCursor("images/cursor.png", 2, 2)
 	crosshair = love.mouse.newCursor("images/crosshair.png", 14, 14)
@@ -38,10 +35,26 @@ end
 
 function love.update(dt)
 	
+
+
+
+
+
+
 	-- Mute game audio if the options script tells mute to be true
 	if SetMute == true then
-		love.audio.stop()
+		love.audio.setVolume(0.0)
 	end
+
+
+
+
+	if SetMute == false then
+		love.audio.setVolume(1.0)
+	end
+
+
+
 
 	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.update(dt)

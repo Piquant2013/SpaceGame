@@ -2,10 +2,10 @@
 local Gamestate = require 'vendors/gamestate'
 
 -- Creates menu as a new gamestate
-local menu = Gamestate.new()
+menu = Gamestate.new()
 
 -- Loads game script
-local game = require 'game'
+game = require 'game'
 
 -- Loads options script
 local options = require 'menu/options'
@@ -13,6 +13,17 @@ local options = require 'menu/options'
 
 function menu:init()
 	
+
+	eggtimer = 0
+	colorgoeshere = love.audio.newSource("audio/colorgoeshere.ogg")
+	egg = 0
+	eggcount = 0
+
+	MenuTimer = 0
+	Restart = true
+	quitactive = false
+
+
 	------ VARIABLES ------
 	-- Play Button Y & X
 	self.PlayBtnY = 392
@@ -175,7 +186,7 @@ function menu:update(dt)
 
 
 	-- MOUSE OUT OF AREA
-	if love.mouse.getX() < (menu.ArrowX + 771) then
+	if love.mouse.getX() > (menu.ArrowX + 326) then
 		menu.MouseOnBtn = false
 		menu.MouseQuitArea = false
 		menu.MousePlayArea = false
@@ -211,7 +222,7 @@ function menu:update(dt)
 	-- MOUSE BUTTON AREAS
 	
 	-- Mouse area of the quit button
-	if love.mouse.getY() > menu.MouseQuitY and love.mouse.getY() < menu.MouseQuitYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 291) then
+	if love.mouse.getY() > menu.MouseQuitY and love.mouse.getY() < menu.MouseQuitYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
 		menu.ArrowY = menu.QuitBtnY
 		menu.MouseOnBtn = true
 		menu.MouseQuitArea = true
@@ -223,7 +234,7 @@ function menu:update(dt)
 	end
 
 	-- Mouse area of the options button
-	if love.mouse.getY() < menu.MouseQuitY and love.mouse.getY() > menu.MousePlayY and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 291) then
+	if love.mouse.getY() < menu.MouseQuitY and love.mouse.getY() > menu.MousePlayY and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
 		menu.ArrowY = menu.OptBtnY
 		menu.MouseOnBtn = true
 		menu.MouseOptArea = true
@@ -235,7 +246,7 @@ function menu:update(dt)
 	end
 
 	-- Mouse area of the play button
-	if love.mouse.getY() < menu.MousePlayY and love.mouse.getY() > menu.MousePlayYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 291) then
+	if love.mouse.getY() < menu.MousePlayY and love.mouse.getY() > menu.MousePlayYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
 		menu.ArrowY = menu.PlayBtnY
 		menu.MouseOnBtn = true
 		menu.MousePlayArea = true
@@ -249,69 +260,108 @@ function menu:update(dt)
 
 	-- Anything between the "MOUSE BUTTON AREAS" comments:
 	-- This tells the menu if the mouse is over a certain button
+
+
+
+
+	if quitactive == true then
+		MenuTimer = MenuTimer + dt
+		
+		menu.PlayState = false
+		menu.OptState = false
+		menu.ExitState = false
+		menu.MousePlayArea = false
+		menu.MouseOptArea = false
+		menu.MouseQuitArea = false
+		menu.MouseOnBtn = false
+		SetMute = true
+	end
+
+	if MenuTimer >= 2 then
+		love.event.quit()
+	end	
+
+
+
+	if egg == true then
+		love.audio.play(colorgoeshere)
+		colorgoeshere:setLooping(true)
+		love.audio.stop(MenuMusic)
+		eggtimer = 0
+		eggcount = 0
+	end
+
+	if egg == false then
+		love.audio.stop(colorgoeshere)
+	end
+
+	eggtimer = eggtimer + dt
+
+	if eggtimer > 4 then
+		eggtimer = 0
+		eggcount = 0
+	end
+
+
+
+
+
+
 end
 
 function menu:mousepressed(mx, my, button)
-
-	-- Move mouse away from button if user tries to use scroll for selection
-	if button == "wu" and menu.MouseOnBtn == true then
-		love.mouse.setX(772)
-	end
-
-	-- Move mouse away from button if user tries to use scroll for selection
-	if button == "wd" and menu.MouseOnBtn == true then
-		love.mouse.setX(772)
-	end
-
-	------ SELECT BUTTONS ------
-	-- Allows scrolling through menu states
-	if button == "wu" then
-		menu.MouseOnBtn = false
-		menu.ArrowY = menu.ArrowY - 100
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		love.audio.play(menu.Select1)
-		love.audio.play(menu.Select2)
-		love.audio.play(menu.Select3)
-	end
-
-	if button == "wd" then
-		menu.MouseOnBtn = false
-		menu.ArrowY = menu.ArrowY + 100
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		love.audio.play(menu.Select1)
-		love.audio.play(menu.Select2)
-		love.audio.play(menu.Select3)
-	end
-	------ SELECT BUTTONS ------
 
 	------ ACTIVATE BUTTONS ------
 	-- Tells menu to continue onto the game script
 	if button == "l" and menu.PlayState and menu.MousePlayArea == true then
 		
-		-- Set game cursor to crosshair
-		love.mouse.setCursor(crosshair)
+
+
+
+
+
 		
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 		
 		-- Tells the menu script to stack the game script on top of it self
 		-- JUST PAUSES FOR NOW
-		Gamestate.push(game)
+		Gamestate.switch(game)
+
+
+
+
+
+
+		paused = false
+		egg = false
+		
+
+
+
+
 		
 		-- Stops menu music and plays game music
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
+		love.audio.stop(colorgoeshere)
 	end
+
+
+
+
+
 
 	-- Tells game to quit
 	if button == "l" and menu.ExitState and menu.MouseQuitArea == true then
-		love.event.quit()
+		quitactive = true
 	end
+
+
+
+
+
 
 	-- Tells menu to continue onto the options script
 	if button == "l" and menu.OptState and menu.MouseOptArea == true then
@@ -330,11 +380,11 @@ function menu:keypressed(key)
 
 	-- Move mouse away from button if user tries to use arrows for selection
 	if key == "up" and menu.MouseOnBtn == true or key == "w" and menu.MouseOnBtn == true then
-		love.mouse.setX(772)
+		love.mouse.setX(806)
 	end
 
 	if key == "down" and menu.MouseOnBtn == true or key == "s" and menu.MouseOnBtn == true then
-		love.mouse.setX(772)
+		love.mouse.setX(806)
 	end
 
 	------ SELECT BUTTONS ------
@@ -366,26 +416,52 @@ function menu:keypressed(key)
 	-- Tells menu to continue onto the game script
 	if key == "return" and menu.PlayState == true then
 		
-		-- Set game cursor to crosshair
-		love.mouse.setCursor(crosshair)
+		
+
+
+
+
+
 
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 
 		-- Tells the menu script to stack the game script on top of it self
 		-- JUST PAUSES FOR NOW
-		Gamestate.push(game)
+		Gamestate.switch(game)
+
+
+
+
+		egg = false
+		paused = false
+
+
+
+
 	
 		-- Stops menu music and plays game music
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
+		love.audio.stop(colorgoeshere)
 	end
+
+
+
+
+
+
 
 	-- Tells game to quit
 	if key == "return" and menu.ExitState == true then
-		love.event.quit()
+		quitactive = true
 	end
+
+
+
+
+
 
 	-- Tells menu to continue onto the options script
 	if key == "return" and menu.OptState == true then
@@ -398,6 +474,34 @@ function menu:keypressed(key)
 		Gamestate.push(options)
 	end
 	------ ACTIVATE BUTTONS ------
+
+
+
+
+
+
+
+	if key == "c" then
+		eggcount = eggcount + 1
+		eggtimer = 0
+	end
+
+	if key == "g" and eggcount == 1 and eggtimer < 2 then
+		eggcount = eggcount + 1
+	end
+
+	if key == "h" and eggcount == 2 and eggtimer < 4 then
+		egg = true
+		eggcount = 0
+	end
+
+
+
+
+
+
+
+
 end
 
 function menu:draw()
@@ -430,6 +534,21 @@ function menu:draw()
 	
 	love.graphics.print('Pre-Alpha 0.2.1', 10, 690)
 	------ TEXT ------
+
+
+
+
+
+	if quitactive == true then
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.rectangle("fill", 0, 0, 1280, 720 )
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.print('See You Space Cowboy...', 1020, 680)
+	end
+
+
+
+
 end
 
 return menu
