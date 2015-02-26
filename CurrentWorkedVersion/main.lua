@@ -1,8 +1,17 @@
+function love.run()
+end
+
+
+
+
 -- Loads gamestate script
 local Gamestate = require 'vendors/gamestate'
 
 -- Loads logo script
 local logo = require 'logo'
+
+
+local frame_limiter = require 'vendors/fpslimter'
 
 
 function love.load()
@@ -37,7 +46,7 @@ function love.update(dt)
 	
 
 
-
+	frame_limiter.set(60)
 
 
 
@@ -85,3 +94,5 @@ function love.draw()
 		love.graphics.print("FPS: " .. love.timer.getFPS(), 1200, 5)
 	end
 end
+
+frame_limiter.run()
