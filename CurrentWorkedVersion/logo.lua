@@ -28,10 +28,28 @@ function logo:init()
 	self.LogoChime = love.audio.newSource("audio/logochime.ogg")
 	love.audio.play(logo.LogoChime)
 	------ AUDIO ------
+
+
+
+
+
+
+
+
 end
 
 function logo:update(dt)
 	
+
+
+
+
+
+	love.audio.setVolume(0.5)
+
+
+
+
 	-- Fades the logo in
 	logo.Timer = logo.Timer + dt
 
@@ -43,9 +61,38 @@ function logo:update(dt)
 	-- unloads logo script and moves to the menu script
 	if  logo.Timer >= 8 then
 		Gamestate.switch(menu)
-		
+		love.audio.setVolume(1.0)
 	end	
 end
+
+
+
+
+
+
+function logo:keypressed(key)
+	if key == "enter" or "esc" or " " then
+		Gamestate.switch(menu)
+		love.graphics.setColor(255, 255, 255)
+		love.audio.stop(logo.LogoChime)
+		love.audio.setVolume(1.0)
+	end 
+end 
+
+function logo:mousepressed(mx, my, button)
+	if button == "l" then
+		Gamestate.switch(menu)
+		love.graphics.setColor(255, 255, 255)
+		love.audio.stop(logo.LogoChime)
+		love.audio.setVolume(1.0)
+	end 
+
+end
+
+
+
+
+
 
 function logo:draw()
 	
