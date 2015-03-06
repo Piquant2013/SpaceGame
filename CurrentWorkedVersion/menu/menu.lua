@@ -8,22 +8,11 @@ menu = Gamestate.new()
 game = require 'game'
 
 -- Loads options script
-local options = require 'menu/options'
+options = require 'menu/options'
 
 
 function menu:init()
 	
-
-	eggtimer = 0
-	colorgoeshere = love.audio.newSource("audio/colorgoeshere.ogg")
-	egg = 0
-	eggcount = 0
-
-	MenuTimer = 0
-	Restart = true
-	quitactive = false
-
-
 	------ VARIABLES ------
 	-- Play Button Y & X
 	self.PlayBtnY = 392
@@ -66,6 +55,18 @@ function menu:init()
 	self.MousePlayY = 450
 	self.MouseQuitY = 560
 	self.MouseQuitYTop = 630
+
+	-- Color goes here easter egg variables
+	self.EggTimer = 0
+	self.Egg = 0
+	self.EggCount = 0
+
+	-- Quit message variables
+	self.QuitTimer = 0
+	QuitActive = false
+
+	-- Resets the game play when true
+	GameReset = true
 	------ VARIABLES ------
 
 	------ IMAGES ------
@@ -74,6 +75,7 @@ function menu:init()
 	------ IMAGES ------
 
 	------ AUDIO ------
+	ColorGoesHere = love.audio.newSource("audio/colorgoeshere.ogg")
 	MenuMusic = love.audio.newSource("audio/menumusic.ogg")
 	self.Enter = love.audio.newSource("audio/enter.ogg")
 	self.Select1 = love.audio.newSource("audio/sel.ogg")
@@ -84,6 +86,7 @@ function menu:init()
 	self.Select3M = love.audio.newSource("audio/sel.ogg")
 	love.audio.play(MenuMusic)
 	MenuMusic:setLooping(true)
+	ColorGoesHere:setLooping(true)
 	------ AUDIO ------
 
 	-- Sets Menu fonts and size
@@ -186,14 +189,14 @@ function menu:update(dt)
 
 
 	-- MOUSE OUT OF AREA
-	if love.mouse.getX() > (menu.ArrowX + 326) then
+	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		menu.MouseOnBtn = false
 		menu.MouseQuitArea = false
 		menu.MousePlayArea = false
 		menu.MouseOptArea = false
 	end
 	
-	if love.mouse.getX() < menu.ArrowX then
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
 		menu.MouseOnBtn = false
 		menu.MouseQuitArea = false
 		menu.MousePlayArea = false
@@ -220,9 +223,8 @@ function menu:update(dt)
 
 
 	-- MOUSE BUTTON AREAS
-	
 	-- Mouse area of the quit button
-	if love.mouse.getY() > menu.MouseQuitY and love.mouse.getY() < menu.MouseQuitYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
+	if love.mouse.getY() > menu.MouseQuitY and love.mouse.getY() < menu.MouseQuitYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		menu.ArrowY = menu.QuitBtnY
 		menu.MouseOnBtn = true
 		menu.MouseQuitArea = true
@@ -234,7 +236,7 @@ function menu:update(dt)
 	end
 
 	-- Mouse area of the options button
-	if love.mouse.getY() < menu.MouseQuitY and love.mouse.getY() > menu.MousePlayY and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
+	if love.mouse.getY() < menu.MouseQuitY and love.mouse.getY() > menu.MousePlayY and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		menu.ArrowY = menu.OptBtnY
 		menu.MouseOnBtn = true
 		menu.MouseOptArea = true
@@ -246,7 +248,7 @@ function menu:update(dt)
 	end
 
 	-- Mouse area of the play button
-	if love.mouse.getY() < menu.MousePlayY and love.mouse.getY() > menu.MousePlayYTop and love.mouse.getX() > menu.ArrowX and love.mouse.getX() < (menu.ArrowX + 326) then
+	if love.mouse.getY() < menu.MousePlayY and love.mouse.getY() > menu.MousePlayYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		menu.ArrowY = menu.PlayBtnY
 		menu.MouseOnBtn = true
 		menu.MousePlayArea = true
@@ -262,11 +264,13 @@ function menu:update(dt)
 	-- This tells the menu if the mouse is over a certain button
 
 
-
-
-	if quitactive == true then
-		MenuTimer = MenuTimer + dt
+	-- QUIT MESSAGE
+	if QuitActive == true then
 		
+		-- Start quit timer 
+		menu.QuitTimer = menu.QuitTimer + dt
+		
+		-- Deactivates the rest of the menu durring quit message
 		menu.PlayState = false
 		menu.OptState = false
 		menu.ExitState = false
@@ -277,36 +281,39 @@ function menu:update(dt)
 		SetMute = true
 	end
 
-	if MenuTimer >= 2 then
+	-- When the message gets to the end of the quit timer quit the game
+	if menu.QuitTimer >= 2 then
 		love.event.quit()
 	end	
+	-- QUIT MESSAGE
+
+	-- Anything between the "QUIT MESSAGE" comments:
+	-- This tells the menu that if quit is activated to display the quit message for 2 seconds
 
 
-
-	if egg == true then
-		love.audio.play(colorgoeshere)
-		colorgoeshere:setLooping(true)
+	-- COLOR GOES HERE EASTER EGG
+	if menu.Egg == true then
+		-- Activate the easter egg
+		love.audio.play(ColorGoesHere)
 		love.audio.stop(MenuMusic)
-		eggtimer = 0
-		eggcount = 0
+		menu.EggTimer = 0
+		menu.EggCount = 0
 	end
 
-	if egg == false then
-		love.audio.stop(colorgoeshere)
+	-- If egg is false stop audio
+	if menu.Egg == false then
+		love.audio.stop(ColorGoesHere)
 	end
 
-	eggtimer = eggtimer + dt
+	-- Starts the egg timer
+	menu.EggTimer = menu.EggTimer + dt
 
-	if eggtimer > 4 then
-		eggtimer = 0
-		eggcount = 0
+	-- Reset timer if over a certain time
+	if menu.EggTimer > 4 then
+		menu.EggTimer = 0
+		menu.EggCount = 0
 	end
-
-
-
-
-
-
+	-- COLOR GOES HERE EASTER EGG
 end
 
 function menu:mousepressed(mx, my, button)
@@ -315,53 +322,26 @@ function menu:mousepressed(mx, my, button)
 	-- Tells menu to continue onto the game script
 	if button == "l" and menu.PlayState and menu.MousePlayArea == true then
 		
-
-
-
-
-
-		
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 		
-		-- Tells the menu script to stack the game script on top of it self
-		-- JUST PAUSES FOR NOW
+		-- Tells the menu script to switch to the game script
 		Gamestate.switch(game)
 
-
-
-
-
-
-		paused = false
-		egg = false
-		
-
-
-
-
+		-- Deactivate the easter egg
+		menu.Egg = false
 		
 		-- Stops menu music and plays game music
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
-		love.audio.stop(colorgoeshere)
+		love.audio.stop(ColorGoesHere)
 	end
-
-
-
-
-
 
 	-- Tells game to quit
 	if button == "l" and menu.ExitState and menu.MouseQuitArea == true then
-		quitactive = true
+		QuitActive = true
 	end
-
-
-
-
-
 
 	-- Tells menu to continue onto the options script
 	if button == "l" and menu.OptState and menu.MouseOptArea == true then
@@ -369,8 +349,7 @@ function menu:mousepressed(mx, my, button)
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 		
-		-- Tells the menu script to stack the options script on top of it self
-		-- JUST PAUSES FOR NOW
+		-- Tells the menu script to switch to the options script
 		Gamestate.push(options)
 	end
 	------ ACTIVATE BUTTONS ------
@@ -416,95 +395,63 @@ function menu:keypressed(key)
 	-- Tells menu to continue onto the game script
 	if key == "return" and menu.PlayState == true then
 		
-		
-
-
-
-
-
-
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 
-		-- Tells the menu script to stack the game script on top of it self
-		-- JUST PAUSES FOR NOW
+		-- Tells the menu script to switch to the game script
 		Gamestate.switch(game)
 
-
-
-
-		egg = false
-		paused = false
-
-
-
-
-	
+		-- Deactivate the easter egg
+		menu.Egg = false
+		
 		-- Stops menu music and plays game music
 		love.audio.play(GameMusic)
 		GameMusic:setLooping(true)
 		love.audio.stop(MenuMusic)
-		love.audio.stop(colorgoeshere)
+		love.audio.stop(ColorGoesHere)
 	end
-
-
-
-
-
-
 
 	-- Tells game to quit
 	if key == "return" and menu.ExitState == true then
-		quitactive = true
+		QuitActive = true
 	end
-
-
-
-
-
 
 	-- Tells menu to continue onto the options script
 	if key == "return" and menu.OptState == true then
 		
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
-
-		-- Tells the menu script to stack the options script on top of it self
-		-- JUST PAUSES FOR NOW
+		
+		-- Tells the menu script to switch to the options script
 		Gamestate.push(options)
 	end
 	------ ACTIVATE BUTTONS ------
 
-
-
-
-
-
-
+	-- SEQUENCE FOR EASTER EGG
+	-- Starts easter eggs sequence and resets it
 	if key == "c" then
-		eggcount = eggcount + 1
-		eggtimer = 0
+		menu.EggCount = menu.EggCount + 1
+		menu.EggTimer = 0
 	end
 
-	if key == "g" and eggcount == 1 and eggtimer < 2 then
-		eggcount = eggcount + 1
+	-- Only works if pressed within time of pressing previous
+	if key == "g" and menu.EggCount == 1 and menu.EggTimer < 2 then
+		menu.EggCount = menu.EggCount + 1
 	end
 
-	if key == "h" and eggcount == 2 and eggtimer < 4 then
-		egg = true
-		eggcount = 0
+	-- Only works if pressed within time of pressing previous
+	if key == "h" and menu.EggCount == 2 and menu.EggTimer < 4 then
+		menu.Egg = true
+		menu.EggCount = 0
 	end
-
-
-
-
-
-
-
-
 end
 
 function menu:draw()
+
+
+
+	if QuitActive == false then
+
 
 	------ FILTERS ------
 	menu.MenuBG:setFilter( 'nearest', 'nearest' )
@@ -513,42 +460,38 @@ function menu:draw()
 	
 	------ IMAGES ------
 	love.graphics.draw(menu.MenuBG, menu.BGx, 0, 0, 2.05)
-	love.graphics.draw(menu.MenuTitle, 375, 100)
+	love.graphics.draw(menu.MenuTitle, (love.graphics.getWidth()/2 - menu.MenuTitle:getWidth()/2), 100)
 	------ IMAGES ------
 
 	------ SHAPES ------
-	love.graphics.rectangle("fill", menu.ArrowX, menu.ArrowY + 5, 29, 35 )
-	love.graphics.rectangle("fill", menu.ArrowX + 291, menu.ArrowY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), menu.ArrowY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, menu.ArrowY + 5, 29, 35 )
 	------ SHAPES ------
 
 	-- Tells Menu to use MenuFont
 	love.graphics.setFont( menu.MenuFont )
 
 	------ TEXT ------
-	love.graphics.print('Play', menu.PlayBtnX, menu.PlayBtnY)
-	love.graphics.print('Quit', menu.QuitBtnX, menu.QuitBtnY)
-	love.graphics.print('Options', menu.OptBtnX, menu.OptBtnY)
+	love.graphics.print('Play', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Play" )/2), menu.PlayBtnY)
+	love.graphics.print('Quit', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Quit" )/2), menu.QuitBtnY)
+	love.graphics.print('Options', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Options" )/2), menu.OptBtnY)
 
-	-- Version text font
+	-- Version text and font
 	love.graphics.setFont( menu.VerFont )
-	
-	love.graphics.print('Pre-Alpha 0.2.1', 10, 690)
+	love.graphics.print('Pre-Alpha 0.3.1', 10, (love.graphics.getHeight( ) - menu.VerFont:getHeight( "Pre-Alpha 0.3.1" ) - 5))
 	------ TEXT ------
 
 
 
 
 
-	if quitactive == true then
-		love.graphics.setColor(0, 0, 0)
-		love.graphics.rectangle("fill", 0, 0, 1280, 720 )
+
+end
+	-- Displays quit message
+	if QuitActive == true then
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.print('See You Space Cowboy...', 1020, 680)
+		love.graphics.print('See You Space Cowboy...', (love.graphics.getWidth( ) - menu.VerFont:getWidth( "See You Space Cowboy..." ) - 10), (love.graphics.getHeight( ) - menu.VerFont:getHeight( "See You Space Cowboy..." ) - 10))
 	end
-
-
-
-
 end
 
 return menu

@@ -2,13 +2,13 @@
 local Gamestate = require 'vendors/gamestate'
 
 -- Creates options as a new gamestate
-local options = Gamestate.new()
+options = Gamestate.new()
 
 -- Loads changlog script
-local changelog = require 'menu/changelog'
+changelog = require 'menu/changelog'
 
 -- Loads credits script
-local credits = require 'menu/credits'
+credits = require 'menu/credits'
 
 
 function options:init()
@@ -281,7 +281,7 @@ function options:update(dt)
 
 
 	-- MOUSE OUT OF AREA
-	if love.mouse.getX() > (options.OptArrowX + 416) then
+	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.MouseOnBtn = false
 		options.MouseFPSArea = false
 		options.MouseMuteArea = false
@@ -290,7 +290,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 	end
 
-	if love.mouse.getX() < options.OptArrowX then
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 410/2) then
 		options.MouseOnBtn = false
 		options.MouseFPSArea = false
 		options.MouseMuteArea = false
@@ -325,7 +325,7 @@ function options:update(dt)
 	-- MOUSE BUTTON AREAS
 	
 	-- Mouse area of the FPS button
-	if love.mouse.getY() > options.MouseFPSY and love.mouse.getY() < options.MouseMuteY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
+	if love.mouse.getY() > options.MouseFPSY and love.mouse.getY() < options.MouseMuteY and love.mouse.getX() > (love.graphics.getWidth()/2 - 410/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.OptArrowY = options.FPSBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = true
@@ -341,7 +341,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the mute button
-	if love.mouse.getY() > options.MouseMuteY and love.mouse.getY() < options.MouseChgY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
+	if love.mouse.getY() > options.MouseMuteY and love.mouse.getY() < options.MouseChgY and love.mouse.getX() > (love.graphics.getWidth()/2 - 410/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.OptArrowY = options.MuteBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -357,7 +357,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the change button
-	if love.mouse.getY() > options.MouseChgY and love.mouse.getY() < options.MouseCrdY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
+	if love.mouse.getY() > options.MouseChgY and love.mouse.getY() < options.MouseCrdY and love.mouse.getX() > (love.graphics.getWidth()/2 - 410/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.OptArrowY = options.ChgBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -373,7 +373,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the credits button
-	if love.mouse.getY() > options.MouseCrdY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
+	if love.mouse.getY() > options.MouseCrdY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > (love.graphics.getWidth()/2 - 410/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.OptArrowY = options.CrdBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -389,7 +389,7 @@ function options:update(dt)
 	end
 
 	-- Mouse area of the back button
-	if love.mouse.getY() > options.MouseBackY and love.mouse.getY() < options.MouseBackYTop and love.mouse.getX() > options.OptArrowX and love.mouse.getX() < (options.OptArrowX + 416) then
+	if love.mouse.getY() > options.MouseBackY and love.mouse.getY() < options.MouseBackYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 410/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 410/2) + 410) then
 		options.OptArrowY = options.BackBtnY
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -558,44 +558,44 @@ function options:draw()
 	------ IMAGES ------
 
 	------ SHAPES ------
-	love.graphics.rectangle("fill", options.OptArrowX, options.OptArrowY + 5, 29, 35 )
-	love.graphics.rectangle("fill", options.OptArrowX + 381, options.OptArrowY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 410/2), options.OptArrowY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 410/2) + 381, options.OptArrowY + 5, 29, 35 )
 	------ SHAPES ------
 
 	-- Tells Options to use TitleFont
 	love.graphics.setFont( options.TitleFont )
 
 	------ TEXT ------
-	love.graphics.print('Options', 475, 45)
+	love.graphics.print('Options', (love.graphics.getWidth()/2 - options.TitleFont:getWidth( "Options" )/2), 45)
 	------ TEXT ------
 
 	-- Tells Options to use OptFont
 	love.graphics.setFont( options.OptFont )
 
 	------ TEXT ------
-	love.graphics.print('Display FPS', options.FPSBtnX, options.FPSBtnY)
-	love.graphics.print('Changelog', options.ChgBtnX, options.ChgBtnY)
-	love.graphics.print('Credits', options.CrdBtnX, options.CrdBtnY)
-	love.graphics.print('Mute Audio', options.MuteBtnX, options.MuteBtnY)
-	love.graphics.print('Back', options.BackBtnX, options.BackBtnY)
+	love.graphics.print('Display FPS', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Display FPS" )/2), options.FPSBtnY)
+	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Changelog" )/2), options.ChgBtnY)
+	love.graphics.print('Credits', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Credits" )/2), options.CrdBtnY)
+	love.graphics.print('Mute Audio', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Mute Audio" )/2), options.MuteBtnY)
+	love.graphics.print('Back', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Back" )/2), options.BackBtnY)
 	------ TEXT ------
 
 	-- Puts the fade on the On & Off buttons for FPS
 	if SetFPS == true then
-		love.graphics.draw(options.FPSOn, 562, 232)
+		love.graphics.draw(options.FPSOn, (love.graphics.getWidth()/2 - options.FPSOn:getWidth()/2), 232)
 	end
 
 	if SetFPS == false then
-		love.graphics.draw(options.FPSOff, 562, 232)
+		love.graphics.draw(options.FPSOff, (love.graphics.getWidth()/2 - options.FPSOff:getWidth()/2), 232)
 	end
 
 	-- Puts the fade on the On & Off buttons for Mute
 	if SetMute == true then
-		love.graphics.draw(options.MuteOn, 562, 347)
+		love.graphics.draw(options.MuteOn, (love.graphics.getWidth()/2 - options.MuteOn:getWidth()/2), 347)
 	end
 
 	if SetMute == false then
-		love.graphics.draw(options.MuteOff, 562, 347)
+		love.graphics.draw(options.MuteOff, (love.graphics.getWidth()/2 - options.MuteOff:getWidth()/2), 347)
 	end
 end
 

@@ -2,7 +2,7 @@
 local Gamestate = require 'vendors/gamestate'
 
 -- Creates changelog as a new gamestate
-local changelog = Gamestate.new()
+changelog = Gamestate.new()
 
 
 function changelog:init()
@@ -51,12 +51,12 @@ function changelog:update(dt)
 
 	-- MOUSE OUT OF AREA
 	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() > (changelog.ChgArrowX + 326) then
+	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		changelog.MouseBackArea = false
 		changelog.MouseOnBtn = false
 	end
 
-	if love.mouse.getX() < changelog.ChgArrowX then
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
 		changelog.MouseBackArea = false
 		changelog.MouseOnBtn = false
 	end
@@ -75,7 +75,7 @@ function changelog:update(dt)
 	-- MOUSE BUTTON AREAS
 	-- Mouse area of the back button
 	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > changelog.ChgArrowX and love.mouse.getX() < (changelog.ChgArrowX + 326) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
+	if love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
 		changelog.MouseBackArea = true
 		changelog.MouseOnBtn = true
 		changelog.MouseDetect = changelog.MouseDetect + 1
@@ -98,7 +98,6 @@ function changelog:keypressed(key)
 	if key == "return" then
 		
 		-- Tells the game script to unload itslef and go back to previous gamestate in stack
-		-- JUST PAUSES FOR NOW
 		Gamestate.pop()
 		
 		-- Plays enter sound and stops previous enter sound
@@ -118,47 +117,24 @@ function changelog:draw()
 	------ IMAGES ------
 
 	------ SHAPES ------
-	love.graphics.rectangle("fill", changelog.ChgArrowX, changelog.ChgBackBtnY + 5, 29, 35 )
-	love.graphics.rectangle("fill", changelog.ChgArrowX + 291, changelog.ChgBackBtnY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), changelog.ChgBackBtnY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, changelog.ChgBackBtnY + 5, 29, 35 )
 	------ SHAPES ------
 
 	------ TEXT ------
 	-- Changes
+	-- First change log row
 	love.graphics.setFont( changelog.ChgFont )
-	love.graphics.print('Version: 0.2.1', 578, 105)
-	love.graphics.print('Menu:', 325, 123)
-	love.graphics.print('- ', 325, 141)
-	love.graphics.print('- ', 325, 159)
-	love.graphics.print('- ', 325, 177)
-	love.graphics.print('', 325, 195)
-	love.graphics.print('Aesthetics and Sound:', 325, 213)
-	love.graphics.print('- ', 325, 231)
-	love.graphics.print('- ', 325, 249)
-	love.graphics.print('- ', 325, 267)
-	love.graphics.print('- ', 325, 285)
-	love.graphics.print('- ', 325, 303)
-	love.graphics.print('- ', 325, 321)
-	love.graphics.print('- ', 325, 339)
-	love.graphics.print('- ', 325, 357)
-	love.graphics.print('', 325, 375)
-	love.graphics.print('Gameplay:', 325, 393)
-	love.graphics.print('- ', 325, 411)
-	love.graphics.print('- ', 325, 429)
-	love.graphics.print('- ', 325, 447)
-	love.graphics.print('- ', 325, 465)
-	love.graphics.print('', 325, 483)
-	love.graphics.print('Code and Misc:', 325, 501)
-	love.graphics.print('- ', 325, 519)
-	love.graphics.print('- ', 325, 537)
-	love.graphics.print('- ', 325, 555)
-
+	love.graphics.print("Version: 0.3.1", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "Version: 0.3.1" )/2), 105)
+	love.graphics.print("- ", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "- " )/2), 141)
+	
 	-- Back button
 	love.graphics.setFont( changelog.BackFont )
-	love.graphics.print('Back', changelog.ChgBackBtnX, changelog.ChgBackBtnY)
+	love.graphics.print('Back', (love.graphics.getWidth()/2 - changelog.BackFont:getWidth( "Back" )/2), changelog.ChgBackBtnY)
 
 	-- Title
 	love.graphics.setFont( changelog.TitleFont )
-	love.graphics.print('Changelog', 403, 15)
+	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - changelog.TitleFont:getWidth( "Changelog" )/2), 15)
 	------ TEXT ------
 end
 

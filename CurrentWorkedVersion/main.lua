@@ -1,17 +1,14 @@
-function love.run()
-end
-
-
-
+-- Function run for FPS limiter
+function love.run() end
 
 -- Loads gamestate script
 local Gamestate = require 'vendors/gamestate'
 
 -- Loads logo script
-local logo = require 'logo'
+logo = require 'logo'
 
-
-local frame_limiter = require 'vendors/fpslimter'
+-- Loads frame limiter script
+frame_limiter = require 'vendors/fpslimter'
 
 
 function love.load()
@@ -44,26 +41,18 @@ end
 
 function love.update(dt)
 	
-
-
+	-- Set the frame rate limit to 60
 	frame_limiter.set(60)
 
-
-
-	-- Mute game audio if the options script tells mute to be true
+	-- Set game audio to 0 if the options script tells mute to be true
 	if SetMute == true then
 		love.audio.setVolume(0.0)
 	end
 
-
-
-
+	-- Set game audio back to default if the options script tells mute to be false
 	if SetMute == false then
 		love.audio.setVolume(1.0)
 	end
-
-
-
 
 	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.update(dt)
@@ -90,9 +79,15 @@ function love.draw()
 	love.graphics.setFont( FPSfont )
 	
 	-- Displays FPS if the options script tells FPS to be true
-	if SetFPS == true then
-		love.graphics.print("FPS: " .. love.timer.getFPS(), 1200, 5)
+	if SetFPS == true and QuitActive == false then
+		love.graphics.print("FPS: " .. love.timer.getFPS(), (love.graphics.getWidth( ) - FPSfont:getWidth( "FPS: " .. love.timer.getFPS()) - 5), 5)
+	end
+
+	-- Displays "Mute: ON" if the options script tells mute to be true 
+	if SetMute == true and QuitActive == false then
+		love.graphics.print("Mute: On", (love.graphics.getWidth( ) - FPSfont:getWidth( "Mute: On" ) - 90), 5)
 	end
 end
 
+-- Run frame limter
 frame_limiter.run()

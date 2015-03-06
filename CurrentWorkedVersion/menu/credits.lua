@@ -2,7 +2,7 @@
 local Gamestate = require 'vendors/gamestate'
 
 -- Creates credits as a new gamestate
-local credits = Gamestate.new()
+credits = Gamestate.new()
 
 
 function credits:init()
@@ -51,12 +51,12 @@ function credits:update(dt)
 
 	-- MOUSE OUT OF AREA
 	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() > (credits.CrdArrowX + 326) then
+	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
 		credits.MouseBackArea = false
 		credits.MouseOnBtn = false
 	end
 
-	if love.mouse.getX() < credits.CrdArrowX then
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
 		credits.MouseBackArea = false
 		credits.MouseOnBtn = false
 	end
@@ -75,7 +75,7 @@ function credits:update(dt)
 	-- MOUSE BUTTON AREAS
 	-- Mouse area of the back button
 	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > credits.CrdArrowX and love.mouse.getX() < (credits.CrdArrowX + 326) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
+	if love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
 		credits.MouseBackArea = true
 		credits.MouseOnBtn = true
 		credits.MouseDetect = credits.MouseDetect + 1
@@ -83,6 +83,7 @@ function credits:update(dt)
 end
 
 function credits:mousepressed(mx, my, button)
+	
 	-- If the mouse is on back and return is true then return to the main menu
 	if button == "l" and credits.MouseBackArea == true then
 		Gamestate.pop()
@@ -97,7 +98,6 @@ function credits:keypressed(key)
 	if key == "return" then
 		
 		-- Tells the game script to unload itslef and go back to previous gamestate in stack
-		-- JUST PAUSES FOR NOW
 		Gamestate.pop()
 
 		-- Plays enter sound and stops previous enter sound
@@ -117,30 +117,32 @@ function credits:draw()
 	------ IMAGES ------
 	
 	------ SHAPES ------
-	love.graphics.rectangle("fill", credits.CrdArrowX, credits.CrdBackBtnY + 5, 29, 35 )
-	love.graphics.rectangle("fill", credits.CrdArrowX + 291, credits.CrdBackBtnY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), credits.CrdBackBtnY + 5, 29, 35 )
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, credits.CrdBackBtnY + 5, 29, 35 )
 	------ SHAPES ------
 
 	------ TEXT ------
 	love.graphics.setFont( credits.CrdFont )
-	love.graphics.print('Aaron Rogers:', 520, 150)
-	love.graphics.print('Writer, Graphics', 520, 180)
-	love.graphics.print('Bryce Dunn:', 520, 240)
-	love.graphics.print('Coder,  Writer,  Graphics', 520, 270)
-	love.graphics.print('Tyronne Chrisfield:', 520, 320)
-	love.graphics.print('Coder,  Writer', 520, 350)
-	love.graphics.print('Toby Lowe:', 520, 400)
-	love.graphics.print('Music & Sound,  Writer', 520, 430)
-	love.graphics.print('Thomas Wiltshire:', 520, 480)
-	love.graphics.print('Coder,  Writer,  Graphics', 520, 510)
+	
+	love.graphics.print("Bryce Dunn:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Bryce Dunn:")/2), 150)
+	love.graphics.print("Author, Coder", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Author, Coder")/2), 180)
+
+	love.graphics.print("Tyronne Crisfield:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Tyronne Crisfield:")/2), 240)
+	love.graphics.print("Author, Coder", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Author, Coder")/2), 270)
+
+	love.graphics.print("Toby Lowe:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Toby Lowe:")/2), 330)
+	love.graphics.print("Music & Sound, Author", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Music & Sound, Author")/2), 360)
+
+	love.graphics.print("Thomas Wiltshire:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Thomas Wiltshire:")/2), 420)
+	love.graphics.print("Lead Coder,  Author,  Graphics", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Lead Coder,  Author,  Graphics")/2), 450)
 
 	-- Back button
 	love.graphics.setFont( credits.BackFont )
-	love.graphics.print('Back', credits.CrdBackBtnX, credits.CrdBackBtnY)
+	love.graphics.print('Back', (love.graphics.getWidth()/2 - credits.BackFont:getWidth( "Back" )/2), credits.CrdBackBtnY)
 	
 	-- Title
 	love.graphics.setFont( credits.TitleFont )
-	love.graphics.print('Credits', 475, 45)
+	love.graphics.print('Credits', (love.graphics.getWidth()/2 - credits.TitleFont:getWidth( "Credits" )/2), 45)
 	------ TEXT ------
 end
 

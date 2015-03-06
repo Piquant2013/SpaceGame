@@ -1,10 +1,11 @@
+-- Game config stuff
 function love.conf(t)
     
     -- Love2d version
     t.version = "0.9.1"  
     
     -- Title on game window
-    t.window.title = "Space Game (Pre-Alpha 0.2.1)"
+    t.window.title = "Space Game (Pre-Alpha 0.3.1)"
 
     -- Game icon
     t.window.icon = "images/logospace.png"
@@ -14,4 +15,11 @@ function love.conf(t)
 
     -- Games window height
     t.window.height = 720
+
+
+
+
+
+
+    t.window.resizable = true    
 end
