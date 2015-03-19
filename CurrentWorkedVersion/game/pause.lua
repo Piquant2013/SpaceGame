@@ -16,11 +16,16 @@ function pause:init()
 	self.ResumeBtnX = 548
  
 	-- Main menu Button Y & X  
-	self.MainMenuBtnY = 382
-	self.MainMenuBtnX = 512
+	self.MainMenuBtnY = 464
+	self.MainMenuBtnX = 476
+
+	-- Main menu Button Y & X  
+	self.OptionsBtnY = 382
+	self.OptionsBtnX = 512
  
 	-- Pause menu state  
 	self.ResumeState = false
+	self.OptionsState = false
 	self.MainMenuState = false
 
 	-- Button Selecter Y & X 
@@ -29,18 +34,20 @@ function pause:init()
 
 	-- Mouse button areas
 	self.MouseResumeArea = false
+	self.MouseOptionsArea = false
 	self.MouseMainMenuArea = false
 
 	-- Mouse detection
 	self.MouseDetect = 0
 	self.MouseDetect1 = 0
+	self.MouseDetect2 = 0
 	self.MouseOnBtn = false
 
 	-- Mouse button coords
 	self.MouseResumeYTop = 300
 	self.MouseResumeY = 360
-	self.MouseMainMenuY = 380
-	self.MouseMainMenuYTop = 440
+	self.MouseOptionsY = 462
+	self.MouseMainMenuYTop = 522
 	------ VARIABLES ------
   
 	------ FONTS ------
@@ -52,8 +59,10 @@ function pause:init()
 	self.Enter = love.audio.newSource("audio/enter.ogg")
 	self.Select1 = love.audio.newSource("audio/sel.ogg")
 	self.Select2 = love.audio.newSource("audio/sel.ogg")
+	self.Select3 = love.audio.newSource("audio/sel.ogg")
 	self.SelectM = love.audio.newSource("audio/sel.ogg")
 	self.Select1M = love.audio.newSource("audio/sel.ogg")
+	self.Select2M = love.audio.newSource("audio/sel.ogg")
 	PauseMusic = love.audio.newSource("audio/pausemusic.ogg")
 	------ AUDIO ------
 end
@@ -74,19 +83,23 @@ function pause:keypressed(key)
 	if key == "up" or key == "w" then
 		pause.MouseMainMenuArea = false
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 		pause.MouseOnBtn = false
-		pause.love.audio.play(pause.Select1)
-		pause.love.audio.play(pause.Select2)
+		love.audio.play(pause.Select1)
+		love.audio.play(pause.Select2)
+		love.audio.play(pause.Select3)
 		pause.ArrowY = pause.ArrowY - 100
 	end
 
 	if key == "down" or key == "s" then
-		MouseMainMenuArea = false
-		MouseResumeArea = false
-		MouseOnBtn = false
-		love.audio.play(Select1)
-		love.audio.play(Select2)
-		ArrowY = ArrowY + 100
+		pause.MouseMainMenuArea = false
+		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
+		pause.MouseOnBtn = false
+		love.audio.play(pause.Select1)
+		love.audio.play(pause.Select2)
+		love.audio.play(pause.Select3)
+		pause.ArrowY = pause.ArrowY + 100
 	end
 	------ SELECT BUTTONS ------
  
@@ -100,7 +113,42 @@ function pause:keypressed(key)
 		-- Changes the pause state
 		Resume = true
 	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+	if key == "return" and pause.OptionsState == true then
+		
+		-- play sound effect for enter
+		love.audio.play(pause.Enter)
+		
+		-- Tells the pause menu script to switch to the options script
+		Gamestate.push(options)
+	end
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	if key == "return" and pause.MainMenuState == true then
 		
 		-- play sound effect for enter
@@ -118,6 +166,13 @@ function pause:keypressed(key)
 		MenuMusic:setLooping(true)
 		love.audio.stop(PauseMusic)
 		love.audio.stop(GameMusic)
+
+
+
+		PlaySelected = false
+
+
+
 	end
 	------ ACTIVATE BUTTONS ------
 
@@ -151,9 +206,51 @@ function pause:mousepressed(mx, my, button)
 		love.audio.stop(PauseMusic)
 		love.audio.stop(GameMusic)
 
-		-- Reset the game
-		GameReset = true
+
+
+
+		PlaySelected = false
 	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	if button == "l" and pause.OptionsState and pause.MouseOptionsArea == true then
+		
+		-- play sound effect for enter
+		love.audio.play(pause.Enter)
+		
+		-- Tells the pause menu script to switch to the pause script
+		Gamestate.push(options)
+	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	-- Tells pause menu to resume game script
 	if button == "l" and pause.ResumeState and pause.MouseResumeArea == true then
@@ -198,14 +295,55 @@ function pause:update(dt)
 	if pause.ArrowY == pause.ResumeBtnY then
 		pause.ResumeState = true
 		pause.MainMenuState = false
+		pause.OptionsState = false
 		love.audio.stop(pause.Select1)
+		love.audio.stop(pause.Select2)
 	end
 
 	if pause.ArrowY == pause.MainMenuBtnY then
 		pause.ResumeState = false
 		pause.MainMenuState = true
-		love.audio.stop(pause.Select2)
+		pause.OptionsState = false
+		love.audio.stop(pause.Select1)
+		love.audio.stop(pause.Select3)
 	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	if pause.ArrowY < pause.MainMenuBtnY and pause.ArrowY > pause.ResumeBtnY then
+		pause.ArrowY = pause.OptionsBtnY
+		pause.ResumeState = false
+		pause.MainMenuState = false
+		pause.OptionsState = true
+		love.audio.stop(pause.Select2)
+		love.audio.stop(pause.Select3)
+	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	-- PAUSE STATES
 
 	-- Anything between the "PAUSE STATES" comments:
@@ -225,19 +363,50 @@ function pause:update(dt)
 	if pause.MouseOnBtn == false then
 		pause.MouseDetect = 0
 		pause.MouseDetect1 = 0
+		pause.MouseDetect2 = 0
 		love.audio.stop(pause.SelectM)
+		love.audio.stop(pause.Select2M)
 		love.audio.stop(pause.Select1M)
 	end
 
 	if pause.MouseDetect == 1 and SetMute == false then
 		love.audio.play(pause.SelectM)
+		love.audio.stop(pause.Select2M)
 		love.audio.stop(pause.Select1M)
 	end
 
 	if pause.MouseDetect1 == 1 and SetMute == false then
 		love.audio.play(pause.Select1M)
+		love.audio.stop(pause.Select2M)
 		love.audio.stop(pause.SelectM)
 	end
+
+
+
+
+
+
+
+
+
+
+
+
+	if pause.MouseDetect2 == 1 and SetMute == false then
+		love.audio.stop(pause.Select1M)
+		love.audio.play(pause.Select2M)
+		love.audio.stop(pause.SelectM)
+	end
+
+
+
+
+
+
+
+
+
+
 	-- MOUSE AUDIO ONCE
 
 	-- Anything between the "MOUSE AUDIO ONCE" comments:
@@ -249,24 +418,28 @@ function pause:update(dt)
 		pause.MouseOnBtn = false
 		pause.MouseMainMenuArea = false
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 	end
   
 	if love.mouse.getX() < (love.graphics.getWidth()/2 - 379/2) then
 		pause.MouseOnBtn = false
 		pause.MouseMainMenuArea = false
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 	end
 
 	if love.mouse.getY() < pause.MouseResumeY then
 		pause.MouseOnBtn = false
 		pause.MouseMainMenuArea = false
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 	end
 
 	if love.mouse.getY() > pause.MouseMainMenuYTop then
 		pause.MouseOnBtn = false
 		pause.MouseMainMenuArea = false
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 	end
   	-- MOUSE OUT OF AREA
 
@@ -276,24 +449,61 @@ function pause:update(dt)
 
 	-- MOUSE BUTTON AREAS
 	-- Mouse area of the main menu button
-	if love.mouse.getY() > pause.MouseMainMenuY and love.mouse.getY() < pause.MouseMainMenuYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 379/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 378/2) + 379) then
+	if love.mouse.getY() > pause.MouseOptionsY and love.mouse.getY() < pause.MouseMainMenuYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 379/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 378/2) + 379) then
 		pause.ArrowY = pause.MainMenuBtnY
 		pause.MouseOnBtn = true
 		pause.MouseMainMenuArea = true
 		pause.MouseResumeArea = false
+		pause.MouseOptionsArea = false
 		pause.MouseDetect = pause.MouseDetect + 1
 		pause.MouseDetect1 = 0
+		pause.MouseDetect2 = 0
 	end
 
 	-- Mouse area of the resume button
+	if love.mouse.getY() < pause.MouseOptionsY and love.mouse.getY() > pause.MouseResumeY and love.mouse.getX() > (love.graphics.getWidth()/2 - 379/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 378/2) + 379) then
+		pause.ArrowY = pause.OptionsBtnY
+		pause.MouseOnBtn = true
+		pause.MouseResumeArea = false
+		pause.MouseMainMenuArea = false
+		pause.MouseOptionsArea = true
+		pause.MouseDetect1 = pause.MouseDetect1 + 1
+		pause.MouseDetect = 0
+		pause.MouseDetect2 = 0
+	end
+
+
+
+
+
+
+
+
+
+
+
+
 	if love.mouse.getY() < pause.MouseResumeY and love.mouse.getY() > pause.MouseResumeYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 379/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 378/2) + 379) then
 		pause.ArrowY = pause.ResumeBtnY
 		pause.MouseOnBtn = true
 		pause.MouseResumeArea = true
 		pause.MouseMainMenuArea = false
-		pause.MouseDetect1 = pause.MouseDetect1 + 1
+		pause.MouseOptionsArea = false
+		pause.MouseDetect2 = pause.MouseDetect2 + 1
+		pause.MouseDetect1 = 0
 		pause.MouseDetect = 0
 	end
+
+
+
+
+
+
+
+
+
+
+
 	-- MOUSE BUTTON AREAS
 
 	-- Anything between the "MOUSE BUTTON AREAS" comments:
@@ -312,12 +522,47 @@ function pause:draw()
 	
 	------ TEXT ------
 	love.graphics.print('Resume', (love.graphics.getWidth()/2 - pause.PauseFont:getWidth( "Resume" )/2), pause.ResumeBtnY)
+	love.graphics.print('Options', (love.graphics.getWidth()/2 - pause.PauseFont:getWidth( "Options" )/2), pause.OptionsBtnY)
 	love.graphics.print('Main Menu', (love.graphics.getWidth()/2 - pause.PauseFont:getWidth( "Main Menu" )/2), pause.MainMenuBtnY)
 	
 	-- Title text and font
 	love.graphics.setFont( pause.TitleFont )
 	love.graphics.print('Paused', (love.graphics.getWidth()/2 - pause.TitleFont:getWidth( "Paused" )/2), 200)
 	------ TEXT ------
+
+	if Deb == true then
+		
+		-- Print all of the pause vars for when debug mode is active
+
+		-- Font, boxes, color
+		love.graphics.setFont( FPSfont )
+		love.graphics.setColor(0,0,0,160)
+		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 415, 375, 415)	
+		love.graphics.setColor(255,255,255,160)
+
+		-- Box 1
+		love.graphics.print("Pause", 5, love.graphics.getHeight( ) - 395)
+		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 375)
+		love.graphics.print("pause.ResumeBtnY: "..tostring(pause.ResumeBtnY), 5, love.graphics.getHeight( ) - 355)
+		love.graphics.print("pause.ResumeBtnX: "..tostring(pause.ResumeBtnX), 5, love.graphics.getHeight( ) - 335)
+		love.graphics.print("pause.MainMenuBtnY: "..tostring(pause.MainMenuBtnY), 5, love.graphics.getHeight( ) - 315)
+		love.graphics.print("pause.MainMenuBtnX: "..tostring(pause.MainMenuBtnX), 5, love.graphics.getHeight( ) - 295)
+		love.graphics.print("pause.ResumeState: "..tostring(pause.ResumeState), 5, love.graphics.getHeight( ) - 275)
+		love.graphics.print("pause.MainMenuState: "..tostring(pause.MainMenuState), 5, love.graphics.getHeight( ) - 255)
+		love.graphics.print("pause.ArrowY: "..tostring(pause.ArrowY), 5, love.graphics.getHeight( ) - 235)
+		love.graphics.print("pause.ArrowX: "..tostring(pause.ArrowX), 5, love.graphics.getHeight( ) - 215)
+		love.graphics.print("pause.MouseResumeArea: "..tostring(pause.MouseResumeArea), 5, love.graphics.getHeight( ) - 195)
+		love.graphics.print("pause.MouseMainMenuArea: "..tostring(pause.MouseMainMenuArea), 5, love.graphics.getHeight( ) - 175)
+		love.graphics.print("pause.MouseDetect: "..tostring(pause.MouseDetect), 5, love.graphics.getHeight( ) - 155)
+		love.graphics.print("pause.MouseDetect1: "..tostring(pause.MouseDetect1), 5, love.graphics.getHeight( ) - 135)
+		love.graphics.print("pause.MouseOnBtn: "..tostring(pause.MouseOnBtn), 5, love.graphics.getHeight( ) - 115)
+		love.graphics.print("pause.MouseResumeYTop: "..tostring(pause.MouseResumeYTop), 5, love.graphics.getHeight( ) - 95)
+		love.graphics.print("pause.MouseResumeY: "..tostring(pause.MouseResumeY), 5, love.graphics.getHeight( ) - 75)
+		love.graphics.print("pause.MouseMainMenuY: "..tostring(pause.MouseMainMenuY), 5, love.graphics.getHeight( ) - 55)
+		love.graphics.print("pause.MouseMainMenuYTop: "..tostring(pause.MouseMainMenuYTop), 5, love.graphics.getHeight( ) - 35)
+		
+		love.graphics.setColor(255,255,255,255)
+	end
 end
 
 return pause

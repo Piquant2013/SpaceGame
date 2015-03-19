@@ -2,7 +2,7 @@
 function love.conf(t)
     
     -- Love2d version
-    t.version = "0.9.1"  
+    t.version = "0.9.2"  
     
     -- Title on game window
     t.window.title = "Space Game (Pre-Alpha 0.3.1)"
@@ -14,12 +14,5 @@ function love.conf(t)
     t.window.width = 1280
 
     -- Games window height
-    t.window.height = 720
-
-
-
-
-
-
-    t.window.resizable = true    
+    t.window.height = 720   
 end

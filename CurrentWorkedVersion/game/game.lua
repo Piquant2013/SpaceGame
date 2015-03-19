@@ -11,7 +11,7 @@ local camera = require "vendors/camera"
 game = Gamestate.new()
 
 -- Loads pause script
-pause = require 'pause'
+pause = require 'game/pause'
 
 
 --function on_collision(dt, shape_a, shape_b, shape_c)
@@ -1095,6 +1095,15 @@ function game:update(dt)
 	-- Reset the game back to default for when you start a new game
 	if GameReset == true then
 	
+
+
+
+
+		PlaySelected = false
+
+
+
+
 		------ VARIABLES ------
 	
 		--- PLAYER ---
@@ -1410,6 +1419,7 @@ function game:draw()
 	game.Rock8:setFilter( 'nearest', 'nearest' )
 	game.Rock9:setFilter( 'nearest', 'nearest' )
 	game.InteractFont:setFilter( 'nearest', 'nearest' )
+	DebugFont:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 	
 	------ IN CAMERA ------
@@ -1427,7 +1437,6 @@ function game:draw()
 
 		-- Moves the bullet hit box with the bullet graphic
 		game.BulletHitBox:moveTo(o.x, o.y)
-		--game.BulletHitBox:draw('fill')
 	end
 	--- GUN DRAWS ---
 
@@ -1589,6 +1598,24 @@ function game:draw()
 	end
 	--- ROCK ---
 
+	-- Prints game hit boxes if debug mode is active
+	if Deb == true then
+		game.BulletHitBox:draw('line')
+		game.ShipHitBox:draw('line')
+		game.PlayerHitBox:draw('line')
+		game.ShipHitBox1:draw('line')
+		game.RockHitBox1:draw('line')
+		game.RockHitBox2:draw('line')
+		game.RockHitBox3:draw('line')
+		game.RockHitBox4:draw('line')
+		game.RockHitBox5:draw('line')
+		game.RockHitBox6:draw('line')
+		game.RockHitBox7:draw('line')
+		game.RockHitBox8:draw('line')
+		game.RockHitBox9:draw('line')
+		game.GunItemHitBox:draw('line')
+	end
+
 	-- End of camera
 	game.Cam:detach()
 	------ IN CAMERA -----
@@ -1699,6 +1726,141 @@ function game:draw()
 		love.graphics.print("Other - Esc = Pause, LeftShift = Sprint/Boost", (love.graphics.getWidth()/2 - game.WelcomeFont:getWidth( "Other - Esc = Pause, LeftShift = Sprint/Boost" )/2), 392)
 		love.graphics.setFont( game.BtnFont )
 		love.graphics.print('Continue', (love.graphics.getWidth()/2 - game.BtnFont:getWidth( "Continue" )/2), game.BtnY)
+	end
+
+	if Deb == true then
+		
+		-- Print all of the game vars for when debug mode is active
+
+		-- Font, boxes, color
+		love.graphics.setFont( DebugFont )
+		love.graphics.setColor(0,0,0,160)
+		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 455, 1010, 455)
+		love.graphics.rectangle("fill", 1010, love.graphics.getHeight( ) - 50, 280, 50)		
+		love.graphics.setColor(255,255,255,160)
+
+		-- Box 1
+		love.graphics.print("Game", 5, love.graphics.getHeight( ) - 450)
+		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 435)
+		love.graphics.print("PlayerY: "..tostring(game.PlayerY), 5, love.graphics.getHeight( ) - 420)
+		love.graphics.print("PlayerX: "..tostring(game.PlayerX), 5, love.graphics.getHeight( ) - 405)
+		love.graphics.print("PlayerMovementStop: "..tostring(game.PlayerMovementStop), 5, love.graphics.getHeight( ) - 390)
+		love.graphics.print("Tired: "..tostring(game.Tired), 5, love.graphics.getHeight( ) - 375)
+		love.graphics.print("TiredTime: "..tostring(game.TiredTime), 5, love.graphics.getHeight( ) - 360)
+		love.graphics.print("Sprint: "..tostring(game.Sprint), 5, love.graphics.getHeight( ) - 345)
+		love.graphics.print("PlayerSpeed: "..tostring(game.PlayerSpeed), 5, love.graphics.getHeight( ) - 330)
+		love.graphics.print("SprintTime: "..tostring(game.SprintTime), 5, love.graphics.getHeight( ) - 315)
+		love.graphics.print("PlayerHit1: "..tostring(game.PlayerHit1), 5, love.graphics.getHeight( ) - 300)
+		love.graphics.print("PlayerHit2: "..tostring(game.PlayerHit2), 5, love.graphics.getHeight( ) - 285)
+		love.graphics.print("PlayerHit3: "..tostring(game.PlayerHit3), 5, love.graphics.getHeight( ) - 270)
+		love.graphics.print("PlayerHit4: "..tostring(game.PlayerHit4), 5, love.graphics.getHeight( ) - 255)
+		love.graphics.print("PlayerHit5: "..tostring(game.PlayerHit5), 5, love.graphics.getHeight( ) - 240)
+		love.graphics.print("PlayerHit6: "..tostring(game.PlayerHit6), 5, love.graphics.getHeight( ) - 225)
+		love.graphics.print("PlayerHit7: "..tostring(game.PlayerHit7), 5, love.graphics.getHeight( ) - 210)
+		love.graphics.print("PlayerHit8: "..tostring(game.PlayerHit8), 5, love.graphics.getHeight( ) - 195)
+		love.graphics.print("PlayerHit9: "..tostring(game.PlayerHit9), 5, love.graphics.getHeight( ) - 180)
+		love.graphics.print("PlayerHealth: "..tostring(game.PlayerHealth), 5, love.graphics.getHeight( ) - 165)
+		love.graphics.print("HealthX: "..tostring(game.HealthX), 5, love.graphics.getHeight( ) - 150) 
+		love.graphics.print("ShotTime: "..tostring(game.ShotTime), 5, love.graphics.getHeight( ) - 135)
+		love.graphics.print("ShotTimePlus: "..tostring(game.ShotTimePlus), 5, love.graphics.getHeight( ) - 120)
+		love.graphics.print("GunShot: "..tostring(game.GunShot), 5, love.graphics.getHeight( ) - 105)
+		love.graphics.print("GunShot1: "..tostring(game.GunShot1), 5, love.graphics.getHeight( ) - 90)
+		love.graphics.print("GunY: "..tostring(game.GunY), 5, love.graphics.getHeight( ) - 75)
+		love.graphics.print("GunX: "..tostring(game.GunX), 5, love.graphics.getHeight( ) - 60)
+		love.graphics.print("HaveGun: "..tostring(game.HaveGun), 5, love.graphics.getHeight( ) - 45)
+		love.graphics.print("GunItemX: "..tostring(game.GunItemX), 5, love.graphics.getHeight( ) - 30)
+		
+		-- Box 2
+		love.graphics.print("GunItemY: "..tostring(game.GunItemY), 275, love.graphics.getHeight( ) - 420)
+		love.graphics.print("ShipX: "..tostring(game.ShipX), 275, love.graphics.getHeight( ) - 405)
+		love.graphics.print("ShipY: "..tostring(game.ShipY), 275, love.graphics.getHeight( ) - 390)
+		love.graphics.print("BoostTired: "..tostring(game.BoostTired), 275, love.graphics.getHeight( ) - 375)
+		love.graphics.print("BoostTiredTime: "..tostring(game.BoostTiredTime), 275, love.graphics.getHeight( ) - 360)
+		love.graphics.print("Boost: "..tostring(game.Boost), 275, love.graphics.getHeight( ) - 345)
+		love.graphics.print("BoostTime: "..tostring(game.BoostTime), 275, love.graphics.getHeight( ) - 330)
+		love.graphics.print("ShipHit: "..tostring(game.ShipHit), 275, love.graphics.getHeight( ) - 315)
+		love.graphics.print("ShipHit1: "..tostring(game.ShipHit1), 275, love.graphics.getHeight( ) - 300)
+		love.graphics.print("ShipHit2: "..tostring(game.ShipHit2), 275, love.graphics.getHeight( ) - 285)
+		love.graphics.print("ShipHit3: "..tostring(game.ShipHit3), 275, love.graphics.getHeight( ) - 270)
+		love.graphics.print("ShipHit4: "..tostring(game.ShipHit4), 275, love.graphics.getHeight( ) - 255)
+		love.graphics.print("ShipHit5: "..tostring(game.ShipHit5), 275, love.graphics.getHeight( ) - 240)
+		love.graphics.print("ShipHit6: "..tostring(game.ShipHit6), 275, love.graphics.getHeight( ) - 225)
+		love.graphics.print("ShipHit7: "..tostring(game.ShipHit7), 275, love.graphics.getHeight( ) - 210)
+		love.graphics.print("ShipHit8: "..tostring(game.ShipHit8), 275, love.graphics.getHeight( ) - 195)
+		love.graphics.print("ShipHit9: "..tostring(game.ShipHit9), 275, love.graphics.getHeight( ) - 180)
+		love.graphics.print("ShipHealthX: "..tostring(game.ShipHealthX), 275, love.graphics.getHeight( ) - 165)
+		love.graphics.print("ShipHealth: "..tostring(game.ShipHealth), 275, love.graphics.getHeight( ) - 150)
+		love.graphics.print("InShip: "..tostring(game.InShip), 275, love.graphics.getHeight( ) - 135)
+		love.graphics.print("ShipYes: "..tostring(game.ShipYes), 275, love.graphics.getHeight( ) - 120)
+		love.graphics.print("ShipYours: "..tostring(game.ShipYours), 275, love.graphics.getHeight( ) - 105)
+		love.graphics.print("ExitShip: "..tostring(game.ExitShip), 275, love.graphics.getHeight( ) - 90)
+		love.graphics.print("ShipDead: "..tostring(game.ShipDead), 275, love.graphics.getHeight( ) - 75)
+		love.graphics.print("RockX1: "..tostring(game.RockX1), 275, love.graphics.getHeight( ) - 60)
+		love.graphics.print("RockY1: "..tostring(game.RockY1), 275, love.graphics.getHeight( ) - 45)
+		love.graphics.print("RockX2: "..tostring(game.RockX2), 275, love.graphics.getHeight( ) - 30)
+		
+		-- Box 3
+		love.graphics.print("RockY2: "..tostring(game.RockY2), 545, love.graphics.getHeight( ) - 420)
+		love.graphics.print("RockX3: "..tostring(game.RockX3), 545, love.graphics.getHeight( ) - 405)
+		love.graphics.print("RockY3: "..tostring(game.RockY3), 545, love.graphics.getHeight( ) - 390)
+		love.graphics.print("RockX4: "..tostring(game.RockX4), 545, love.graphics.getHeight( ) - 375)
+		love.graphics.print("RockY4: "..tostring(game.RockY4), 545, love.graphics.getHeight( ) - 360)
+		love.graphics.print("RockX5: "..tostring(game.RockX5), 545, love.graphics.getHeight( ) - 345)
+		love.graphics.print("RockY5: "..tostring(game.RockY5), 545, love.graphics.getHeight( ) - 330)
+		love.graphics.print("RockX6: "..tostring(game.RockX6), 545, love.graphics.getHeight( ) - 315)
+		love.graphics.print("RockY6: "..tostring(game.RockY6), 545, love.graphics.getHeight( ) - 300)
+		love.graphics.print("RockX7: "..tostring(game.RockX7), 545, love.graphics.getHeight( ) - 285)
+		love.graphics.print("RockY7: "..tostring(game.RockY7), 545, love.graphics.getHeight( ) - 270)
+		love.graphics.print("RockX8: "..tostring(game.RockX8), 545, love.graphics.getHeight( ) - 255)
+		love.graphics.print("RockY8: "..tostring(game.RockY8), 545, love.graphics.getHeight( ) - 240)
+		love.graphics.print("RockX9: "..tostring(game.RockX9), 545, love.graphics.getHeight( ) - 225)
+		love.graphics.print("RockY9: "..tostring(game.RockY9), 545, love.graphics.getHeight( ) - 210)
+		love.graphics.print("RockHealth1: "..tostring(game.RockHealth1), 545, love.graphics.getHeight( ) - 195)
+		love.graphics.print("RockHealth2: "..tostring(game.RockHealth2), 545, love.graphics.getHeight( ) - 180)
+		love.graphics.print("RockHealth3: "..tostring(game.RockHealth3), 545, love.graphics.getHeight( ) - 165)
+		love.graphics.print("RockHealth4: "..tostring(game.RockHealth4), 545, love.graphics.getHeight( ) - 150)
+		love.graphics.print("RockHealth5: "..tostring(game.RockHealth5), 545, love.graphics.getHeight( ) - 135)
+		love.graphics.print("RockHealth6: "..tostring(game.RockHealth6), 545, love.graphics.getHeight( ) - 120)
+		love.graphics.print("RockHealth7: "..tostring(game.RockHealth7), 545, love.graphics.getHeight( ) - 105)
+		love.graphics.print("RockHealth8: "..tostring(game.RockHealth8), 545, love.graphics.getHeight( ) - 90)
+		love.graphics.print("RockHealth9: "..tostring(game.RockHealth9), 545, love.graphics.getHeight( ) - 75)
+		love.graphics.print("RockHit1: "..tostring(game.RockHit1), 545, love.graphics.getHeight( ) - 60)
+		love.graphics.print("RockHit2: "..tostring(game.RockHit2), 545, love.graphics.getHeight( ) - 45)
+		love.graphics.print("RockHit3: "..tostring(game.RockHit3), 545, love.graphics.getHeight( ) - 30)
+
+		-- Box 4
+		love.graphics.print("RockHit4: "..tostring(game.RockHit4), 715, love.graphics.getHeight( ) - 420)
+		love.graphics.print("RockHit5: "..tostring(game.RockHit5), 715, love.graphics.getHeight( ) - 405)
+		love.graphics.print("RockHit6: "..tostring(game.RockHit6), 715, love.graphics.getHeight( ) - 390)
+		love.graphics.print("RockHit7: "..tostring(game.RockHit7), 715, love.graphics.getHeight( ) - 375)
+		love.graphics.print("RockHit8: "..tostring(game.RockHit8), 715, love.graphics.getHeight( ) - 360)
+		love.graphics.print("RockHit9: "..tostring(game.RockHit9), 715, love.graphics.getHeight( ) - 345)
+		love.graphics.print("RockDead1: "..tostring(game.RockDead1), 715, love.graphics.getHeight( ) - 330)
+		love.graphics.print("RockDead2: "..tostring(game.RockDead2), 715, love.graphics.getHeight( ) - 315)
+		love.graphics.print("RockDead3: "..tostring(game.RockDead3), 715, love.graphics.getHeight( ) - 300)
+		love.graphics.print("RockDead4: "..tostring(game.RockDead4), 715, love.graphics.getHeight( ) - 285)
+		love.graphics.print("RockDead5: "..tostring(game.RockDead5), 715, love.graphics.getHeight( ) - 270)
+		love.graphics.print("RockDead6: "..tostring(game.RockDead6), 715, love.graphics.getHeight( ) - 255)
+		love.graphics.print("RockDead7: "..tostring(game.RockDead7), 715, love.graphics.getHeight( ) - 240)
+		love.graphics.print("RockDead8: "..tostring(game.RockDead8), 715, love.graphics.getHeight( ) - 225)
+		love.graphics.print("RockDead9: "..tostring(game.RockDead9), 715, love.graphics.getHeight( ) - 210)
+		love.graphics.print("Cam: "..tostring(game.Cam), 715, love.graphics.getHeight( ) - 195)
+		love.graphics.print("ZoomCam: "..tostring(game.ZoomCam), 715, love.graphics.getHeight( ) - 180)
+		love.graphics.print("ArrowX: "..tostring(game.ArrowX), 715, love.graphics.getHeight( ) - 165)
+		love.graphics.print("WelcomeButtonArea: "..tostring(game.WelcomeButtonArea), 715, love.graphics.getHeight( ) - 150)
+		love.graphics.print("WelcomeMouseDetect: "..tostring(game.WelcomeMouseDetect), 715, love.graphics.getHeight( ) - 135)
+		love.graphics.print("WelcomeMouseOnBtn: "..tostring(game.WelcomeMouseOnBtn), 715, love.graphics.getHeight( ) - 120)
+		love.graphics.print("Welcome: "..tostring(game.Welcome), 715, love.graphics.getHeight( ) - 105)
+		love.graphics.print("GameOver: "..tostring(game.GameOver), 715, love.graphics.getHeight( ) - 90)
+		love.graphics.print("GameOverMouseBackArea: "..tostring(game.GameOverMouseBackArea), 715, love.graphics.getHeight( ) - 75)
+		love.graphics.print("GameOverMouseDetect: "..tostring(game.GameOverMouseDetect), 715, love.graphics.getHeight( ) - 60)
+		love.graphics.print("GameOverMouseOnBtn: "..tostring(game.GameOverMouseOnBtn), 715, love.graphics.getHeight( ) - 45)
+		love.graphics.print("GameOverArrowX: "..tostring(game.GameOverArrowX), 715, love.graphics.getHeight( ) - 30)
+	
+		-- Box 5
+		love.graphics.print("PlayerRot: "..tostring(game.PlayerRot), 1010, love.graphics.getHeight( ) - 30)
+
+		love.graphics.setColor(255,255,255,255)
 	end
 end
 

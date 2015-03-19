@@ -113,7 +113,7 @@ function credits:draw()
 	------ FILTERS ------
 
 	------ IMAGES ------
-	love.graphics.draw(credits.CrdBG, -2000, -2000)
+	love.graphics.draw(credits.CrdBG, -2000, -2000, 0, 2.05)
 	------ IMAGES ------
 	
 	------ SHAPES ------
@@ -144,6 +144,29 @@ function credits:draw()
 	love.graphics.setFont( credits.TitleFont )
 	love.graphics.print('Credits', (love.graphics.getWidth()/2 - credits.TitleFont:getWidth( "Credits" )/2), 45)
 	------ TEXT ------
+
+	if Deb == true then
+		
+		-- Print all of the credits vars for when debug mode is active
+
+		-- Font, boxes, color
+		love.graphics.setFont( FPSfont )
+		love.graphics.setColor(0,0,0,160)
+		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 195, 375, 195)	
+		love.graphics.setColor(255,255,255,160)
+
+		-- Box 1
+		love.graphics.print("Credits", 5, love.graphics.getHeight( ) - 175)
+		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 155)
+		love.graphics.print("credits.CrdBackBtnY: "..tostring(credits.CrdBackBtnY), 5, love.graphics.getHeight( ) - 135)
+		love.graphics.print("credits.CrdBackBtnX: "..tostring(credits.CrdBackBtnX), 5, love.graphics.getHeight( ) - 115)
+		love.graphics.print("credits.CrdArrowX: "..tostring(credits.CrdArrowX), 5, love.graphics.getHeight( ) - 95)
+		love.graphics.print("credits.MouseBackArea: "..tostring(credits.MouseBackArea), 5, love.graphics.getHeight( ) - 75)
+		love.graphics.print("credits.MouseDetect: "..tostring(credits.MouseDetect), 5, love.graphics.getHeight( ) - 55)
+		love.graphics.print("credits.MouseOnBtn: "..tostring(credits.MouseOnBtn), 5, love.graphics.getHeight( ) - 35)
+		
+		love.graphics.setColor(255,255,255,255)
+	end
 end
 
 return credits

@@ -113,7 +113,7 @@ function changelog:draw()
 	------ FILTERS ------
 
 	------ IMAGES ------
-	love.graphics.draw(changelog.ChgBG, -2000, -2000)
+	love.graphics.draw(changelog.ChgBG, -2000, -2000, 0, 2.05)
 	------ IMAGES ------
 
 	------ SHAPES ------
@@ -136,6 +136,29 @@ function changelog:draw()
 	love.graphics.setFont( changelog.TitleFont )
 	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - changelog.TitleFont:getWidth( "Changelog" )/2), 15)
 	------ TEXT ------
+
+	if Deb == true then
+	
+		-- Print all of the changlogs vars for when debug mode is active
+
+		-- Font, boxes, color
+		love.graphics.setFont( FPSfont )
+		love.graphics.setColor(0,0,0,160)
+		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 195, 375, 195)	
+		love.graphics.setColor(255,255,255,160)
+
+		-- Box 1
+		love.graphics.print("Changelog", 5, love.graphics.getHeight( ) - 175)
+		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 155)
+		love.graphics.print("changelog.ChgBackBtnY: "..tostring(changelog.ChgBackBtnY), 5, love.graphics.getHeight( ) - 135)
+		love.graphics.print("changelog.ChgBackBtnX: "..tostring(changelog.ChgBackBtnX), 5, love.graphics.getHeight( ) - 115)
+		love.graphics.print("changelog.ChgArrowX: "..tostring(changelog.ChgArrowX), 5, love.graphics.getHeight( ) - 95)
+		love.graphics.print("changelog.MouseBackArea: "..tostring(changelog.MouseBackArea), 5, love.graphics.getHeight( ) - 75)
+		love.graphics.print("changelog.MouseDetect: "..tostring(changelog.MouseDetect), 5, love.graphics.getHeight( ) - 55)
+		love.graphics.print("changelog.MouseOnBtn: "..tostring(changelog.MouseOnBtn), 5, love.graphics.getHeight( ) - 35)
+		
+		love.graphics.setColor(255,255,255,255)
+	end
 end
 
 return changelog
