@@ -1,5 +1,5 @@
 -- Function run for FPS limiter
-function love.run() end
+--function love.run() end
 
 -- Loads gamestate script
 local Gamestate = require 'vendors/gamestate'
@@ -8,7 +8,7 @@ local Gamestate = require 'vendors/gamestate'
 logo = require 'logo'
 
 -- Loads frame limiter script
-frame_limiter = require 'vendors/fpslimter'
+--frame_limiter = require 'vendors/fpslimter'
 
 
 function love.load()
@@ -62,9 +62,9 @@ end
 function love.update(dt)
 	
 	 dt = math.min(0.033333333, dt)
-	
+
 	-- Set the frame rate limit to 60
-	frame_limiter.set(60)
+	--frame_limiter.set(60)
 
 	-- Set game audio to 0 if the options script tells mute to be true
 	if SetMute == true then
@@ -173,4 +173,4 @@ function love.draw()
 end
 
 -- Run frame limter
-frame_limiter.run()
+--frame_limiter.run()
