@@ -152,8 +152,9 @@ function controls:draw()
 	love.graphics.print('controls', (love.graphics.getWidth()/2 - controls.TitleFont:getWidth( "controls" )/2), 45)
 	------ TEXT ------
 
+	-- Draw controls.lua debug
 	if SetDeb == true then
-		debugmode:drawcontorls()
+		debugmode:controls()
 	end
 end
 

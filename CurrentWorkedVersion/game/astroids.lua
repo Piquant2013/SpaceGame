@@ -51,8 +51,6 @@ function astroids:spawn()
 	rock = {}    
 
 	rock.sprite = love.graphics.newImage("images/rock.png")
-	rock.yes = false
-	rock.dead = false
 	rock.health = 50
 	rock.x = love.math.random(-0, 2000)
 	rock.y = love.math.random(-0, 2000)
@@ -66,13 +64,9 @@ function astroids:draw()
 
 	for i,v in ipairs(rocks) do
 		
-		love.graphics.setColor(0, 255, 0)
-		love.graphics.rectangle("fill", v.x, v.y + 30, v.health/2, 2 )
-		
 		love.graphics.setColor(255, 255, 255)
 		v.sprite:setFilter( 'nearest', 'nearest' )
 		love.graphics.draw(v.sprite, v.x, v.y)
-		v.bb:draw('line')
 	end
 
 end

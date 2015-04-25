@@ -80,6 +80,7 @@ function logo:draw()
 	logo.PiquantLogo:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 	
+	-- Draw logo
 	love.graphics.setColor(255, 255, 255, logo.Alpha * 255)
 	love.graphics.draw(logo.PiquantLogo, (love.graphics.getWidth()/2 - logo.PiquantLogo:getWidth()/2), (love.graphics.getHeight()/2 - logo.PiquantLogo:getHeight()/2))
 end

@@ -141,8 +141,9 @@ function changelog:draw()
 	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - changelog.TitleFont:getWidth( "Changelog" )/2), 15)
 	------ TEXT ------
 
+	-- Draw changelog.lua debug
 	if SetDeb == true then
-		debugmode:drawchangelog()
+		debugmode:changelog()
 	end
 end
 

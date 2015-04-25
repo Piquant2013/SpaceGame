@@ -1313,8 +1313,9 @@ function options:draw()
 		love.graphics.draw(options.MouseLockOff, (love.graphics.getWidth()/2 - options.MouseLockOff:getWidth()/2) + 250, 462)
 	end
 
+	-- Draw options.lua debug
 	if SetDeb == true then
-		debugmode:drawoptions()
+		debugmode:options()
 	end
 end
 

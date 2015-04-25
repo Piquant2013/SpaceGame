@@ -250,6 +250,7 @@ end
 function ship:draw()
 
 	sship.sprite:setFilter( 'nearest', 'nearest' )
+	self.InteractFont:setFilter( 'nearest', 'nearest' )
 
 	--- PLAYER, SHIP AND GUN ---
 	if sship.entered == true then

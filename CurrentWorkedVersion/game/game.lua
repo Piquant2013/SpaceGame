@@ -28,6 +28,7 @@ game = Gamestate.new()
 
 function game:init()
 
+	-- Set up for hardon collider
 	Collider = HC(100, on_collision, collision_stop)
 
 	-- Load player
@@ -39,19 +40,6 @@ function game:init()
     -- Load ship
     ship:initialize()
 	
-
-
-
-
-
-  
-	
-
-
-
-
-
-
 	------ VARIABLES ------
 	-- Camera and zoom vars
 	self.Cam = camera(plyr.x, plyr.y, 2.5)
@@ -262,18 +250,10 @@ function game:update(dt)
 		love.audio.stop(ship.IdleSound)
 	end 
 
-
-
-
-
-
-
-
-
-	
 	-- Reset the game back to default for when you start a new game
 	if GameReset == true then
 
+		-- Reset player
 		plyr.y = 400
 		plyr.x = 800
 		plyr.movementstop = false
@@ -284,9 +264,11 @@ function game:update(dt)
 		player.Sprint = false
 		player.SprintTime = 0
 
+		-- Reset gun
 		pistol.GunY = plyr.y
 		pistol.GunX = plyr.x
 		pistol.HaveGun = false
+		pistol.yes = false
 		pistol.itemx = 750
 		pistol.itemy = 380
 		gun.ShotTime = 0
@@ -295,6 +277,7 @@ function game:update(dt)
 		gun.GunShot = false
 		gun.GunShot1 = false
 
+		-- Reset ship
 		sship.x = 456
 		sship.y = 490
 		sship.health = 200
@@ -308,6 +291,7 @@ function game:update(dt)
 		ship.Boost = false
 		ship.BoostTime = 0
 
+		-- Reset game vars
 		game.Cam = camera(plyr.x, plyr.y, 2.5)
 		game.ZoomCam = false
 		Paused = false
@@ -318,11 +302,13 @@ function game:update(dt)
 		game.GameOverMouseOnBtn = false
 		game.GameOverArrowX = 450
 		
+		-- Reset hardon collider hit boxes
 		Collider = HC(100, on_collision, collision_stop)
 		plyr.bb = Collider:addRectangle(plyr.x, plyr.y, plyr.w, plyr.h)
 		sship.bb = Collider:addRectangle(sship.x, sship.y, sship.w, sship.h)
 		pistol.bb = Collider:addRectangle(pistol.itemx, pistol.itemy,24,24)
 
+		-- Reset/spawn astroids
 		astroids:initialize()
 		rock1 = astroids:spawn()
 		rock2 = astroids:spawn()
@@ -334,18 +320,8 @@ function game:update(dt)
 		rock8 = astroids:spawn()
 		rock9 = astroids:spawn()
 		rock10 = astroids:spawn()
-		
 	end
 	
-
-
-
-
-
-
-
-
-
 	------ WELCOME MOUSE ------
 	-- MOUSE WELCOME AUDIO ONCE
 	if game.WelcomeMouseOnBtn == false and game.Welcome == true then
@@ -497,36 +473,19 @@ function game:draw()
 	-- Draw gun
 	gun:draw()
 
-
-
-
-
+	-- Draw astroids
 	astroids:draw()
 
-
-
-
-
-
-	-- Draw game hitboxes when debugmode is active
-	--if SetDeb == true then
-		debugmode:drawhitbox()
-	--end
+	-- Draw game hitboxes and other info when debugmode is active
+	if SetDeb == true then
+		debugmode:hitbox()
+		debugmode:astroids()
+		debugmode:bullets()
+	end
 	
 	-- End of camera
 	game.Cam:detach()
 	------ IN CAMERA -----
-
-
-
-
-
-
-
-
-
-
-
 
 	-- Draws Player Health and game hud
 	love.graphics.setFont( game.WelcomeFont )
@@ -564,26 +523,8 @@ function game:draw()
 	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 + 202 - 2/2), love.graphics.getHeight() - 60, 2, 60 )
 	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 + 302 - 2/2), love.graphics.getHeight() - 60, 2, 60 )
 
+	-- draw gun in inventory bar
 	gun:hotbaritem()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	if game.GameOver == true then
 
@@ -645,9 +586,10 @@ function game:draw()
 		love.graphics.print('Continue', (love.graphics.getWidth()/2 - game.BtnFont:getWidth( "Continue" )/2), game.BtnY)
 	end
 
-	--if SetDeb == true then
-		--debugmode:drawgame()
-	--end
+	-- Draw game.lua debug
+	if SetDeb == true then
+		debugmode:game()
+	end
 end
 
 return game

@@ -396,8 +396,9 @@ function pause:draw()
 	love.graphics.print('Paused', (love.graphics.getWidth()/2 - pause.TitleFont:getWidth( "Paused" )/2), 200)
 	------ TEXT ------
 
+	-- Draw pause.lua debug
 	if SetDeb == true then
-		debugmode:drawpause()
+		debugmode:pause()
 	end
 end
 

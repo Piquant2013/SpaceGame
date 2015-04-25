@@ -5,7 +5,7 @@ local Gamestate = require 'libs/hump/gamestate'
 debugmode = Gamestate.new()
 
 
-function debugmode:drawmain()
+function debugmode:main()
 
 	-- Prints all of the global vars for when debug mode is active
 
@@ -31,7 +31,7 @@ function debugmode:drawmain()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawmenu()
+function debugmode:menu()
 	
 	-- Print all of the menu vars for when debug mode is active
 
@@ -76,7 +76,7 @@ function debugmode:drawmenu()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawoptions()
+function debugmode:options()
 	
 	-- Print all of the options vars for when debug mode is active
 
@@ -137,7 +137,7 @@ function debugmode:drawoptions()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawcredits()
+function debugmode:credits()
 	
 	-- Print all of the credits vars for when debug mode is active
 
@@ -160,7 +160,7 @@ function debugmode:drawcredits()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawcontorls()
+function debugmode:controls()
 
 	-- Print all of the controls vars for when debug mode is active
 
@@ -183,7 +183,7 @@ function debugmode:drawcontorls()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawchangelog()
+function debugmode:changelog()
 	
 	-- Print all of the changlogs vars for when debug mode is active
 
@@ -206,157 +206,127 @@ function debugmode:drawchangelog()
 	love.graphics.setColor(255,255,255,255)
 end
 
-function debugmode:drawhitbox()
+function debugmode:hitbox()
 	
 	-- draw game hitboxs
 	sship.bb:draw('line')
 	plyr.bb:draw('line')
 	pistol.bb:draw('line')
 
+	-- Bullet hit boxes
+	for i, o in ipairs(gun.Bullets) do
+		o.bb:draw('line')
+	end
+
+	-- Astroid hit boxes
+	for i, o in ipairs(rocks) do
+		o.bb:draw('line')
+	end
 end
---[[
-function debugmode:drawgame()
+
+function debugmode:astroids()
+
+	-- Astroid debug info
+	for i, o in ipairs(rocks) do
+		
+		-- rock health and postions
+		love.graphics.setFont( gun.InteractFont )
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("rock.health: "..tostring(o.health), o.x, o.y + 40)
+		love.graphics.print("rock.x: "..tostring(o.x), o.x, o.y + 50)
+		love.graphics.print("rock.y: "..tostring(o.y), o.x, o.y + 60)
+		
+		-- rock healthbar
+		love.graphics.setColor(0, 255, 0)
+		love.graphics.rectangle("fill", o.x, o.y + 30, o.health/2, 2 )
+	end
+end
+
+function debugmode:bullets()
 	
-	-- Print all of the game vars for when debug mode is active
+	-- Bullet debug info
+	for i, o in ipairs(gun.Bullets) do
+		
+		-- Bullet direction, postions and speed
+		love.graphics.setFont( gun.InteractFont )
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("bullet.x: "..tostring(o.x), plyr.x, plyr.y + 30)
+		love.graphics.print("bullet.y: "..tostring(o.y), plyr.x, plyr.y + 40)
+		love.graphics.print("bullet.Dir: "..tostring(o.Dir), plyr.x, plyr.y + 50)
+		love.graphics.print("bullet.Speed: "..tostring(o.Speed), plyr.x, plyr.y + 60)
+	end
+end
+
+function debugmode:game()
+	
+	-- Print all of the game vars for when debug mode is active	
 
 	-- Font, boxes, color
 	love.graphics.setFont( DebugFont )
 	love.graphics.setColor(0,0,0,160)
-	love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 455, 1010, 455)
-	love.graphics.rectangle("fill", 1010, love.graphics.getHeight( ) - 80, 280, 80)		
+	love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 455, 675, 455)		
 	love.graphics.setColor(255,255,255,160)
 
 	-- Box 1
 	love.graphics.print("Game", 5, love.graphics.getHeight( ) - 450)
 	love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 435)
-	love.graphics.print("plyr.y: "..tostring(plyr.y), 5, love.graphics.getHeight( ) - 420)
-	love.graphics.print("plyr.x: "..tostring(plyr.x), 5, love.graphics.getHeight( ) - 405)
-	love.graphics.print("plyr.movementstop: "..tostring(plyr.movementstop), 5, love.graphics.getHeight( ) - 390)
-	love.graphics.print("player.Tired: "..tostring(player.Tired), 5, love.graphics.getHeight( ) - 375)
-	love.graphics.print("playerTiredTime: "..tostring(player.TiredTime), 5, love.graphics.getHeight( ) - 360)
-	love.graphics.print("playerSprint: "..tostring(player.Sprint), 5, love.graphics.getHeight( ) - 345)
-	love.graphics.print("plyr.speed: "..tostring(plyr.speed), 5, love.graphics.getHeight( ) - 330)
-	love.graphics.print("playerSprintTime: "..tostring(player.SprintTime), 5, love.graphics.getHeight( ) - 315)
-	--love.graphics.print("PlayerHit1: "..tostring(game.PlayerHit1), 5, love.graphics.getHeight( ) - 300)
-	--love.graphics.print("PlayerHit2: "..tostring(game.PlayerHit2), 5, love.graphics.getHeight( ) - 285)
-	--love.graphics.print("PlayerHit3: "..tostring(game.PlayerHit3), 5, love.graphics.getHeight( ) - 270)
-	--love.graphics.print("PlayerHit4: "..tostring(game.PlayerHit4), 5, love.graphics.getHeight( ) - 255)
-	--love.graphics.print("PlayerHit5: "..tostring(game.PlayerHit5), 5, love.graphics.getHeight( ) - 240)
-	--love.graphics.print("PlayerHit6: "..tostring(game.PlayerHit6), 5, love.graphics.getHeight( ) - 225)
-	--love.graphics.print("PlayerHit7: "..tostring(game.PlayerHit7), 5, love.graphics.getHeight( ) - 210)
-	--love.graphics.print("PlayerHit8: "..tostring(game.PlayerHit8), 5, love.graphics.getHeight( ) - 195)
-	--love.graphics.print("PlayerHit9: "..tostring(game.PlayerHit9), 5, love.graphics.getHeight( ) - 180)
-	--love.graphics.print("PlayerHealth: "..tostring(game.PlayerHealth), 5, love.graphics.getHeight( ) - 165)
-	--love.graphics.print("HealthX: "..tostring(game.HealthX), 5, love.graphics.getHeight( ) - 150) 
-	love.graphics.print("gun.ShotTime: "..tostring(gun.ShotTime), 5, love.graphics.getHeight( ) - 135)
-	love.graphics.print("gun.ShotTimePlus: "..tostring(gun.ShotTimePlus), 5, love.graphics.getHeight( ) - 120)
-	love.graphics.print("gun.GunShot: "..tostring(gun.GunShot), 5, love.graphics.getHeight( ) - 105)
-	love.graphics.print("gun.GunShot1: "..tostring(gun.GunShot1), 5, love.graphics.getHeight( ) - 90)
-	love.graphics.print("pistol.y: "..tostring(pistol.y), 5, love.graphics.getHeight( ) - 75)
-	love.graphics.print("pistol.x: "..tostring(pistol.x), 5, love.graphics.getHeight( ) - 60)
-	love.graphics.print("pistol.HaveGun: "..tostring(pistol.HaveGun), 5, love.graphics.getHeight( ) - 45)
-	love.graphics.print("pistol.itemx: "..tostring(pistol.itemx), 5, love.graphics.getHeight( ) - 30)
-		
+	love.graphics.print("BtnY: "..tostring(game.BtnY), 5, love.graphics.getHeight( ) - 420)
+	love.graphics.print("BtnX: "..tostring(game.BtnX), 5, love.graphics.getHeight( ) - 405)
+	love.graphics.print("ZoomCam: "..tostring(game.ZoomCam), 5, love.graphics.getHeight( ) - 390)
+	love.graphics.print("ArrowX: "..tostring(game.ArrowX), 5, love.graphics.getHeight( ) - 375)
+	love.graphics.print("WelcomeButtonArea: "..tostring(game.WelcomeButtonArea), 5, love.graphics.getHeight( ) - 360)
+	love.graphics.print("WelcomeMouseDetect: "..tostring(game.WelcomeMouseDetect), 5, love.graphics.getHeight( ) - 345)
+	love.graphics.print("WelcomeMouseOnBtn: "..tostring(game.WelcomeMouseOnBtn), 5, love.graphics.getHeight( ) - 330)
+	love.graphics.print("Welcome: "..tostring(game.Welcome), 5, love.graphics.getHeight( ) - 315)
+	love.graphics.print("GameOver: "..tostring(game.GameOver), 5, love.graphics.getHeight( ) - 300)
+	love.graphics.print("GameOverMouseBackArea: "..tostring(game.GameOverMouseBackArea), 5, love.graphics.getHeight( ) - 285)
+	love.graphics.print("GameOverMouseDetect: "..tostring(game.GameOverMouseDetect), 5, love.graphics.getHeight( ) - 270)
+	love.graphics.print("GameOverMouseOnBtn: "..tostring(game.GameOverMouseOnBtn), 5, love.graphics.getHeight( ) - 255)
+	love.graphics.print("GameOverArrowX: "..tostring(game.GameOverArrowX), 5, love.graphics.getHeight( ) - 240)
+	love.graphics.print("plyr.y: "..tostring(plyr.y), 5, love.graphics.getHeight( ) - 225)
+	love.graphics.print("plyr.x: "..tostring(plyr.x), 5, love.graphics.getHeight( ) - 210)
+	love.graphics.print("plyr.w: "..tostring(plyr.w), 5, love.graphics.getHeight( ) - 195)
+	love.graphics.print("plyr.h: "..tostring(plyr.h), 5, love.graphics.getHeight( ) - 180)
+	love.graphics.print("plyr.health: "..tostring(plyr.health), 5, love.graphics.getHeight( ) - 165)
+	love.graphics.print("plyr.speed: "..tostring(plyr.speed), 5, love.graphics.getHeight( ) - 150)
+	love.graphics.print("plyr.movementstop: "..tostring(plyr.movementstop), 5, love.graphics.getHeight( ) - 135)
+	love.graphics.print("plyr.rotation: "..tostring(plyr.rotation), 5, love.graphics.getHeight( ) - 120)
+	love.graphics.print("player.Tired: "..tostring(player.Tired), 5, love.graphics.getHeight( ) - 105)
+	love.graphics.print("player.TiredTime: "..tostring(player.TiredTime), 5, love.graphics.getHeight( ) - 90)
+	love.graphics.print("player.Sprint: "..tostring(player.Sprint), 5, love.graphics.getHeight( ) - 75)
+	love.graphics.print("player.SprintTime: "..tostring(player.SprintTime), 5, love.graphics.getHeight( ) - 60)
+	love.graphics.print("sship.x: "..tostring(sship.x), 5, love.graphics.getHeight( ) - 45)
+	love.graphics.print("sship.y: "..tostring(sship.y), 5, love.graphics.getHeight( ) - 30)
+
 	-- Box 2
-	love.graphics.print("pistol.itemy: "..tostring(pistol.itemy), 275, love.graphics.getHeight( ) - 420)
-	love.graphics.print("sship.x: "..tostring(sship.x), 275, love.graphics.getHeight( ) - 405)
-	love.graphics.print("sship.y: "..tostring(sship.y), 275, love.graphics.getHeight( ) - 390)
-	love.graphics.print("ship.BoostTired: "..tostring(ship.BoostTired), 275, love.graphics.getHeight( ) - 375)
-	love.graphics.print("ship.BoostTiredTime: "..tostring(ship.BoostTiredTime), 275, love.graphics.getHeight( ) - 360)
-	love.graphics.print("ship.Boost: "..tostring(ship.Boost), 275, love.graphics.getHeight( ) - 345)
-	love.graphics.print("ship.BoostTime: "..tostring(ship.BoostTime), 275, love.graphics.getHeight( ) - 330)
-	--love.graphics.print("ShipHit: "..tostring(game.ShipHit), 275, love.graphics.getHeight( ) - 315)
-	--love.graphics.print("ShipHit1: "..tostring(game.ShipHit1), 275, love.graphics.getHeight( ) - 300)
-	--love.graphics.print("ShipHit2: "..tostring(game.ShipHit2), 275, love.graphics.getHeight( ) - 285)
-	--love.graphics.print("ShipHit3: "..tostring(game.ShipHit3), 275, love.graphics.getHeight( ) - 270)
-	--love.graphics.print("ShipHit4: "..tostring(game.ShipHit4), 275, love.graphics.getHeight( ) - 255)
-	--love.graphics.print("ShipHit5: "..tostring(game.ShipHit5), 275, love.graphics.getHeight( ) - 240)
-	--love.graphics.print("ShipHit6: "..tostring(game.ShipHit6), 275, love.graphics.getHeight( ) - 225)
-	--love.graphics.print("ShipHit7: "..tostring(game.ShipHit7), 275, love.graphics.getHeight( ) - 210)
-	--love.graphics.print("ShipHit8: "..tostring(game.ShipHit8), 275, love.graphics.getHeight( ) - 195)
-	--love.graphics.print("ShipHit9: "..tostring(game.ShipHit9), 275, love.graphics.getHeight( ) - 180)
-	--love.graphics.print("ShipHealthX: "..tostring(game.ShipHealthX), 275, love.graphics.getHeight( ) - 165)
-	--love.graphics.print("ShipHealth: "..tostring(game.ShipHealth), 275, love.graphics.getHeight( ) - 150)
-	love.graphics.print("sship.entered: "..tostring(sship.entered), 275, love.graphics.getHeight( ) - 135)
-	love.graphics.print("sship.yes: "..tostring(sship.yes), 275, love.graphics.getHeight( ) - 120)
-	love.graphics.print("sship.owned: "..tostring(sship.owned), 275, love.graphics.getHeight( ) - 105)
-	love.graphics.print("sship.exited: "..tostring(sship.exited), 275, love.graphics.getHeight( ) - 90)
-	love.graphics.print("sship.dead: "..tostring(sship.dead), 275, love.graphics.getHeight( ) - 75)
-	--love.graphics.print("RockX1: "..tostring(game.RockX1), 275, love.graphics.getHeight( ) - 60)
-	--love.graphics.print("RockY1: "..tostring(game.RockY1), 275, love.graphics.getHeight( ) - 45)
-	--love.graphics.print("RockX2: "..tostring(game.RockX2), 275, love.graphics.getHeight( ) - 30)
-		
-	-- Box 3
-	--love.graphics.print("RockY2: "..tostring(game.RockY2), 545, love.graphics.getHeight( ) - 420)
-	--love.graphics.print("RockX3: "..tostring(game.RockX3), 545, love.graphics.getHeight( ) - 405)
-	--love.graphics.print("RockY3: "..tostring(game.RockY3), 545, love.graphics.getHeight( ) - 390)
-	--love.graphics.print("RockX4: "..tostring(game.RockX4), 545, love.graphics.getHeight( ) - 375)
-	--love.graphics.print("RockY4: "..tostring(game.RockY4), 545, love.graphics.getHeight( ) - 360)
-	--love.graphics.print("RockX5: "..tostring(game.RockX5), 545, love.graphics.getHeight( ) - 345)
-	--love.graphics.print("RockY5: "..tostring(game.RockY5), 545, love.graphics.getHeight( ) - 330)
-	--love.graphics.print("RockX6: "..tostring(game.RockX6), 545, love.graphics.getHeight( ) - 315)
-	--love.graphics.print("RockY6: "..tostring(game.RockY6), 545, love.graphics.getHeight( ) - 300)
-	--love.graphics.print("RockX7: "..tostring(game.RockX7), 545, love.graphics.getHeight( ) - 285)
-	--love.graphics.print("RockY7: "..tostring(game.RockY7), 545, love.graphics.getHeight( ) - 270)
-	--love.graphics.print("RockX8: "..tostring(game.RockX8), 545, love.graphics.getHeight( ) - 255)
-	--love.graphics.print("RockY8: "..tostring(game.RockY8), 545, love.graphics.getHeight( ) - 240)
-	--love.graphics.print("RockX9: "..tostring(game.RockX9), 545, love.graphics.getHeight( ) - 225)
-	--love.graphics.print("RockY9: "..tostring(game.RockY9), 545, love.graphics.getHeight( ) - 210)
-	--love.graphics.print("RockHealth1: "..tostring(game.RockHealth1), 545, love.graphics.getHeight( ) - 195)
-	--love.graphics.print("RockHealth2: "..tostring(game.RockHealth2), 545, love.graphics.getHeight( ) - 180)
-	--love.graphics.print("RockHealth3: "..tostring(game.RockHealth3), 545, love.graphics.getHeight( ) - 165)
-	--love.graphics.print("RockHealth4: "..tostring(game.RockHealth4), 545, love.graphics.getHeight( ) - 150)
-	--love.graphics.print("RockHealth5: "..tostring(game.RockHealth5), 545, love.graphics.getHeight( ) - 135)
-	--love.graphics.print("RockHealth6: "..tostring(game.RockHealth6), 545, love.graphics.getHeight( ) - 120)
-	--love.graphics.print("RockHealth7: "..tostring(game.RockHealth7), 545, love.graphics.getHeight( ) - 105)
-	--love.graphics.print("RockHealth8: "..tostring(game.RockHealth8), 545, love.graphics.getHeight( ) - 90)
-	--love.graphics.print("RockHealth9: "..tostring(game.RockHealth9), 545, love.graphics.getHeight( ) - 75)
-	--love.graphics.print("RockHit1: "..tostring(game.RockHit1), 545, love.graphics.getHeight( ) - 60)
-	--love.graphics.print("RockHit2: "..tostring(game.RockHit2), 545, love.graphics.getHeight( ) - 45)
-	--love.graphics.print("RockHit3: "..tostring(game.RockHit3), 545, love.graphics.getHeight( ) - 30)
-
-	-- Box 4
-	--love.graphics.print("RockHit4: "..tostring(game.RockHit4), 715, love.graphics.getHeight( ) - 420)
-	--love.graphics.print("RockHit5: "..tostring(game.RockHit5), 715, love.graphics.getHeight( ) - 405)
-	--love.graphics.print("RockHit6: "..tostring(game.RockHit6), 715, love.graphics.getHeight( ) - 390)
-	--love.graphics.print("RockHit7: "..tostring(game.RockHit7), 715, love.graphics.getHeight( ) - 375)
-	--love.graphics.print("RockHit8: "..tostring(game.RockHit8), 715, love.graphics.getHeight( ) - 360)
-	--love.graphics.print("RockHit9: "..tostring(game.RockHit9), 715, love.graphics.getHeight( ) - 345)
-	--love.graphics.print("RockDead1: "..tostring(game.RockDead1), 715, love.graphics.getHeight( ) - 330)
-	--love.graphics.print("RockDead2: "..tostring(game.RockDead2), 715, love.graphics.getHeight( ) - 315)
-	--love.graphics.print("RockDead3: "..tostring(game.RockDead3), 715, love.graphics.getHeight( ) - 300)
-	--love.graphics.print("RockDead4: "..tostring(game.RockDead4), 715, love.graphics.getHeight( ) - 285)
-	--love.graphics.print("RockDead5: "..tostring(game.RockDead5), 715, love.graphics.getHeight( ) - 270)
-	--love.graphics.print("RockDead6: "..tostring(game.RockDead6), 715, love.graphics.getHeight( ) - 255)
-	--love.graphics.print("RockDead7: "..tostring(game.RockDead7), 715, love.graphics.getHeight( ) - 240)
-	--love.graphics.print("RockDead8: "..tostring(game.RockDead8), 715, love.graphics.getHeight( ) - 225)
-	--love.graphics.print("RockDead9: "..tostring(game.RockDead9), 715, love.graphics.getHeight( ) - 210)
-	love.graphics.print("gun.Direction : "..tostring(gun.Direction ), 715, love.graphics.getHeight( ) - 195)
-	love.graphics.print("ZoomCam: "..tostring(game.ZoomCam), 715, love.graphics.getHeight( ) - 180)
-	love.graphics.print("ArrowX: "..tostring(game.ArrowX), 715, love.graphics.getHeight( ) - 165)
-	love.graphics.print("WelcomeButtonArea: "..tostring(game.WelcomeButtonArea), 715, love.graphics.getHeight( ) - 150)
-	love.graphics.print("WelcomeMouseDetect: "..tostring(game.WelcomeMouseDetect), 715, love.graphics.getHeight( ) - 135)
-	love.graphics.print("WelcomeMouseOnBtn: "..tostring(game.WelcomeMouseOnBtn), 715, love.graphics.getHeight( ) - 120)
-	love.graphics.print("Welcome: "..tostring(game.Welcome), 715, love.graphics.getHeight( ) - 105)
-	love.graphics.print("GameOver: "..tostring(game.GameOver), 715, love.graphics.getHeight( ) - 90)
-	love.graphics.print("GameOverMouseBackArea: "..tostring(game.GameOverMouseBackArea), 715, love.graphics.getHeight( ) - 75)
-	love.graphics.print("GameOverMouseDetect: "..tostring(game.GameOverMouseDetect), 715, love.graphics.getHeight( ) - 60)
-	love.graphics.print("GameOverMouseOnBtn: "..tostring(game.GameOverMouseOnBtn), 715, love.graphics.getHeight( ) - 45)
-	love.graphics.print("GameOverArrowX: "..tostring(game.GameOverArrowX), 715, love.graphics.getHeight( ) - 30)
+	love.graphics.print("sship.w: "..tostring(sship.w), 375, love.graphics.getHeight( ) - 360)
+	love.graphics.print("sship.h: "..tostring(sship.h), 375, love.graphics.getHeight( ) - 345)
+	love.graphics.print("sship.health: "..tostring(sship.health), 375, love.graphics.getHeight( ) - 330)
+	love.graphics.print("sship.entered: "..tostring(sship.entered), 375, love.graphics.getHeight( ) - 315)
+	love.graphics.print("sship.yes: "..tostring(sship.yes), 375, love.graphics.getHeight( ) - 300)
+	love.graphics.print("sship.owned: "..tostring(sship.owned), 375, love.graphics.getHeight( ) - 285)
+	love.graphics.print("sship.exited: "..tostring(sship.exited), 375, love.graphics.getHeight( ) - 270)
+	love.graphics.print("sship.dead: "..tostring(sship.dead), 375, love.graphics.getHeight( ) - 255)
+	love.graphics.print("ship.ShipDir: "..tostring(ship.ShipDir), 375, love.graphics.getHeight( ) - 240)
+	love.graphics.print("ship.BoostTired: "..tostring(ship.BoostTired), 375, love.graphics.getHeight( ) - 225)
+	love.graphics.print("ship.BoostTiredTime: "..tostring(ship.BoostTiredTime), 375, love.graphics.getHeight( ) - 210)
+	love.graphics.print("ship.Boost: "..tostring(ship.Boost), 375, love.graphics.getHeight( ) - 195)
+	love.graphics.print("ship.BoostTime: "..tostring(ship.BoostTime), 375, love.graphics.getHeight( ) - 180)
+	love.graphics.print("gun.ShotTime: "..tostring(gun.ShotTime), 375, love.graphics.getHeight( ) - 165)
+	love.graphics.print("gun.ShotTimePlus: "..tostring(gun.ShotTimePlus), 375, love.graphics.getHeight( ) - 150)
+	love.graphics.print("gun.GunShot: "..tostring(gun.GunShot), 375, love.graphics.getHeight( ) - 135)
+	love.graphics.print("gun.GunShot1: "..tostring(gun.GunShot1), 375, love.graphics.getHeight( ) - 120)
+	love.graphics.print("pistol.GunY: "..tostring(pistol.GunY), 375, love.graphics.getHeight( ) - 105)
+	love.graphics.print("pistol.GunX: "..tostring(pistol.GunX), 375, love.graphics.getHeight( ) - 90)
+	love.graphics.print("pistol.HaveGun: "..tostring(pistol.HaveGun), 375, love.graphics.getHeight( ) - 75)
+	love.graphics.print("pistol.yes: "..tostring(pistol.yes), 375, love.graphics.getHeight( ) - 60)
+	love.graphics.print("pistol.itemx: "..tostring(pistol.itemx), 375, love.graphics.getHeight( ) - 45)
+	love.graphics.print("pistol.itemy: "..tostring(pistol.itemy), 375, love.graphics.getHeight( ) - 30)
 	
-	-- Box 5
-	love.graphics.print("plyr.rotation: "..tostring(plyr.rotation), 1010, love.graphics.getHeight( ) - 45)
-	love.graphics.print("ship.ShipDir: "..tostring(ship.ShipDir), 1010, love.graphics.getHeight( ) - 30)
-
-	--for i, o in ipairs(game.Bullets) do
-		--love.graphics.setColor(255,255,255,160)
-		--love.graphics.print("Bullet Speed: "..tostring(o.Speed), 1010, love.graphics.getHeight( ) - 60)
-	--end
-		
 	love.graphics.setColor(255,255,255,255)
 end
---]]
-function debugmode:drawpause()
+
+function debugmode:pause()
 	
 	-- Print all of the pause vars for when debug mode is active
 

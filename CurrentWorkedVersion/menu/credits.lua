@@ -149,8 +149,9 @@ function credits:draw()
 	love.graphics.print('Credits', (love.graphics.getWidth()/2 - credits.TitleFont:getWidth( "Credits" )/2), 45)
 	------ TEXT ------
 
+	-- Draw credits.lua debug
 	if SetDeb == true then
-		debugmode:drawcredits()
+		debugmode:credits()
 	end
 end
 

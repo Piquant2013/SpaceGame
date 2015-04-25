@@ -480,10 +480,11 @@ function menu:draw()
 	love.graphics.setFont( menu.VerFont )
 	love.graphics.print('Pre-Alpha 0.3.1', 10, (love.graphics.getHeight( ) - menu.VerFont:getHeight( "Pre-Alpha 0.3.1" ) - 5))
 	------ TEXT ------
-end
-
+	end
+	
+	-- Draw menu.lua debug
 	if SetDeb == true then
-		debugmode:drawmenu()
+		debugmode:menu()
 	end
 
 	if QuitActive == true then

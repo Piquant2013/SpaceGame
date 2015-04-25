@@ -136,7 +136,6 @@ function gun:bulletdraw()
 		
 		-- Gun bullet graphic
 		love.graphics.draw(self.Shot, o.x, o.y, o.Dir)
-		o.bb:draw('line')
 		o.bb:moveTo(o.x, o.y)
 	end
 end
@@ -147,6 +146,7 @@ function gun:draw()
 	pistol.sprite:setFilter( 'nearest', 'nearest' )
 	pistol.itemsprite:setFilter( 'nearest', 'nearest' )
 	pistol.invsprite:setFilter( 'nearest', 'nearest' )
+	self.InteractFont:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	if pistol.HaveGun == true and sship.entered == false then

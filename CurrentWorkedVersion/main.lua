@@ -114,8 +114,9 @@ function love.draw()
 		love.graphics.print("Mute: On", (love.graphics.getWidth( ) - FPSfont:getWidth( "Mute: On" ) - 90), 5)
 	end
 
+	-- Draw main.lua debug
 	if SetDeb == true then
-		debugmode:drawmain()
+		debugmode:main()
 	end
 end
 
