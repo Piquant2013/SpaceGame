@@ -1,5 +1,5 @@
 -- Loads gamestate script
-local Gamestate = require 'vendors/gamestate'
+local Gamestate = require 'libs/hump/gamestate'
 
 -- Creates controls as a new gamestate
 controls = Gamestate.new()
@@ -110,6 +110,10 @@ function controls:draw()
 	
 	------ FILTERS ------
 	controls.ConBG:setFilter( 'nearest', 'nearest' )
+	controls.ConFont:setFilter( 'nearest', 'nearest' )
+	controls.BackFont:setFilter( 'nearest', 'nearest' )
+	controls.TitleFont:setFilter( 'nearest', 'nearest' )
+	FPSfont:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	------ IMAGES ------
@@ -148,27 +152,8 @@ function controls:draw()
 	love.graphics.print('controls', (love.graphics.getWidth()/2 - controls.TitleFont:getWidth( "controls" )/2), 45)
 	------ TEXT ------
 
-	if Deb == true then
-		
-		-- Print all of the controls vars for when debug mode is active
-
-		-- Font, boxes, color
-		love.graphics.setFont( FPSfont )
-		love.graphics.setColor(0,0,0,160)
-		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 195, 375, 195)	
-		love.graphics.setColor(255,255,255,160)
-
-		-- Box 1
-		love.graphics.print("Controls", 5, love.graphics.getHeight( ) - 175)
-		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 155)
-		love.graphics.print("controls.ConBackBtnY: "..tostring(controls.ConBackBtnY), 5, love.graphics.getHeight( ) - 135)
-		love.graphics.print("controls.ConBackBtnX: "..tostring(controls.ConBackBtnX), 5, love.graphics.getHeight( ) - 115)
-		love.graphics.print("controls.ConArrowX: "..tostring(controls.ConArrowX), 5, love.graphics.getHeight( ) - 95)
-		love.graphics.print("controls.MouseBackArea: "..tostring(controls.MouseBackArea), 5, love.graphics.getHeight( ) - 75)
-		love.graphics.print("controls.MouseDetect: "..tostring(controls.MouseDetect), 5, love.graphics.getHeight( ) - 55)
-		love.graphics.print("controls.MouseOnBtn: "..tostring(controls.MouseOnBtn), 5, love.graphics.getHeight( ) - 35)
-		
-		love.graphics.setColor(255,255,255,255)
+	if SetDeb == true then
+		debugmode:drawcontorls()
 	end
 end
 

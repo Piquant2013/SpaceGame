@@ -1,5 +1,5 @@
 -- Loads gamestate script
-local Gamestate = require 'vendors/gamestate'
+local Gamestate = require 'libs/hump/gamestate'
 
 -- Creates options as a new gamestate
 options = Gamestate.new()
@@ -10,95 +10,11 @@ changelog = require 'menu/changelog'
 -- Loads credits script
 credits = require 'menu/credits'
 
-
-
-
+-- Loads controls script
 controls = require 'menu/controls'
 
 
 function options:init()
-	
-
-
-
-
-
-
-
-	self.ScreenModeOn = love.graphics.newImage("images/on.png")
-	self.ScreenModeOff = love.graphics.newImage("images/off.png")
-	self.DebugModeOn = love.graphics.newImage("images/on.png")
-	self.DebugModeOff = love.graphics.newImage("images/off.png")
-	self.HighDPIOn = love.graphics.newImage("images/on.png")
-	self.HighDPIOff = love.graphics.newImage("images/off.png")
-	
-	self.Select6M = love.audio.newSource("audio/sel.ogg")
-	self.Select7M = love.audio.newSource("audio/sel.ogg")
-	self.Select8M = love.audio.newSource("audio/sel.ogg")
-	self.Select9M = love.audio.newSource("audio/sel.ogg")
-
-	self.Select6 = love.audio.newSource("audio/sel.ogg")
-	self.Select7 = love.audio.newSource("audio/sel.ogg")
-	self.Select8 = love.audio.newSource("audio/sel.ogg")
-	self.Select9 = love.audio.newSource("audio/sel.ogg")
-
-	self.Select10 = love.audio.newSource("audio/sel.ogg")
-	self.Select11 = love.audio.newSource("audio/sel.ogg")
-
-	self.EnterOpt2 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt2a = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt3 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt3a = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt4 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt4a = love.audio.newSource("audio/enter.ogg")
-
-	self.WinState = false
-	self.DebState = false
-	self.HighState = false
-	self.ConState = false
-
-
-	self.WinBtnY = 182
-	self.WinBtnX = 492
-
-	self.DebBtnY = 297
-	self.DebBtnX = 502
-
-	self.HighBtnY = 412
-	self.HighBtnX = 507
-
-	self.ConBtnY = 527
-	self.ConBtnX = 550
-
-
-	self.MouseWinArea = false
-	self.MouseDebArea = false
-	self.MouseHighArea = false
-	self.MouseConArea = false
-
-
-	self.WinY = 162
-	self.DebY = 277
-	self.HighY = 392
-	self.ConY = 497
-
-
-	self.WinArrowY = 232
-	self.WinArrowX = 665
-
-	self.DebArrowY = 347
-	self.DebArrowX = 665
-
-	self.HighArrowY = 462
-	self.HighArrowX = 665
-
-	rightside = false
-
-
-
-
-
-
 
 	------ IMAGES ------
 	self.OptBG = love.graphics.newImage("images/largespacebg.png")
@@ -106,22 +22,44 @@ function options:init()
 	self.FPSOff = love.graphics.newImage("images/off.png")
 	self.MuteOn = love.graphics.newImage("images/on.png")
 	self.MuteOff = love.graphics.newImage("images/off.png")
+	self.ScreenModeOn = love.graphics.newImage("images/on.png")
+	self.ScreenModeOff = love.graphics.newImage("images/off.png")
+	self.DebugModeOn = love.graphics.newImage("images/on.png")
+	self.DebugModeOff = love.graphics.newImage("images/off.png")
+	self.MouseLockOn = love.graphics.newImage("images/on.png")
+	self.MouseLockOff = love.graphics.newImage("images/off.png")
 	------ IMAGES ------
 
 	------ AUDIO ------
 	EnterOpt = love.audio.newSource("audio/enter.ogg")
 	self.EnterOpt1 = love.audio.newSource("audio/enter.ogg")
 	self.EnterOpt1a = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt2 = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt2a = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt3 = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt3a = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt4 = love.audio.newSource("audio/enter.ogg")
+	self.EnterOpt4a = love.audio.newSource("audio/enter.ogg")
 	self.Select1 = love.audio.newSource("audio/sel.ogg")
 	self.Select2 = love.audio.newSource("audio/sel.ogg")
 	self.Select3 = love.audio.newSource("audio/sel.ogg")
 	self.Select4 = love.audio.newSource("audio/sel.ogg")
 	self.Select5 = love.audio.newSource("audio/sel.ogg")
+	self.Select6 = love.audio.newSource("audio/sel.ogg")
+	self.Select7 = love.audio.newSource("audio/sel.ogg")
+	self.Select8 = love.audio.newSource("audio/sel.ogg")
+	self.Select9 = love.audio.newSource("audio/sel.ogg")
+	self.Select10 = love.audio.newSource("audio/sel.ogg")
+	self.Select11 = love.audio.newSource("audio/sel.ogg")
 	self.Select1M = love.audio.newSource("audio/sel.ogg")
 	self.Select2M = love.audio.newSource("audio/sel.ogg")
 	self.Select3M = love.audio.newSource("audio/sel.ogg")
 	self.Select4M = love.audio.newSource("audio/sel.ogg")
 	self.Select5M = love.audio.newSource("audio/sel.ogg")
+	self.Select6M = love.audio.newSource("audio/sel.ogg")
+	self.Select7M = love.audio.newSource("audio/sel.ogg")
+	self.Select8M = love.audio.newSource("audio/sel.ogg")
+	self.Select9M = love.audio.newSource("audio/sel.ogg")
 	------ AUDIO ------
 
 	------ VARIABLES ------
@@ -130,6 +68,10 @@ function options:init()
 	self.MuteState = false
 	self.ChgState = false
 	self.CrdState = false
+	self.WinState = false
+	self.DebState = false
+	self.MouState = false
+	self.ConState = false
 	self.BackState = false
 
 	-- FPS Button Y & X
@@ -147,6 +89,22 @@ function options:init()
 	-- Credits Button Y & X
 	self.CrdBtnY = 527
 	self.CrdBtnX = 550
+
+	-- Windowed Mode Button Y & X
+	self.WinBtnY = 182
+	self.WinBtnX = 492
+
+	-- Debug Button Y & X
+	self.DebBtnY = 297
+	self.DebBtnX = 502
+
+	-- Mouse Lock Button Y & X
+	self.MouBtnY = 412
+	self.MouBtnX = 507
+
+	-- Controls Button Y & X
+	self.ConBtnY = 527
+	self.ConBtnX = 550
 
 	-- Back Button Y & X
 	self.BackBtnY = 642
@@ -172,11 +130,27 @@ function options:init()
 	self.MuteOnOffY = 347
 	self.MuteOnOffX = 647
 
+	-- Windowed Mode Selecter Y & X
+	self.WinArrowY = 232
+	self.WinArrowX = 665
+
+	-- Debug Selecter Y & X
+	self.DebArrowY = 347
+	self.DebArrowX = 665
+
+	-- Mouse Lock Selecter Y & X
+	self.MouArrowY = 462
+	self.MouArrowX = 665
+
 	-- Mouse button areas
 	self.MouseFPSArea = false
 	self.MouseMuteArea = false
 	self.MouseChgArea = false
 	self.MouseCrdArea = false
+	self.MouseWinArea = false
+	self.MouseDebArea = false
+	self.MouseMouArea = false
+	self.MouseConArea = false
 	self.MouseBackArea = false
 
 	-- Mouse detection
@@ -196,8 +170,15 @@ function options:init()
 	self.MouseMuteY = 277
 	self.MouseChgY = 392
 	self.MouseCrdY = 497
+	self.WinY = 162
+	self.DebY = 277
+	self.MouY = 392
+	self.ConY = 497
 	self.MouseBackYTop = 702
 	self.MouseBackY = 612
+
+	-- If its on the right side or left side
+	RightSide = false
 	------ VARIABLES ------
 
 	-- Sets Menu font and size
@@ -216,8 +197,8 @@ function options:update(dt)
 		options.ChgState = false
 		options.CrdState = false
 		options.WinState = false
-		options.DebState = false
-		options.HighState = false
+		options.MouState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -237,7 +218,7 @@ function options:update(dt)
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = true
 		love.audio.stop(options.Select1)
@@ -257,7 +238,7 @@ function options:update(dt)
 		options.CrdState = true
 		options.WinState = false
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -277,7 +258,7 @@ function options:update(dt)
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -297,7 +278,7 @@ function options:update(dt)
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select2)
@@ -310,14 +291,14 @@ function options:update(dt)
 		love.audio.stop(options.Select9)
 	end
 
-	if options.OptArrowY == options.WinBtnY and rightside == true then
+	if options.OptArrowY == options.WinBtnY and RightSide == true then
 		options.ChgState = false
 		options.FPSState = false
 		options.MuteState = false
 		options.CrdState = false
 		options.WinState = true
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -330,14 +311,14 @@ function options:update(dt)
 		love.audio.stop(options.Select9)
 	end
 
-	if options.OptArrowY < options.BackBtnY and options.OptArrowY > options.HighBtnY and rightside == true then
+	if options.OptArrowY < options.BackBtnY and options.OptArrowY > options.MouBtnY and RightSide == true then
 		options.ChgState = false
 		options.FPSState = false
 		options.MuteState = false
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = false
-		options.HighState = false
+		options.MouState = false
 		options.ConState = true
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -350,14 +331,14 @@ function options:update(dt)
 		love.audio.stop(options.Select9)
 	end
 	
-	if options.OptArrowY < options.ConBtnY and options.OptArrowY > options.DebBtnY and rightside == true then
+	if options.OptArrowY < options.ConBtnY and options.OptArrowY > options.DebBtnY and RightSide == true then
 		options.ChgState = false
 		options.FPSState = false
 		options.MuteState = false
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = false
-		options.HighState = true
+		options.MouState = true
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -370,14 +351,14 @@ function options:update(dt)
 		love.audio.stop(options.Select9)
 	end
 
-	if options.OptArrowY < options.HighBtnY and options.OptArrowY > options.WinBtnY and rightside == true then
+	if options.OptArrowY < options.MouBtnY and options.OptArrowY > options.WinBtnY and RightSide == true then
 		options.ChgState = false
 		options.FPSState = false
 		options.MuteState = false
 		options.CrdState = false
 		options.WinState = false
 		options.DebState = true
-		options.HighState = false
+		options.MouState = false
 		options.ConState = false
 		options.BackState = false
 		love.audio.stop(options.Select1)
@@ -396,35 +377,13 @@ function options:update(dt)
 	-- This piece of code is everything that tells the menu what state it is at
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	-- Makes sure the arrow doesnt go past back
 	if options.OptArrowY > 527 then
 		options.OptArrowY = options.BackBtnY
 		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 250
 	end
 
+	-- Makes sure the arrow doesnt go past the left side and the right side
 	if options.OptArrowY < 642 and options.OptArrowX == (love.graphics.getWidth()/2 - 459/2) + 250 then
 		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) or (love.graphics.getWidth()/2 - 459/2) + 500
 	end
@@ -433,24 +392,6 @@ function options:update(dt)
 	if options.OptArrowY < 182 then
 		options.OptArrowY = options.FPSBtnY
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	-- Pushes FPS arrow back if it trys to pass off
 	if options.FPSArrowX > options.FPSBtnX then
@@ -482,54 +423,50 @@ function options:update(dt)
 		SetMute = true
 	end
 
+	-- Pushes Win arrow back if it trys to pass off
 	if options.WinArrowX > options.WinBtnX then
 		options.WinArrowX = options.WinBtnX - 118
 	end
 
+	-- Sets Win to Off
 	if options.WinArrowX == options.WinBtnX - 118 then
-		Win = false
+		SetWin = true
 	end
 
+	-- Sets Win to On
 	if options.WinArrowX == options.WinBtnX then	
-		Win = true
+		SetWin = false
 	end
 
+	-- Pushes Deb arrow back if it trys to pass off
 	if options.DebArrowX > options.DebBtnX then
 		options.DebArrowX = options.DebBtnX - 118
 	end
 
+	-- Sets Deb to Off
 	if options.DebArrowX == options.DebBtnX - 118 then
-		Deb = false
+		SetDeb = false
 	end
 
+	-- Sets Deb to On
 	if options.DebArrowX == options.DebBtnX then	
-		Deb = true
+		SetDeb = true
 	end
 
-	if options.HighArrowX > options.HighBtnX then
-		options.HighArrowX = options.HighBtnX - 118
+	-- Pushes Mou arrow back if it trys to pass off
+	if options.MouArrowX > options.MouBtnX then
+		options.MouArrowX = options.MouBtnX - 118
 	end
 
-	if options.HighArrowX == options.HighBtnX - 118 then
-		High = false
+	-- Sets Mou to Off
+	if options.MouArrowX == options.MouBtnX - 118 then
+		SetMou = false
 	end
 
-	if options.HighArrowX == options.HighBtnX then	
-		High = true
+	-- Sets Mou to On
+	if options.MouArrowX == options.MouBtnX then	
+		SetMou = true
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	-- MOUSE AUDIO ONCE
 	if options.MouseOnBtn == false then
@@ -677,7 +614,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 	end
 
@@ -690,7 +627,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 	end
 
@@ -703,7 +640,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 	end
 
@@ -716,7 +653,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 	end
 
@@ -729,7 +666,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 	end
 	-- MOUSE OUT OF AREA
@@ -752,7 +689,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect = options.MouseDetect + 1
 		options.MouseDetect1 = 0
@@ -763,7 +700,7 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = false
+		RightSide = false
 	end
 
 	-- Mouse area of the mute button
@@ -778,7 +715,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect1 = options.MouseDetect1 + 1
 		options.MouseDetect = 0
@@ -789,7 +726,7 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = false
+		RightSide = false
 	end
 
 	-- Mouse area of the change button
@@ -804,7 +741,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect2 = options.MouseDetect2 + 1
 		options.MouseDetect = 0
@@ -815,7 +752,7 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = false
+		RightSide = false
 	end
 
 	-- Mouse area of the credits button
@@ -830,7 +767,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect3 = options.MouseDetect3 + 1
 		options.MouseDetect1 = 0
@@ -841,7 +778,7 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = false
+		RightSide = false
 	end
 
 	-- Mouse area of the windowed button
@@ -856,7 +793,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = true
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect5 = options.MouseDetect5 + 1
 		options.MouseDetect1 = 0
@@ -866,11 +803,11 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = true
+		RightSide = true
 	end
 
 	-- Mouse area of the debug mode button
-	if love.mouse.getY() > options.DebY and love.mouse.getY() < options.HighY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
+	if love.mouse.getY() > options.DebY and love.mouse.getY() < options.MouY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
 		options.OptArrowY = options.DebBtnY
 		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
 		options.MouseOnBtn = true
@@ -881,7 +818,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = true
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect6 = options.MouseDetect6 + 1
 		options.MouseDetect1 = 0
@@ -891,12 +828,12 @@ function options:update(dt)
 		options.MouseDetect5 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = true
+		RightSide = true
 	end
 
-	-- Mouse area of the highdpi button
-	if love.mouse.getY() > options.HighY and love.mouse.getY() < options.ConY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
-		options.OptArrowY = options.HighBtnY
+	-- Mouse area of the mouse lock button
+	if love.mouse.getY() > options.MouY and love.mouse.getY() < options.ConY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
+		options.OptArrowY = options.MouBtnY
 		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
 		options.MouseOnBtn = true
 		options.MouseFPSArea = false
@@ -906,7 +843,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = true
+		options.MouseMouArea = true
 		options.MouseConArea = false
 		options.MouseDetect7 = options.MouseDetect7 + 1
 		options.MouseDetect1 = 0
@@ -916,7 +853,7 @@ function options:update(dt)
 		options.MouseDetect5 = 0
 		options.MouseDetect6 = 0
 		options.MouseDetect8 = 0
-		rightside = true
+		RightSide = true
 	end
 
 	-- Mouse area of the contorls button
@@ -931,7 +868,7 @@ function options:update(dt)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = true
 		options.MouseDetect8 = options.MouseDetect8 + 1
 		options.MouseDetect1 = 0
@@ -941,7 +878,7 @@ function options:update(dt)
 		options.MouseDetect5 = 0
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
-		rightside = true
+		RightSide = true
 	end
 
 	-- Mouse area of the back button
@@ -956,7 +893,7 @@ function options:update(dt)
 		options.MouseBackArea = true
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseDetect4 = options.MouseDetect4 + 1
 		options.MouseDetect1 = 0
@@ -967,69 +904,13 @@ function options:update(dt)
 		options.MouseDetect6 = 0
 		options.MouseDetect7 = 0
 		options.MouseDetect8 = 0
-		rightside = false
+		RightSide = false
 	end
 	-- MOUSE BUTTON AREAS
 
 	-- Anything between the "MOUSE BUTTON AREAS" comments:
 	-- This tells the menu if the mouse is over a certain button
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function options:mousepressed(mx, my, button)
 
@@ -1044,31 +925,20 @@ function options:mousepressed(mx, my, button)
 		options.MuteArrowX = options.MuteArrowX + 118
 	end
 
-
-
-
-
-
-
-
+	-- If the mouse is on Win and return is true then move Win On & Off arrow
 	if button == "l" and options.WinState and options.MouseWinArea == true then
 		options.WinArrowX = options.WinArrowX + 118
 	end
 
+	-- If the mouse is on Deb and return is true then move Deb On & Off arrow
 	if button == "l" and options.DebState and options.MouseDebArea == true then
 		options.DebArrowX = options.DebArrowX + 118
 	end
 
-	if button == "l" and options.HighState and options.MouseHighArea == true then
-		options.HighArrowX = options.HighArrowX + 118
+	-- If the mouse is on Mou and return is true then move Mou On & Off arrow
+	if button == "l" and options.MouState and options.MouseMouArea == true then
+		options.MouArrowX = options.MouArrowX + 118
 	end
-
-
-
-
-
-
-
 
 	-- If the mouse is on changelog and return is true then display chnagelog
 	if button == "l" and options.ChgState and options.MouseChgArea == true then
@@ -1081,7 +951,6 @@ function options:mousepressed(mx, my, button)
 	if button == "l" and options.BackState and options.MouseBackArea == true then
 		Gamestate.pop()
 		love.audio.play(EnterOpt)
-		OptionsSelected = false
 	end
 
 	-- If the mouse is on credits and return is true then display credits
@@ -1091,26 +960,11 @@ function options:mousepressed(mx, my, button)
 		love.audio.stop(EnterCrd)
 	end
 
-
-
-
-
-
-
-
-
+	-- If the mouse is on controls and return is true then display controls
 	if button == "l" and options.ConState and options.MouseConArea == true then
 		Gamestate.push(controls)
 		love.audio.play(EnterOpt)
 	end
-
-
-
-
-
-
-
-
 	------ ACTIVATE BUTTONS ------
 
 	-- Plays audio for FPS On & Off buttons
@@ -1124,52 +978,43 @@ function options:mousepressed(mx, my, button)
 		love.audio.stop(options.EnterOpt1)
 	end 
 
-
-
-
-
-
-
-	if button == "l" and Win and options.MouseWinArea == true then
+	-- Plays audio for Win On & Off buttons
+	if button == "l" and SetWin and options.MouseWinArea == true then
 		love.audio.play(options.EnterOpt2)
 		love.audio.stop(options.EnterOpt2a)
 	end
 
-	if button == "l" and Win == false and options.MouseWinArea == true then
+	if button == "l" and SetWin == false and options.MouseWinArea == true then
 		love.audio.play(options.EnterOpt2a)
 		love.audio.stop(options.EnterOpt2)
 	end
 
-	if button == "l" and Deb and options.MouseDebArea == true then
+	-- Plays audio for Deb On & Off buttons
+	if button == "l" and SetDeb and options.MouseDebArea == true then
 		love.audio.play(options.EnterOpt3a)
 		love.audio.stop(options.EnterOpt3)
 	end
 
-	if button == "l" and Deb == false and options.MouseDebArea == true then
+	if button == "l" and SetDeb == false and options.MouseDebArea == true then
 		love.audio.play(options.EnterOpt3)
 		love.audio.stop(options.EnterOpt3a)
 	end
 
-	if button == "l" and High and options.MouseHighArea == true then
+	-- Plays audio for Mou On & Off buttons
+	if button == "l" and SetMou and options.MouseMouArea == true then
 		love.audio.play(options.EnterOpt4a)
 		love.audio.stop(options.EnterOpt4)
 	end
 
-	if button == "l" and High == false and options.MouseHighArea == true then
+	if button == "l" and SetMou == false and options.MouseMouArea == true then
 		love.audio.play(options.EnterOpt4)
 		love.audio.stop(options.EnterOpt4a)
 	end
-
-
-
-
-
-
 end
 
 function options:keypressed(key)
 	
-	-- Move mouse away from button if user tries to use arrows for selection
+	-- Move mouse away from button if user tries to use arrows for selection while using the mouse
 	if key == "up" and options.MouseOnBtn == true or key == "w" and options.MouseOnBtn == true then
 		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
 	end
@@ -1196,7 +1041,7 @@ function options:keypressed(key)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseOnBtn = false
 		love.audio.play(options.Select1)
@@ -1219,7 +1064,7 @@ function options:keypressed(key)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseOnBtn = false
 		love.audio.play(options.Select1)
@@ -1234,14 +1079,8 @@ function options:keypressed(key)
 		options.OptArrowY = options.OptArrowY + 115
 	end
 
-
-
-
-
-
-
-
-	if key == "left" and rightside == true or key == "a" and rightside == true then
+	-- Moves arrow left and right through option menu states
+	if key == "left" and RightSide == true or key == "a" and RightSide == true then
 		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
 		options.MouseFPSArea = false
 		options.MouseMuteArea = false
@@ -1250,10 +1089,10 @@ function options:keypressed(key)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseOnBtn = false
-		rightside = false
+		RightSide = false
 		love.audio.play(options.Select10)
 		love.audio.stop(options.Select11)
 	end
@@ -1267,21 +1106,13 @@ function options:keypressed(key)
 		options.MouseBackArea = false
 		options.MouseWinArea = false
 		options.MouseDebArea = false
-		options.MouseHighArea = false
+		options.MouseMouArea = false
 		options.MouseConArea = false
 		options.MouseOnBtn = false
-		rightside = true
+		RightSide = true
 		love.audio.stop(options.Select10)
 		love.audio.play(options.Select11)
 	end
-
-
-
-
-
-
-
-
 	------ SELECT BUTTONS ------
 
 	------ ACTIVATE BUTTONS ------
@@ -1295,37 +1126,20 @@ function options:keypressed(key)
 		options.MuteArrowX = options.MuteArrowX + 118
 	end
 
-
-
-
-
-
-
-
+	-- If the arrow is on Win and return is true then move Win On & Off arrow
 	if key == "return" and options.WinState == true then
 		options.WinArrowX = options.WinArrowX + 118
 	end
 
+	-- If the arrow is on Deb and return is true then move Deb On & Off arrow
 	if key == "return" and options.DebState == true then
 		options.DebArrowX = options.DebArrowX + 118
 	end
 
-	if key == "return" and options.HighState == true then
-		options.HighArrowX = options.HighArrowX + 118
+	-- If the arrow is on Mou and return is true then move Mou On & Off arrow
+	if key == "return" and options.MouState == true then
+		options.MouArrowX = options.MouArrowX + 118
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	-- If the arrow is on changelog and return is true then display chnagelog
 	if key == "return" and options.ChgState == true then
@@ -1338,7 +1152,6 @@ function options:keypressed(key)
 	if key == "return" and options.BackState == true then
 		Gamestate.pop()
 		love.audio.play(EnterOpt)
-		OptionsSelected = false
 	end
 
 	-- If the arrow is on credits and return is true then display credits
@@ -1348,19 +1161,11 @@ function options:keypressed(key)
 		love.audio.stop(EnterCrd)
 	end
 
-
-
-
-
+	-- If the arrow is on controls and return is true then display controls
 	if key == "return" and options.ConState == true then
 		Gamestate.push(controls)
 		love.audio.play(EnterOpt)
 	end
-
-
-
-
-
 	------ ACTIVATE BUTTONS ------
 
 	-- Plays audio for FPS On & Off buttons
@@ -1374,45 +1179,38 @@ function options:keypressed(key)
 		love.audio.stop(options.EnterOpt1)
 	end 
 
-
-
-
-
-	if key == "return" and Win == true then
+	-- Plays audio for Win On & Off buttons
+	if key == "return" and SetWin == true then
 		love.audio.play(options.EnterOpt2)
 		love.audio.stop(options.EnterOpt2a)
 	end
 
-	if key == "return" and Win == false then
+	if key == "return" and SetWin == false then
 		love.audio.play(options.EnterOpt2a)
 		love.audio.stop(options.EnterOpt2)
 	end
 
-	if key == "return" and Deb == true then
+	-- Plays audio for Deb On & Off buttons
+	if key == "return" and SetDeb == true then
 		love.audio.play(options.EnterOpt3)
 		love.audio.stop(options.EnterOpt3a)
 	end
 
-	if key == "return" and Deb == false then
+	if key == "return" and SetDeb == false then
 		love.audio.play(options.EnterOpt3a)
 		love.audio.stop(options.EnterOpt3)
 	end
 
-	if key == "return" and High == true then
+	-- Plays audio for Mou On & Off buttons
+	if key == "return" and SetMou == true then
 		love.audio.play(options.EnterOpt4)
 		love.audio.stop(options.EnterOpt4a)
 	end
 
-	if key == "return" and High == false then
+	if key == "return" and SetMou == false then
 		love.audio.play(options.EnterOpt4a)
 		love.audio.stop(options.EnterOpt4)
-	end 
-
-
-
-
-
-
+	end
 end
 
 function options:draw()
@@ -1423,13 +1221,15 @@ function options:draw()
 	options.FPSOff:setFilter( 'nearest', 'nearest' )
 	options.MuteOn:setFilter( 'nearest', 'nearest' )
 	options.MuteOff:setFilter( 'nearest', 'nearest' )
-
 	options.ScreenModeOn:setFilter( 'nearest', 'nearest' )
 	options.ScreenModeOff:setFilter( 'nearest', 'nearest' )
 	options.DebugModeOn:setFilter( 'nearest', 'nearest' )
 	options.DebugModeOff:setFilter( 'nearest', 'nearest' )
-	options.HighDPIOn:setFilter( 'nearest', 'nearest' )
-	options.HighDPIOff:setFilter( 'nearest', 'nearest' )
+	options.MouseLockOn:setFilter( 'nearest', 'nearest' )
+	options.MouseLockOff:setFilter( 'nearest', 'nearest' )
+	options.TitleFont:setFilter( 'nearest', 'nearest' )
+	options.OptFont:setFilter( 'nearest', 'nearest' )
+	FPSfont:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	------ IMAGES ------
@@ -1452,23 +1252,19 @@ function options:draw()
 	love.graphics.setFont( options.OptFont )
 
 	------ TEXT ------
+	-- Left side buttons
 	love.graphics.print('Display FPS', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Display FPS" )/2) -250, options.FPSBtnY)
 	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Changelog" )/2)-250, options.ChgBtnY)
 	love.graphics.print('Credits', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Credits" )/2)-250, options.CrdBtnY)
 	love.graphics.print('Mute Audio', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Mute Audio" )/2)-250, options.MuteBtnY)
 	
-
-
-
-
+	-- Right side buttons
 	love.graphics.print('Windowed Mode', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Windowed Mode" )/2) +250, options.WinBtnY)
-	love.graphics.print('Window Lock', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Window Lock" )/2)+250, options.HighBtnY)
+	love.graphics.print('Window Lock', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Window Lock" )/2)+250, options.MouBtnY)
 	love.graphics.print('Controls', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Controls" )/2)+250, options.ConBtnY)
 	love.graphics.print('Debug Mode', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Debug Mode" )/2)+250, options.DebBtnY)
 
-
-
-
+	-- Back button
 	love.graphics.print('Back', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Back" )/2), options.BackBtnY)
 	------ TEXT ------
 
@@ -1490,115 +1286,35 @@ function options:draw()
 		love.graphics.draw(options.MuteOff, (love.graphics.getWidth()/2 - options.MuteOff:getWidth()/2) - 250, 347)
 	end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	if Win == false then
+	-- Puts the fade on the On & Off buttons for Win
+	if SetWin == true then
 		love.graphics.draw(options.ScreenModeOn, (love.graphics.getWidth()/2 - options.ScreenModeOn:getWidth()/2) + 250, 232)
 	end
 
-	if Win == true then
+	if SetWin == false then
 		love.graphics.draw(options.ScreenModeOff, (love.graphics.getWidth()/2 - options.ScreenModeOff:getWidth()/2) + 250, 232)
 	end
 
-	if Deb == true then
+	-- Puts the fade on the On & Off buttons for Deb
+	if SetDeb == true then
 		love.graphics.draw(options.DebugModeOn, (love.graphics.getWidth()/2 - options.DebugModeOn:getWidth()/2) + 250, 347)
 	end
 
-	if Deb == false then
+	if SetDeb == false then
 		love.graphics.draw(options.DebugModeOff, (love.graphics.getWidth()/2 - options.DebugModeOff:getWidth()/2) + 250, 347)
 	end
 
-	if High == true then
-		love.graphics.draw(options.HighDPIOn, (love.graphics.getWidth()/2 - options.HighDPIOn:getWidth()/2) + 250, 462)
+	-- Puts the fade on the On & Off buttons for Mou
+	if SetMou == true then
+		love.graphics.draw(options.MouseLockOn, (love.graphics.getWidth()/2 - options.MouseLockOn:getWidth()/2) + 250, 462)
 	end
 
-	if High == false then
-		love.graphics.draw(options.HighDPIOff, (love.graphics.getWidth()/2 - options.HighDPIOff:getWidth()/2) + 250, 462)
+	if SetMou == false then
+		love.graphics.draw(options.MouseLockOff, (love.graphics.getWidth()/2 - options.MouseLockOff:getWidth()/2) + 250, 462)
 	end
 
-
-
-
-
-
-
-
-
-
-
-
-
-	if Deb == true then
-		
-		-- Print all of the options vars for when debug mode is active
-
-		-- Font, boxes, color
-		love.graphics.setFont( FPSfont )
-		love.graphics.setColor(0,0,0,160)
-		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 455, 330, 455)
-		love.graphics.rectangle("fill", 330, love.graphics.getHeight( ) - 240, 650, 240)		
-		love.graphics.setColor(255,255,255,160)
-
-		-- Box 1
-		love.graphics.print("Options", 5, love.graphics.getHeight( ) - 435)
-		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 415)
-		love.graphics.print("options.WinState: "..tostring(options.WinState), 5, love.graphics.getHeight( ) - 395)
-		love.graphics.print("options.DebState: "..tostring(options.DebState), 5, love.graphics.getHeight( ) - 375)
-		love.graphics.print("options.HighState: "..tostring(options.HighState), 5, love.graphics.getHeight( ) - 355)
-		love.graphics.print("options.ConState: "..tostring(options.ConState), 5, love.graphics.getHeight( ) - 335)
-		love.graphics.print("options.MouseWinArea: "..tostring(options.MouseWinArea), 5, love.graphics.getHeight( ) - 315)
-		love.graphics.print("options.MouseDebArea: "..tostring(options.MouseDebArea), 5, love.graphics.getHeight( ) - 295)
-		love.graphics.print("options.MouseHighArea: "..tostring(options.MouseHighArea), 5, love.graphics.getHeight( ) - 275)
-		love.graphics.print("options.MouseConArea: "..tostring(options.MouseConArea), 5, love.graphics.getHeight( ) - 255)
-		love.graphics.print("options.WinArrowY: "..tostring(options.WinArrowY), 5, love.graphics.getHeight( ) - 235)
-		love.graphics.print("options.WinArrowX: "..tostring(options.WinArrowX), 5, love.graphics.getHeight( ) - 215)
-		love.graphics.print("options.DebArrowY: "..tostring(options.DebArrowY), 5, love.graphics.getHeight( ) - 195)
-		love.graphics.print("options.DebArrowX: "..tostring(options.DebArrowX), 5, love.graphics.getHeight( ) - 175)
-		love.graphics.print("options.HighArrowY: "..tostring(options.HighArrowY), 5, love.graphics.getHeight( ) - 155)
-		love.graphics.print("options.HighArrowX: "..tostring(options.HighArrowX), 5, love.graphics.getHeight( ) - 135)
-		love.graphics.print("options.FPSState: "..tostring(options.FPSState), 5, love.graphics.getHeight( ) - 115)
-		love.graphics.print("options.MuteState: "..tostring(options.MuteState), 5, love.graphics.getHeight( ) - 95)
-		love.graphics.print("options.ChgState: "..tostring(options.ChgState), 5, love.graphics.getHeight( ) - 75)
-		love.graphics.print("options.CrdState: "..tostring(options.CrdState), 5, love.graphics.getHeight( ) - 55)
-		love.graphics.print("options.BackState: "..tostring(options.BackState), 5, love.graphics.getHeight( ) - 35)
-		
-		-- Box 2
-		love.graphics.print("options.OptArrowY: "..tostring(options.OptArrowY), 335, love.graphics.getHeight( ) - 215)
-		love.graphics.print("options.OptArrowX: "..tostring(options.OptArrowX), 335, love.graphics.getHeight( ) - 195)
-		love.graphics.print("options.FPSArrowY: "..tostring(options.FPSArrowY), 335, love.graphics.getHeight( ) - 175)
-		love.graphics.print("options.FPSArrowX: "..tostring(options.FPSArrowX), 335, love.graphics.getHeight( ) - 155)
-		love.graphics.print("options.MuteArrowY: "..tostring(options.MuteArrowY), 335, love.graphics.getHeight( ) - 135)
-		love.graphics.print("options.MuteArrowX: "..tostring(options.MuteArrowX), 335, love.graphics.getHeight( ) - 115)
-		love.graphics.print("options.MouseMuteArea: "..tostring(options.MouseMuteArea), 335, love.graphics.getHeight( ) - 95)
-		love.graphics.print("options.MouseChgArea: "..tostring(options.MouseChgArea), 335, love.graphics.getHeight( ) - 75)
-		love.graphics.print("options.MouseCrdArea: "..tostring(options.MouseCrdArea), 335, love.graphics.getHeight( ) - 55)
-		love.graphics.print("options.MouseBackArea: "..tostring(options.MouseBackArea), 335, love.graphics.getHeight( ) - 35)
-		
-		-- Box 3
-		love.graphics.print("options.MouseDetect: "..tostring(options.MouseDetect), 675, love.graphics.getHeight( ) - 215)
-		love.graphics.print("options.MouseDetect1: "..tostring(options.MouseDetect1), 675, love.graphics.getHeight( ) - 195)
-		love.graphics.print("options.MouseDetect2: "..tostring(options.MouseDetect2), 675, love.graphics.getHeight( ) - 175)
-		love.graphics.print("options.MouseDetect3: "..tostring(options.MouseDetect3), 675, love.graphics.getHeight( ) - 155)
-		love.graphics.print("options.MouseDetect4: "..tostring(options.MouseDetect4), 675, love.graphics.getHeight( ) - 135)
-		love.graphics.print("options.MouseDetect5: "..tostring(options.MouseDetect5), 675, love.graphics.getHeight( ) - 115)
-		love.graphics.print("options.MouseDetect6: "..tostring(options.MouseDetect6), 675, love.graphics.getHeight( ) - 95)
-		love.graphics.print("options.MouseDetect7: "..tostring(options.MouseDetect7), 675, love.graphics.getHeight( ) - 75)
-		love.graphics.print("options.MouseDetect8: "..tostring(options.MouseDetect8), 675, love.graphics.getHeight( ) - 55)
-		love.graphics.print("options.MouseOnBtn: "..tostring(options.MouseOnBtn), 675, love.graphics.getHeight( ) - 35)
-		
-		love.graphics.setColor(255,255,255,255)
+	if SetDeb == true then
+		debugmode:drawoptions()
 	end
 end
 

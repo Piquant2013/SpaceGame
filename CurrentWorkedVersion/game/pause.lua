@@ -1,5 +1,5 @@
 -- Loads gamestate script
-local Gamestate = require 'vendors/gamestate'
+local Gamestate = require 'libs/hump/gamestate'
 
 -- Creates pause as a new gamestate
 pause = Gamestate.new()
@@ -114,18 +114,6 @@ function pause:keypressed(key)
 		Resume = true
 	end
 
-
-
-
-
-
-
-
-
-
-
-
-
 	if key == "return" and pause.OptionsState == true then
 		
 		-- play sound effect for enter
@@ -135,20 +123,6 @@ function pause:keypressed(key)
 		Gamestate.push(options)
 	end
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if key == "return" and pause.MainMenuState == true then
 		
 		-- play sound effect for enter
@@ -166,13 +140,6 @@ function pause:keypressed(key)
 		MenuMusic:setLooping(true)
 		love.audio.stop(PauseMusic)
 		love.audio.stop(GameMusic)
-
-
-
-		PlaySelected = false
-
-
-
 	end
 	------ ACTIVATE BUTTONS ------
 
@@ -205,26 +172,7 @@ function pause:mousepressed(mx, my, button)
 		MenuMusic:setLooping(true)
 		love.audio.stop(PauseMusic)
 		love.audio.stop(GameMusic)
-
-
-
-
-		PlaySelected = false
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	if button == "l" and pause.OptionsState and pause.MouseOptionsArea == true then
 		
@@ -234,23 +182,6 @@ function pause:mousepressed(mx, my, button)
 		-- Tells the pause menu script to switch to the pause script
 		Gamestate.push(options)
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	-- Tells pause menu to resume game script
 	if button == "l" and pause.ResumeState and pause.MouseResumeArea == true then
@@ -308,19 +239,6 @@ function pause:update(dt)
 		love.audio.stop(pause.Select3)
 	end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if pause.ArrowY < pause.MainMenuBtnY and pause.ArrowY > pause.ResumeBtnY then
 		pause.ArrowY = pause.OptionsBtnY
 		pause.ResumeState = false
@@ -329,21 +247,6 @@ function pause:update(dt)
 		love.audio.stop(pause.Select2)
 		love.audio.stop(pause.Select3)
 	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	-- PAUSE STATES
 
 	-- Anything between the "PAUSE STATES" comments:
@@ -381,32 +284,11 @@ function pause:update(dt)
 		love.audio.stop(pause.SelectM)
 	end
 
-
-
-
-
-
-
-
-
-
-
-
 	if pause.MouseDetect2 == 1 and SetMute == false then
 		love.audio.stop(pause.Select1M)
 		love.audio.play(pause.Select2M)
 		love.audio.stop(pause.SelectM)
 	end
-
-
-
-
-
-
-
-
-
-
 	-- MOUSE AUDIO ONCE
 
 	-- Anything between the "MOUSE AUDIO ONCE" comments:
@@ -472,17 +354,6 @@ function pause:update(dt)
 		pause.MouseDetect2 = 0
 	end
 
-
-
-
-
-
-
-
-
-
-
-
 	if love.mouse.getY() < pause.MouseResumeY and love.mouse.getY() > pause.MouseResumeYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 379/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 378/2) + 379) then
 		pause.ArrowY = pause.ResumeBtnY
 		pause.MouseOnBtn = true
@@ -493,17 +364,6 @@ function pause:update(dt)
 		pause.MouseDetect1 = 0
 		pause.MouseDetect = 0
 	end
-
-
-
-
-
-
-
-
-
-
-
 	-- MOUSE BUTTON AREAS
 
 	-- Anything between the "MOUSE BUTTON AREAS" comments:
@@ -512,6 +372,12 @@ end
 
 function pause:draw()
 	
+	------ FILTERS ------
+	pause.PauseFont:setFilter( 'nearest', 'nearest' )
+	pause.TitleFont:setFilter( 'nearest', 'nearest' )
+	FPSfont:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
+
 	------ SHAPES ------
 	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 379/2), pause.ArrowY + 5, 29, 35 )
 	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 379/2) + 350, pause.ArrowY + 5, 29, 35 )
@@ -530,38 +396,8 @@ function pause:draw()
 	love.graphics.print('Paused', (love.graphics.getWidth()/2 - pause.TitleFont:getWidth( "Paused" )/2), 200)
 	------ TEXT ------
 
-	if Deb == true then
-		
-		-- Print all of the pause vars for when debug mode is active
-
-		-- Font, boxes, color
-		love.graphics.setFont( FPSfont )
-		love.graphics.setColor(0,0,0,160)
-		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 415, 375, 415)	
-		love.graphics.setColor(255,255,255,160)
-
-		-- Box 1
-		love.graphics.print("Pause", 5, love.graphics.getHeight( ) - 395)
-		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 375)
-		love.graphics.print("pause.ResumeBtnY: "..tostring(pause.ResumeBtnY), 5, love.graphics.getHeight( ) - 355)
-		love.graphics.print("pause.ResumeBtnX: "..tostring(pause.ResumeBtnX), 5, love.graphics.getHeight( ) - 335)
-		love.graphics.print("pause.MainMenuBtnY: "..tostring(pause.MainMenuBtnY), 5, love.graphics.getHeight( ) - 315)
-		love.graphics.print("pause.MainMenuBtnX: "..tostring(pause.MainMenuBtnX), 5, love.graphics.getHeight( ) - 295)
-		love.graphics.print("pause.ResumeState: "..tostring(pause.ResumeState), 5, love.graphics.getHeight( ) - 275)
-		love.graphics.print("pause.MainMenuState: "..tostring(pause.MainMenuState), 5, love.graphics.getHeight( ) - 255)
-		love.graphics.print("pause.ArrowY: "..tostring(pause.ArrowY), 5, love.graphics.getHeight( ) - 235)
-		love.graphics.print("pause.ArrowX: "..tostring(pause.ArrowX), 5, love.graphics.getHeight( ) - 215)
-		love.graphics.print("pause.MouseResumeArea: "..tostring(pause.MouseResumeArea), 5, love.graphics.getHeight( ) - 195)
-		love.graphics.print("pause.MouseMainMenuArea: "..tostring(pause.MouseMainMenuArea), 5, love.graphics.getHeight( ) - 175)
-		love.graphics.print("pause.MouseDetect: "..tostring(pause.MouseDetect), 5, love.graphics.getHeight( ) - 155)
-		love.graphics.print("pause.MouseDetect1: "..tostring(pause.MouseDetect1), 5, love.graphics.getHeight( ) - 135)
-		love.graphics.print("pause.MouseOnBtn: "..tostring(pause.MouseOnBtn), 5, love.graphics.getHeight( ) - 115)
-		love.graphics.print("pause.MouseResumeYTop: "..tostring(pause.MouseResumeYTop), 5, love.graphics.getHeight( ) - 95)
-		love.graphics.print("pause.MouseResumeY: "..tostring(pause.MouseResumeY), 5, love.graphics.getHeight( ) - 75)
-		love.graphics.print("pause.MouseMainMenuY: "..tostring(pause.MouseMainMenuY), 5, love.graphics.getHeight( ) - 55)
-		love.graphics.print("pause.MouseMainMenuYTop: "..tostring(pause.MouseMainMenuYTop), 5, love.graphics.getHeight( ) - 35)
-		
-		love.graphics.setColor(255,255,255,255)
+	if SetDeb == true then
+		debugmode:drawpause()
 	end
 end
 

@@ -1,5 +1,5 @@
 -- Loads gamestate script
-local Gamestate = require 'vendors/gamestate'
+local Gamestate = require 'libs/hump/gamestate'
 
 -- Creates menu as a new gamestate
 menu = Gamestate.new()
@@ -12,7 +12,7 @@ options = require 'menu/options'
 
 
 function menu:init()
-	
+
 	------ VARIABLES ------
 	-- Play Button Y & X
 	self.PlayBtnY = 392
@@ -314,22 +314,14 @@ function menu:update(dt)
 		menu.EggCount = 0
 	end
 	-- COLOR GOES HERE EASTER EGG
+end
 
+function menu:mousepressed(mx, my, button)
 
-
-
-
-
-
-
-
-
-
-
-
-
-	if PlaySelected == true then
-
+	------ ACTIVATE BUTTONS ------
+	-- Tells menu to continue onto the game script
+	if button == "l" and menu.PlayState and menu.MousePlayArea == true then
+		
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 		
@@ -346,79 +338,19 @@ function menu:update(dt)
 		love.audio.stop(ColorGoesHere)
 	end
 
+	-- Tells game to quit
+	if button == "l" and menu.ExitState and menu.MouseQuitArea == true then
+		QuitActive = true
+	end
 
-	if OptionsSelected == true then
-	
+	-- Tells menu to continue onto the options script
+	if button == "l" and menu.OptState and menu.MouseOptArea == true then
+		
 		-- play sound effect for enter
 		love.audio.play(menu.Enter)
 		
 		-- Tells the menu script to switch to the options script
 		Gamestate.push(options)
-	end
-
-
-	if QuitSelected == true then
-
-		-- Tells game to quit
-		QuitActive = true
-	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-end
-
-function menu:mousepressed(mx, my, button)
-
-	------ ACTIVATE BUTTONS ------
-	-- Tells menu to continue onto the game script
-	if button == "l" and menu.PlayState and menu.MousePlayArea == true then
-		
-
-
-
-
-
-
-		PlaySelected = true
-		Gamestate.switch(game)
-	end
-
-	-- Tells game to quit
-	if button == "l" and menu.ExitState and menu.MouseQuitArea == true then
-		
-
-
-
-
-
-
-
-		QuitSelected = true
-	end
-
-	-- Tells menu to continue onto the options script
-	if button == "l" and menu.OptState and menu.MouseOptArea == true then
-	
-
-
-
-
-
-
-
-	
-		OptionsSelected = true
 	end
 	------ ACTIVATE BUTTONS ------
 end
@@ -463,37 +395,35 @@ function menu:keypressed(key)
 	-- Tells menu to continue onto the game script
 	if key == "return" and menu.PlayState == true then
 		
+		-- play sound effect for enter
+		love.audio.play(menu.Enter)
 
-
-
-
-
-
-		PlaySelected = true
+		-- Tells the menu script to switch to the game script
 		Gamestate.switch(game)
+
+		-- Deactivate the easter egg
+		menu.Egg = false
+		
+		-- Stops menu music and plays game music
+		love.audio.play(GameMusic)
+		GameMusic:setLooping(true)
+		love.audio.stop(MenuMusic)
+		love.audio.stop(ColorGoesHere)
 	end
 
 	-- Tells game to quit
 	if key == "return" and menu.ExitState == true then
-		
-
-
-
-
-
-
-		QuitSelected = true
+		QuitActive = true
 	end
 
 	-- Tells menu to continue onto the options script
 	if key == "return" and menu.OptState == true then
 		
-
-
-
-
-
-		OptionsSelected = true
+		-- play sound effect for enter
+		love.audio.play(menu.Enter)
+		
+		-- Tells the menu script to switch to the options script
+		Gamestate.push(options)
 	end
 	------ ACTIVATE BUTTONS ------
 
@@ -524,6 +454,8 @@ function menu:draw()
 	------ FILTERS ------
 	menu.MenuBG:setFilter( 'nearest', 'nearest' )
 	menu.MenuTitle:setFilter( 'nearest', 'nearest' )
+	menu.MenuFont:setFilter( 'nearest', 'nearest' )
+	menu.VerFont:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 	
 	------ IMAGES ------
@@ -550,49 +482,8 @@ function menu:draw()
 	------ TEXT ------
 end
 
-	if Deb == true then
-		
-		-- Print all of the menu vars for when debug mode is active
-
-		-- Font, boxes, color
-		love.graphics.setColor(0,0,0,160)
-		love.graphics.rectangle("fill", 0, love.graphics.getHeight( ) - 455, 310, 455)
-		love.graphics.rectangle("fill", 310, love.graphics.getHeight( ) - 180, 375, 180)	
-		love.graphics.setColor(255,255,255,160)
-
-		-- Box 1
-		love.graphics.print("Menu", 5, love.graphics.getHeight( ) - 435)
-		love.graphics.print("--------------------------", 5, love.graphics.getHeight( ) - 415)
-		love.graphics.print("menu.PlayBtnY: "..tostring(menu.PlayBtnY), 5, love.graphics.getHeight( ) - 395)
-		love.graphics.print("menu.PlayBtnX: "..tostring(menu.PlayBtnX), 5, love.graphics.getHeight( ) - 375)
-		love.graphics.print("menu.OptBtnY: "..tostring(menu.OptBtnY), 5, love.graphics.getHeight( ) - 355)
-		love.graphics.print("menu.OptBtnX: "..tostring(menu.OptBtnX), 5, love.graphics.getHeight( ) - 335)
-		love.graphics.print("menu.QuitBtnY: "..tostring(menu.QuitBtnY), 5, love.graphics.getHeight( ) - 315)
-		love.graphics.print("menu.QuitBtnX: "..tostring(menu.QuitBtnX), 5, love.graphics.getHeight( ) - 295)
-		love.graphics.print("menu.ArrowY: "..tostring(menu.ArrowY), 5, love.graphics.getHeight( ) - 275)
-		love.graphics.print("menu.ArrowX: "..tostring(menu.ArrowX), 5, love.graphics.getHeight( ) - 255)
-		love.graphics.print("menu.BGx: "..tostring(menu.BGx), 5, love.graphics.getHeight( ) - 235)
-		love.graphics.print("menu.Scrl: "..tostring(menu.Scrl), 5, love.graphics.getHeight( ) - 215)
-		love.graphics.print("menu.PlayState: "..tostring(menu.PlayState), 5, love.graphics.getHeight( ) - 195)
-		love.graphics.print("menu.OptState: "..tostring(menu.OptState), 5, love.graphics.getHeight( ) - 175)
-		love.graphics.print("menu.MousePlayArea: "..tostring(menu.MousePlayArea), 5, love.graphics.getHeight( ) - 155)
-		love.graphics.print("menu.MouseOptArea: "..tostring(menu.MouseOptArea), 5, love.graphics.getHeight( ) - 135)
-		love.graphics.print("menu.MouseQuitArea: "..tostring(menu.MouseQuitArea), 5, love.graphics.getHeight( ) - 115)
-		love.graphics.print("menu.MouseDetect: "..tostring(menu.MouseDetect), 5, love.graphics.getHeight( ) - 95)
-		love.graphics.print("menu.MouseDetect2: "..tostring(menu.MouseDetect2), 5, love.graphics.getHeight( ) - 75)
-		love.graphics.print("menu.MouseOnBtn: "..tostring(menu.MouseOnBtn), 5, love.graphics.getHeight( ) - 55)
-		love.graphics.print("menu.MousePlayYTop: "..tostring(menu.MousePlayYTop), 5, love.graphics.getHeight( ) - 35)
-		
-		-- Box 2
-		love.graphics.print("menu.MousePlayY: "..tostring(menu.MousePlayY), 325, love.graphics.getHeight( ) - 155)
-		love.graphics.print("menu.MouseQuitY: "..tostring(menu.MouseQuitY), 325, love.graphics.getHeight( ) - 135)
-		love.graphics.print("menu.MouseQuitYTop: "..tostring(menu.MouseQuitYTop), 325, love.graphics.getHeight( ) - 115)
-		love.graphics.print("menu.EggTimer: "..tostring(menu.EggTimer), 325, love.graphics.getHeight( ) - 95)
-		love.graphics.print("menu.Egg: "..tostring(menu.Egg), 325, love.graphics.getHeight( ) - 75)
-		love.graphics.print("menu.EggCount: "..tostring(menu.EggCount), 325, love.graphics.getHeight( ) - 55)
-		love.graphics.print("menu.QuitTimer: "..tostring(menu.QuitTimer), 325, love.graphics.getHeight( ) - 35)
-		
-		love.graphics.setColor(255,255,255,255)
+	if SetDeb == true then
+		debugmode:drawmenu()
 	end
 
 	if QuitActive == true then

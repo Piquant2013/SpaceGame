@@ -1,5 +1,5 @@
 -- Loads gamestate script
-local Gamestate = require 'vendors/gamestate'
+local Gamestate = require 'libs/hump/gamestate'
 
 -- Creates logo as a new gamestate
 logo = Gamestate.new()
@@ -71,8 +71,7 @@ function logo:mousepressed(mx, my, button)
 		love.graphics.setColor(255, 255, 255)
 		love.audio.stop(logo.LogoChime)
 		love.audio.setVolume(1.0)
-	end 
-
+	end
 end
 
 function logo:draw()
