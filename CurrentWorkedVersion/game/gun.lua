@@ -44,13 +44,6 @@ function gun:initialize()
 	self.InteractFont = love.graphics.newFont("fonts/xen3.ttf", 10)
 end
 
-
-
-
-
-
-
-
 function gun:shooting(mx, my, button)
 
 	if button == "l" and self.ShotTime <= 0 and sship.entered == false and pistol.HaveGun == true then
@@ -65,7 +58,8 @@ function gun:shooting(mx, my, button)
 		bullet.y = pistol.GunY
 		bullet.Dir = self.Direction
 		bullet.Speed = 400
-		bullet.bb = Collider:addRectangle(bullet.x, bullet.y, 1, 1)
+		bullet.bb = Collider:addRectangle(bullet.x, bullet.y, 12, 1)
+		--bullet.bb = Collider:addPoint(bullet.x, bullet.y)
 
 		table.insert(self.Bullets, bullet)
 		
@@ -135,8 +129,10 @@ function gun:bulletdraw()
 	for i, o in ipairs(self.Bullets) do
 		
 		-- Gun bullet graphic
-		love.graphics.draw(self.Shot, o.x, o.y, o.Dir)
+		love.graphics.draw(self.Shot, o.x, o.y, o.Dir, 1, 1, plyr.sprite:getWidth() - 40, plyr.sprite:getHeight() - 25)--self.Shot:getWidth()/2, self.Shot:getHeight()/2) --plyr.sprite:getWidth() - 40, plyr.sprite:getHeight() - 25)
+
 		o.bb:moveTo(o.x, o.y)
+		o.bb:setRotation(o.Dir)
 	end
 end
 

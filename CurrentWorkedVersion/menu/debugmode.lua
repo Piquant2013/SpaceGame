@@ -250,10 +250,10 @@ function debugmode:bullets()
 		-- Bullet direction, postions and speed
 		love.graphics.setFont( gun.InteractFont )
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("bullet.x: "..tostring(o.x), plyr.x, plyr.y + 30)
-		love.graphics.print("bullet.y: "..tostring(o.y), plyr.x, plyr.y + 40)
-		love.graphics.print("bullet.Dir: "..tostring(o.Dir), plyr.x, plyr.y + 50)
-		love.graphics.print("bullet.Speed: "..tostring(o.Speed), plyr.x, plyr.y + 60)
+		love.graphics.print("bullet.x: "..tostring(o.x), plyr.x + 30, plyr.y - 20)
+		love.graphics.print("bullet.y: "..tostring(o.y), plyr.x + 30, plyr.y - 10)
+		love.graphics.print("bullet.Dir: "..tostring(o.Dir), plyr.x + 30, plyr.y - 0)
+		love.graphics.print("bullet.Speed: "..tostring(o.Speed), plyr.x + 30, plyr.y + 10)
 	end
 end
 
