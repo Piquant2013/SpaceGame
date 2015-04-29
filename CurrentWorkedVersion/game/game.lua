@@ -137,13 +137,13 @@ function game:keypressed(key)
   	end
 
   	-- Zoom game camera in by 1
-    if key == "x" then--and game.ZoomCam == false and game.GameOver == false then
+    if key == "x" and game.ZoomCam == false and game.GameOver == false then
 		game.Cam:zoom(2)
 		game.ZoomCam = true
 	end
 
 	-- Zoom game camera back to default
-	if key == "z" then--and game.ZoomCam == true and game.GameOver == false then
+	if key == "z" and game.ZoomCam == true and game.GameOver == false then
 		game.Cam:zoom(0.5)
 		game.ZoomCam = false
 	end
@@ -477,11 +477,11 @@ function game:draw()
 	astroids:draw()
 
 	-- Draw game hitboxes and other info when debugmode is active
-	--if SetDeb == true then
+	if SetDeb == true then
 		debugmode:hitbox()
 		debugmode:astroids()
 		debugmode:bullets()
-	--end
+	end
 	
 	-- End of camera
 	game.Cam:detach()

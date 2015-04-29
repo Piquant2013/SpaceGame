@@ -359,11 +359,11 @@ function menu:keypressed(key)
 
 	-- Move mouse away from button if user tries to use arrows for selection
 	if key == "up" and menu.MouseOnBtn == true or key == "w" and menu.MouseOnBtn == true then
-		love.mouse.setX(806)
+		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
 	end
 
 	if key == "down" and menu.MouseOnBtn == true or key == "s" and menu.MouseOnBtn == true then
-		love.mouse.setX(806)
+		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
 	end
 
 	------ SELECT BUTTONS ------
@@ -478,7 +478,7 @@ function menu:draw()
 
 	-- Version text and font
 	love.graphics.setFont( menu.VerFont )
-	love.graphics.print('Pre-Alpha 0.3.1', 10, (love.graphics.getHeight( ) - menu.VerFont:getHeight( "Pre-Alpha 0.3.1" ) - 5))
+	love.graphics.print('Pre-Alpha 0.', 10, (love.graphics.getHeight( ) - menu.VerFont:getHeight( "Pre-Alpha 0." ) - 5))
 	------ TEXT ------
 	end
 	

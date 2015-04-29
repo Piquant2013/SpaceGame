@@ -24,7 +24,7 @@ function gun:initialize()
 	self.GunShot1 = false
 	self.Shot = love.graphics.newImage("images/shot.png")
 	
-	-- Gun postions
+	-- Gun
 	pistol.GunY = plyr.y
 	pistol.GunX = plyr.x
 	pistol.HaveGun = false
@@ -59,7 +59,6 @@ function gun:shooting(mx, my, button)
 		bullet.Dir = self.Direction
 		bullet.Speed = 400
 		bullet.bb = Collider:addRectangle(bullet.x, bullet.y, 12, 1)
-		--bullet.bb = Collider:addPoint(bullet.x, bullet.y)
 
 		table.insert(self.Bullets, bullet)
 		
@@ -93,10 +92,15 @@ function gun:update(dt)
 		o.x = o.x + math.cos(o.Dir) * o.Speed * dt
 		o.y = o.y + math.sin(o.Dir) * o.Speed * dt
 
+		--o.x = o.x - 0.5 * math.sin(o.Dir)
+		--o.y = o.y + 0.5 * math.cos(o.Dir)
+
 		if (o.x > (plyr.x + 300) or (o.x < (plyr.x - 300 ))) or (o.y > (plyr.y + 300 ) or (o.y < (plyr.y - 300 ))) then
 			
 			-- if the bullet goes off screen undraw it and move the bullet hit box (Temporally) to 4000, 4000
+			Collider:remove(o.bb)
 			table.remove(self.Bullets, i)
+
 		end
 	end
 
@@ -124,14 +128,17 @@ end
 
 function gun:bulletdraw()
 
+	------ FILTERS ------
 	self.Shot:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	for i, o in ipairs(self.Bullets) do
 		
 		-- Gun bullet graphic
-		love.graphics.draw(self.Shot, o.x, o.y, o.Dir, 1, 1, plyr.sprite:getWidth() - 40, plyr.sprite:getHeight() - 25)--self.Shot:getWidth()/2, self.Shot:getHeight()/2) --plyr.sprite:getWidth() - 40, plyr.sprite:getHeight() - 25)
+		love.graphics.draw(self.Shot, o.x, o.y, o.Dir, 1, 1, plyr.sprite:getWidth() - 26, plyr.sprite:getHeight() - 25) --self.Shot:getWidth()/2, self.Shot:getHeight()/2) 
 
-		o.bb:moveTo(o.x, o.y)
+		-- Move and rotate bullet hitbox
+		o.bb:moveTo(o.x + 6 * math.sin(o.Dir), o.y - 6 * math.cos(o.Dir))
 		o.bb:setRotation(o.Dir)
 	end
 end

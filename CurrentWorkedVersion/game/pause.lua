@@ -71,11 +71,11 @@ function pause:keypressed(key)
 
 	-- Move mouse away from button if user tries to use arrows for selection
 	if key == "up" and pause.MouseOnBtn == true or key == "w" and pause.MouseOnBtn == true then
-		love.mouse.setX(835)
+		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 430)
 	end
 
 	if key == "down" and pause.MouseOnBtn == true or key == "s" and pause.MouseOnBtn == true then
-		love.mouse.setX(835)
+		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 430)
 	end
 
 	------ SELECT BUTTONS ------

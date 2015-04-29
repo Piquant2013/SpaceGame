@@ -10,10 +10,13 @@ ship = Gamestate.new()
 
 function ship:initialize()
 
+	-- Ship table and its varibles
 	self.sship = {}
 
+	-- So dont have to keep writing ship at the start of every ship var
 	sship = self.sship
 
+	-- The contents of the ship table
 	sship.x = 456
 	sship.y = 490
 	sship.w = 78
@@ -28,20 +31,24 @@ function ship:initialize()
 	sship.sprite = love.graphics.newImage("images/ship1.png")
 	sship.bb = Collider:addRectangle(sship.x, sship.y, sship.w, sship.h)
 	
+	-- Boost varibles
 	self.BoostTired = false
 	self.BoostTiredTime = 0 
 	self.Boost = false
 	self.BoostTime = 0
 
+	-- Ship sounds
 	self.BoostSound = love.audio.newSource("audio/boost.ogg")
 	self.ThrustSound = love.audio.newSource("audio/thrust.ogg")
 	self.IdleSound = love.audio.newSource("audio/idle.ogg")
 
+	-- Interact font
 	self.InteractFont = love.graphics.newFont("fonts/xen3.ttf", 10)
 end
 
 function ship:collision(dt, shape_a, shape_b)
 
+	-- Set ship hitbox to a shape
 	local other
     
     if shape_a == sship.bb then
@@ -52,16 +59,23 @@ function ship:collision(dt, shape_a, shape_b)
         return
     end
 
+    -- what the ship is colliding with and what to do
     for i, o in ipairs(gun.Bullets) do
+    	
+    	-- Bullet
     	if other == o.bb then
     		sship.health = sship.health - 10
+    		Collider:remove(o.bb)
     		table.remove(gun.Bullets, i)
     	end
     end
 
     for i, o in ipairs(rocks) do
+    	
+    	-- Rock
     	if other == o.bb then
     		sship.health = sship.health - 20
+    		Collider:remove(o.bb)
     		table.remove(rocks, i)
     	end
     end
@@ -72,29 +86,16 @@ end
 
 function ship:health()
 
+	-- If ship health is less then 0 keep it at 0
 	if sship.health < 0 then
 		sship.health = 0
 	end
 
+	-- if ship health is 0 then ship dies
 	if sship.health == 0 then
 		sship.dead = true
 	end
-
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function ship:movement(dt)
 	
@@ -243,6 +244,8 @@ function ship:boost(dt)
 end
 
 function ship:update(dt)
+	
+	-- Update ship
 	ship:movement(dt)
 	ship:boost(dt)
 end

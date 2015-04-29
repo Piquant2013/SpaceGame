@@ -40,16 +40,11 @@ function player:initialize()
 	self.SprintTime = 0
 end
 
-
-
-
-
-
-
 function player:collision(dt, shape_a, shape_b)
 
+	-- Set player hitbox to a shape
 	local other
-    
+
     if shape_a == plyr.bb then
         other = shape_b
     elseif shape_b == plyr.bb then
@@ -58,43 +53,44 @@ function player:collision(dt, shape_a, shape_b)
         return
     end
 
+    -- what the player is colliding with
     if other == pistol.bb then
+    	
+    	-- Gun
     	pistol.yes = true
     elseif other == sship.bb then
+    	
+    	-- Ship
     	sship.yes = true
     end
 
+    -- Rock
     for i, o in ipairs(rocks) do
     	if other == o.bb then
     		plyr.health = plyr.health - 1
     	end
     end
-
 end
 
 function player:collisionstopped(dt, shape_a, shape_b)
+	
+	-- turn to false when the collisions stop
 	sship.yes = false
 	pistol.yes = false
 end
 
 function player:health(dt)
 
+	-- If player health is less then 0 keep it at 0
 	if plyr.health < 0 then
 		plyr.health = 0
 	end
 
+	-- if player health is 0 then player dies and you get a gameover 
 	if plyr.health == 0 then
 		game.GameOver = true
 	end
-
 end
-
-
-
-
-
-
-
 
 function player:movement(dt)
 

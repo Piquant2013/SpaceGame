@@ -129,9 +129,12 @@ function changelog:draw()
 	-- Changes
 	-- First change log row
 	love.graphics.setFont( changelog.ChgFont )
-	love.graphics.print("Version: 0.3.1", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "Version: 0.3.1" )/2), 105)
-	love.graphics.print("- ", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "- " )/2), 141)
-	
+	love.graphics.print("Version: 0.", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "Version: 0." )/2), 105)
+	love.graphics.print("- ", love.graphics.getWidth()/2 - 520, 141)
+
+	-- Second change log row
+	love.graphics.print("- ", love.graphics.getWidth()/2 + 20, 141)
+
 	-- Back button
 	love.graphics.setFont( changelog.BackFont )
 	love.graphics.print('Back', (love.graphics.getWidth()/2 - changelog.BackFont:getWidth( "Back" )/2), changelog.ChgBackBtnY)
