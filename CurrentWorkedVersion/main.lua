@@ -1,14 +1,11 @@
 -- Function run for FPS limiter
-function love.run() end
+function love.run() end -- MAYBE GET RID OF 
 
 -- Loads gamestate script
-local Gamestate = require 'libs/hump/gamestate'
+Gamestate = require 'libs/hump/gamestate'
 
 -- Loads logo script
 logo = require 'logo'
-
--- Loads controls script
-debugmode = require 'menu/debugmode'
 
 -- Loads frame limiter script
 frame_limiter = require 'libs/fpslimter'
@@ -16,28 +13,34 @@ frame_limiter = require 'libs/fpslimter'
 
 function love.load()
 
+	------ FONTS ------
+	fpsfont = love.graphics.newFont("fonts/xen3.ttf", 15)
+	fpsfont1 = love.graphics.newFont("fonts/xen3.ttf", 20)
+	------ FONTS ------
+
 	------ CURSOR ------
-	-- Load cursors
-	cursor = love.mouse.newCursor("images/cursor.png", 2, 2)
 	crosshair = love.mouse.newCursor("images/crosshair.png", 14, 14)
-	
+	cursor = love.mouse.newCursor("images/cursor.png", 2, 2)
+	------ CURSOR ------
+
+	------ GOLBAL VARIABLES ------
+	setfps = false
+	setmute = false
+	setmouselock = true
+	setfull = false
+	setgamefull = false
+	paused = false
+	resume = false
+	gamereset = true
+	setendless = true --
+	gameover = false
+	welcomescreen = true
+	------ GOLBAL VARIABLES ------
+
 	-- Set system cursor
 	love.mouse.setCursor(cursor)
-	------ CURSOR ------
-
-	------ FONTS ------
-	FPSfont = love.graphics.newFont("fonts/xen3.ttf", 20)
-	DebugFont = love.graphics.newFont("fonts/xen3.ttf", 16)
-	------ FONTS ------
-
-	-- FPS, Mute, Win, Deb and Mou states
-	SetFPS = false
-	SetMute = false
-	SetWin = true
-	SetDeb = false
-	SetMou = false
 	
-	-- Tells game to continue onto the logo script
+	-- Tells game to start with the logo script
 	Gamestate.switch(logo)
 end
 
@@ -50,31 +53,31 @@ end
 function love.update(dt)
 	
 	-- Set the frame rate limit to 60
-	frame_limiter.set(60)
+	frame_limiter.set(60) -- MAYBE GET RID OF 
 
 	-- Set game audio to 0 if the options script tells mute to be true
-	if SetMute == true then
+	if setmute == true then
 		love.audio.setVolume(0.0)
 	end
 
 	-- Set game audio back to default if the options script tells mute to be false
-	if SetMute == false then
+	if setmute == false then
 		love.audio.setVolume(1.0)
 	end
 
 	-- Locks the cursor to the screen
-	if SetMou == true then
+	if setmouselock == true then
 		love.mouse.setGrabbed( true )
-	elseif SetMou == false then
+	elseif setmouselock == false then
 		love.mouse.setGrabbed( false )
 	end
 
-	-- Sets if the game is in windowed mode or not
-    if SetWin == false then
-    	love.window.setFullscreen(true, "desktop")
-    elseif SetWin == true then
-    	love.window.setFullscreen(false, "desktop")
-    end
+	-- Set game fullscreen
+	if setfull == true then
+		love.window.setFullscreen(true, "desktop")
+	elseif setfull == false then
+		love.window.setFullscreen(false, "desktop")
+	end
 
 	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.update(dt)
@@ -95,30 +98,30 @@ end
 function love.draw()
 
 	------ FILTERS ------
-	FPSfont:setFilter( 'nearest', 'nearest' )
+	fpsfont:setFilter( 'nearest', 'nearest' )
+	fpsfont1:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.draw()
 
-	-- Tells FPS to use FPSfont
-	love.graphics.setFont( FPSfont )
+	-- Set font for fps and mute
+	love.graphics.setFont( fpsfont1 )
 	
 	-- Displays FPS if the options script tells FPS to be true
-	if SetFPS == true and QuitActive == false then
-		love.graphics.print("FPS: " .. love.timer.getFPS(), (love.graphics.getWidth( ) - FPSfont:getWidth( "FPS: " .. love.timer.getFPS()) - 5), 5)
+	if setfps == true then
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.print("FPS: " .. love.timer.getFPS(), (love.graphics.getWidth( ) - fpsfont1:getWidth( "FPS: " .. love.timer.getFPS()) - 20), 5)
+		love.graphics.setColor(255, 255, 255)
 	end
 
 	-- Displays "Mute: ON" if the options script tells mute to be true 
-	if SetMute == true and QuitActive == false then
-		love.graphics.print("Mute: On", (love.graphics.getWidth( ) - FPSfont:getWidth( "Mute: On" ) - 90), 5)
-	end
-
-	-- Draw main.lua debug
-	if SetDeb == true then
-		debugmode:main()
+	if setmute == true then
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.print("MUTE: ON", (love.graphics.getWidth( ) - fpsfont1:getWidth( "Mute: ON" ) - 120), 5)
+		love.graphics.setColor(255, 255, 255)
 	end
 end
 
 -- Run frame limter
-frame_limiter.run()
+frame_limiter.run() -- MAYBE GET RID OF 

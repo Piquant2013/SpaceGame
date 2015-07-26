@@ -1,153 +1,107 @@
 -- Loads gamestate script
 local Gamestate = require 'libs/hump/gamestate'
 
--- Creates changelog as a new gamestate
+-- changelog credits as a new gamestate
 changelog = Gamestate.new()
 
 
 function changelog:init()
-	
+
 	------ VARIABLES ------
-	-- Back Button Y & X
-	self.ChgBackBtnY = 592
-	self.ChgBackBtnX = 584
-	self.ChgArrowX = 480
-
-	-- Mouse button areas
-	self.MouseBackArea = false
-
-	-- Mouse detection
-	self.MouseDetect = 0
-	self.MouseOnBtn = false
+	-- white flash
+	self.fade = 100
 	------ VARIABLES ------
-	
-	------ IMAGES ------
-	self.ChgBG = love.graphics.newImage("images/largespacebg.png")
-	------ IMAGES ------
 
-	------ FONTS ------
-	self.ChgFont = love.graphics.newFont("fonts/xen3.ttf", 20)
-	self.BackFont = love.graphics.newFont("fonts/xen3.ttf", 50)
-	self.TitleFont = love.graphics.newFont("fonts/xen3.ttf", 90)
-	------ FONTS ------
-	
 	------ AUDIO ------
-	EnterChg = love.audio.newSource("audio/enter.ogg")
-	self.Select1M = love.audio.newSource("audio/sel.ogg")
+	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
+	self.backsound = love.audio.newSource("audio/buttons/enter.ogg")
 	------ AUDIO ------
-end
-
-function changelog:update(dt)
-
-	-- MOUSE AUDIO ONCE 
-	if changelog.MouseOnBtn == false then
-		changelog.MouseDetect = 0
-		love.audio.stop(changelog.Select1M)
-	end
-
-	if changelog.MouseDetect == 1 and SetMute == false then
-		love.audio.play(changelog.Select1M)
-	end
-
-	-- MOUSE OUT OF AREA
-	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		changelog.MouseBackArea = false
-		changelog.MouseOnBtn = false
-	end
-
-	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
-		changelog.MouseBackArea = false
-		changelog.MouseOnBtn = false
-	end
-
-	if love.mouse.getY() < 580 then
-		changelog.MouseBackArea = false
-		changelog.MouseOnBtn = false
-	end
-
-	if love.mouse.getY() > 660 then
-		changelog.MouseBackArea = false
-		changelog.MouseOnBtn = false
-	end
-
-
-	-- MOUSE BUTTON AREAS
-	-- Mouse area of the back button
-	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
-		changelog.MouseBackArea = true
-		changelog.MouseOnBtn = true
-		changelog.MouseDetect = changelog.MouseDetect + 1
-	end
-end
-
-function changelog:mousepressed(mx, my, button)
-	
-	-- If the mouse is on back and return is true then return to the main menu
-	if button == "l" and changelog.MouseBackArea == true then
-		Gamestate.pop()
-		love.audio.play(EnterChg)
-		love.audio.stop(EnterOpt)
-	end
 end
 
 function changelog:keypressed(key)
 	
 	-- Takes you back to the main menu
-	if key == "return" then
-		
-		-- Tells the game script to unload itslef and go back to previous gamestate in stack
+	if key == "escape" or key == "return" or key == " " then
 		Gamestate.pop()
-		
-		-- Plays enter sound and stops previous enter sound
-		love.audio.play(EnterChg)
-		love.audio.stop(EnterOpt)
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		self.fade = 100
 	end
+end
+
+function changelog:mousepressed(mx, my, button)
+
+	-- Go back to the start screen
+	if button == "l" or button == "r" then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		self.fade = 100
+	end
+end
+
+function changelog:update(dt)
+
+	-- FLASH WHITE --
+	self.fade = self.fade + dt - 2
+
+	if self.fade < 0 then
+		self.fade = 0
+	end
+	-- FLASH WHITE --
+
+	-- BACKGROUND SCROLL --
+	start.bgx = start.bgx - start.bgscroll * dt
+
+	if start.bgx <= -5200 then
+		start.bgscroll = -65
+	end
+
+	if start.bgx >= 1 then
+		start.bgscroll = 65
+	end
+	-- BACKGROUND SCROLL --
 end
 
 function changelog:draw()
 	
 	------ FILTERS ------
-	changelog.ChgBG:setFilter( 'nearest', 'nearest' )
-	changelog.ChgFont:setFilter( 'nearest', 'nearest' )
-	changelog.BackFont:setFilter( 'nearest', 'nearest' )
-	changelog.TitleFont:setFilter( 'nearest', 'nearest' )
-	FPSfont:setFilter( 'nearest', 'nearest' )
+	start.bg:setFilter( 'nearest', 'nearest' )
+	start.font9:setFilter( 'nearest', 'nearest' )
+	start.font0:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
-	------ IMAGES ------
-	love.graphics.draw(changelog.ChgBG, -2000, -2000, 0, 2.05)
-	------ IMAGES ------
-
-	------ SHAPES ------
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), changelog.ChgBackBtnY + 5, 29, 35 )
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, changelog.ChgBackBtnY + 5, 29, 35 )
-	------ SHAPES ------
-
-	------ TEXT ------
-	-- Changes
-	-- First change log row
-	love.graphics.setFont( changelog.ChgFont )
-	love.graphics.print("Version: 0.", (love.graphics.getWidth()/2 - changelog.ChgFont:getWidth( "Version: 0." )/2), 105)
-	love.graphics.print("- ", love.graphics.getWidth()/2 - 520, 141)
-
-	-- Second change log row
-	love.graphics.print("- ", love.graphics.getWidth()/2 + 20, 141)
-
-	-- Back button
-	love.graphics.setFont( changelog.BackFont )
-	love.graphics.print('Back', (love.graphics.getWidth()/2 - changelog.BackFont:getWidth( "Back" )/2), changelog.ChgBackBtnY)
-
-	-- Title
-	love.graphics.setFont( changelog.TitleFont )
-	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - changelog.TitleFont:getWidth( "Changelog" )/2), 15)
-	------ TEXT ------
-
-	-- Draw changelog.lua debug
-	if SetDeb == true then
-		debugmode:changelog()
+	------ IMAGE ------
+	if paused == false then
+		love.graphics.draw(start.bg, start.bgx, 0, 0, 2.05)
+	elseif paused == true then
+		love.graphics.draw(start.bg, 0, -1000, 0, 3)
 	end
+	------ IMAGE ------
+
+	------ SHAPES ------
+	-- Box
+	love.graphics.rectangle("line", (love.graphics.getWidth()/2 - 1204/2), (love.graphics.getHeight()/2 - 664/2), 1204, 664 )
+	love.graphics.setColor(0, 0, 0, 100)
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 1200/2), (love.graphics.getHeight()/2 - 660/2), 1200, 660 )
+	love.graphics.setColor(255, 255, 255, 255)
+	------ SHAPES ------
+
+	------ TEXT ------
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.setFont( start.font9 )
+	love.graphics.print('CHANGELOG', (love.graphics.getWidth()/2 - start.font9:getWidth( "CHANGELOG" )/2), (love.graphics.getHeight()/2 - 310))
+	love.graphics.setFont( start.font0 )
+	love.graphics.print('', (love.graphics.getWidth()/2 - 580), 115-25)
+	love.graphics.setColor(255, 255, 255)
+	------ TEXT ------
+
+	------ SHAPES ------
+	-- Flash white
+	love.graphics.setColor(255, 255, 255, self.fade)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(255, 255, 255, 255)
+	------ SHAPES ------
 end
 
 return changelog

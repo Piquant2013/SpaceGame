@@ -5,10 +5,10 @@ function love.conf(t)
     t.version = "0.9.2"  
     
     -- Title on game window
-    t.window.title = "Space Game (Pre-Alpha 0.)"
+    t.window.title = "Space Game (Pre-Alpha 0.4.0)"
 
     -- Game icon
-    t.window.icon = "images/logospace.png"
+    t.window.icon = "images/gameicon.png"
 
     -- Games window width
     t.window.width = 1280

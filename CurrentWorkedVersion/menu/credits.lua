@@ -8,151 +8,165 @@ credits = Gamestate.new()
 function credits:init()
 	
 	------ VARIABLES ------
-	-- Back Button Y & X
-	self.CrdBackBtnY = 582	
-	self.CrdBackBtnX = 584
-	self.CrdArrowX = 480
-
-	-- Mouse button areas
-	self.MouseBackArea = false
-
-	-- Mouse detection
-	self.MouseDetect = 0
-	self.MouseOnBtn = false
+	-- Slide credits
+	self.slider = love.graphics.getHeight() + 20
+	
+	-- white flash
+	self.fade = 100
 	------ VARIABLES ------
 
-	------ FONTS ------
-	self.CrdFont = love.graphics.newFont("fonts/xen3.ttf", 20)
-	self.BackFont = love.graphics.newFont("fonts/xen3.ttf", 50)
-	self.TitleFont = love.graphics.newFont("fonts/xen3.ttf", 90)
-	------ FONTS ------
-
 	------ AUDIO ------
-	EnterCrd = love.audio.newSource("audio/enter.ogg")
-	self.Select1M = love.audio.newSource("audio/sel.ogg")
+	self.music = love.audio.newSource("audio/music/credits.ogg")
+	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
+	self.backsound = love.audio.newSource("audio/buttons/enter.ogg")
 	------ AUDIO ------
-
-	------ IMAGES ------
-	self.CrdBG = love.graphics.newImage("images/largespacebg.png")
-	------ IMAGES ------
-end
-
-function credits:update(dt)
-	
-	-- MOUSE AUDIO ONCE 
-	if credits.MouseOnBtn == false then
-		credits.MouseDetect = 0
-		love.audio.stop(credits.Select1M)
-	end
-
-	if credits.MouseDetect == 1 and SetMute == false then
-		love.audio.play(credits.Select1M)
-	end
-
-	-- MOUSE OUT OF AREA
-	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		credits.MouseBackArea = false
-		credits.MouseOnBtn = false
-	end
-
-	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
-		credits.MouseBackArea = false
-		credits.MouseOnBtn = false
-	end
-
-	if love.mouse.getY() < 580 then
-		credits.MouseBackArea = false
-		credits.MouseOnBtn = false
-	end
-
-	if love.mouse.getY() > 660 then
-		credits.MouseBackArea = false
-		credits.MouseOnBtn = false
-	end
-
-
-	-- MOUSE BUTTON AREAS
-	-- Mouse area of the back button
-	-- This tells the menu if the mouse is over a certain button
-	if love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) and love.mouse.getY() > 580 and love.mouse.getY() < 660 then
-		credits.MouseBackArea = true
-		credits.MouseOnBtn = true
-		credits.MouseDetect = credits.MouseDetect + 1
-	end
-end
-
-function credits:mousepressed(mx, my, button)
-	
-	-- If the mouse is on back and return is true then return to the main menu
-	if button == "l" and credits.MouseBackArea == true then
-		Gamestate.pop()
-		love.audio.play(EnterCrd)
-		love.audio.stop(EnterOpt)
-	end
 end
 
 function credits:keypressed(key)
 	
 	-- Takes you back to the main menu
-	if key == "return" then
-		
-		-- Tells the game script to unload itslef and go back to previous gamestate in stack
+	if key == "escape" or key == "return" or key == " " then
 		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		love.audio.stop(self.music)
+		self.fade = 100
+		
+		-- resume game music if its playing or play music if its not and not in pause
+		if paused == false then
+			love.audio.resume(start.music)
+		elseif paused == true then
+			love.audio.resume(game.music1)
+		end
 
-		-- Plays enter sound and stops previous enter sound
-		love.audio.play(EnterCrd)
-		love.audio.stop(EnterOpt)
+		-- resume easteregg music if its paused
+		if start.easteregg == true then
+			love.audio.resume(start.colorgoeshere)
+		end
 	end
+end
+
+function credits:mousepressed(mx, my, button)
+
+	-- Takes you back to the main menu
+	if button == "l" or button == "r" then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		love.audio.stop(self.music)
+		self.fade = 100
+		
+		-- resume game music if its playing or play music if its not and not in pause
+		if paused == false then
+			love.audio.resume(start.music)
+		elseif paused == true then
+			love.audio.resume(game.music1)
+		end
+
+		-- resume easteregg music if its paused
+		if start.easteregg == true then
+			love.audio.resume(start.colorgoeshere)
+		end
+	end
+end
+
+function credits:update(dt)
+
+	-- FLASH WHITE --
+	self.fade = self.fade + dt - 2
+
+	if self.fade < 0 then
+		self.fade = 0
+	end
+	-- FLASH WHITE --
+
+	-- SCROLL CREDITS --
+	self.slider = self.slider + dt - 1
+
+	if self.slider < -2600 then
+		self.slider = love.graphics.getHeight() + 20
+		self.fade = 100
+	end
+	-- SCROLL CREDITS --
 end
 
 function credits:draw()
 	
 	------ FILTERS ------
-	credits.CrdBG:setFilter( 'nearest', 'nearest' )
-	credits.CrdFont:setFilter( 'nearest', 'nearest' )
-	credits.BackFont:setFilter( 'nearest', 'nearest' )
-	credits.TitleFont:setFilter( 'nearest', 'nearest' )
-	FPSfont:setFilter( 'nearest', 'nearest' )
+	start.gamelogo:setFilter( 'nearest', 'nearest' )
+	start.bg:setFilter( 'nearest', 'nearest' )
+	logo.image:setFilter( 'nearest', 'nearest' )
+	start.font3:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
+	love.graphics.setColor(16, 16, 16)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(255, 255, 255)
+
 	------ IMAGES ------
-	love.graphics.draw(credits.CrdBG, -2000, -2000, 0, 2.05)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(start.bg, -500, self.slider -1000, 0, 3)
+	love.graphics.draw(start.gamelogo, (love.graphics.getWidth()/2 - start.gamelogo:getWidth()/2), self.slider)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(logo.image, (love.graphics.getWidth()/2 - 249.75), self.slider + 2350, 0 ,0.5)
 	------ IMAGES ------
-	
-	------ SHAPES ------
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), credits.CrdBackBtnY + 5, 29, 35 )
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, credits.CrdBackBtnY + 5, 29, 35 )
-	------ SHAPES ------
 
 	------ TEXT ------
-	love.graphics.setFont( credits.CrdFont )
-	
-	love.graphics.print("Bryce Dunn:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Bryce Dunn:")/2), 150)
-	love.graphics.print("Author, Coder", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Author, Coder")/2), 180)
-
-	love.graphics.print("Tyronne Crisfield:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Tyronne Crisfield:")/2), 240)
-	love.graphics.print("Author, Coder", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Author, Coder")/2), 270)
-
-	love.graphics.print("Toby Lowe:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Toby Lowe:")/2), 330)
-	love.graphics.print("Music & Sound, Author", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Music & Sound, Author")/2), 360)
-
-	love.graphics.print("Thomas Wiltshire:", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Thomas Wiltshire:")/2), 420)
-	love.graphics.print("Lead Coder,  Author,  Graphics", (love.graphics.getWidth( )/2-credits.CrdFont:getWidth("Lead Coder,  Author,  Graphics")/2), 450)
-
-	-- Back button
-	love.graphics.setFont( credits.BackFont )
-	love.graphics.print('Back', (love.graphics.getWidth()/2 - credits.BackFont:getWidth( "Back" )/2), credits.CrdBackBtnY)
-	
-	-- Title
-	love.graphics.setFont( credits.TitleFont )
-	love.graphics.print('Credits', (love.graphics.getWidth()/2 - credits.TitleFont:getWidth( "Credits" )/2), 45)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("PROGRAMMER", (love.graphics.getWidth( )/2-start.font3:getWidth("PROGRAMMER")/2), self.slider + 450)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("THOMAS WILTSHIRE", (love.graphics.getWidth( )/2-start.font2:getWidth("THOMAS WILTSHIRE")/2), self.slider + 500)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("MUSIC & SOUND", (love.graphics.getWidth( )/2-start.font3:getWidth("MUSIC & SOUND")/2), self.slider + 600)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("TOBY LOWE", (love.graphics.getWidth( )/2-start.font2:getWidth("TOBY LOWE")/2), self.slider + 650)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("GRAPHICS", (love.graphics.getWidth( )/2-start.font3:getWidth("GRAPHICS")/2), self.slider + 750)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("THOMAS WILTSHIRE", (love.graphics.getWidth( )/2-start.font2:getWidth("THOMAS WILTSHIRE")/2), self.slider + 800)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("TECHNICAL SHIZZLE WIZZLE", (love.graphics.getWidth( )/2-start.font3:getWidth("TECHNICAL SHIZZLE WIZZLE")/2), self.slider + 900)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("BRYCE DUNN", (love.graphics.getWidth( )/2-start.font2:getWidth("BRYCE DUNN")/2), self.slider + 950)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("XEN3 FONT", (love.graphics.getWidth( )/2-start.font3:getWidth("XEN3 FONT")/2), self.slider + 1050)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("-XEN-", (love.graphics.getWidth( )/2-start.font2:getWidth("-XEN-")/2), self.slider + 1100)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("HUMP LIBRARY", (love.graphics.getWidth( )/2-start.font3:getWidth("HUMP LIBRARY")/2), self.slider + 1200)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("MATTHIAS RICHTER", (love.graphics.getWidth( )/2-start.font2:getWidth("MATTHIAS RICHTER")/2), self.slider + 1250)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("HARDONCOLLIDER LIBRARY", (love.graphics.getWidth( )/2-start.font3:getWidth("HARDONCOLLIDER LIBRARY")/2), self.slider + 1350)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("MATTHIAS RICHTER", (love.graphics.getWidth( )/2-start.font2:getWidth("MATTHIAS RICHTER")/2), self.slider + 1400)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("SPECIAL THANKS", (love.graphics.getWidth( )/2-start.font3:getWidth("SPECIAL THANKS")/2), self.slider + 1500)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("WOJAK", (love.graphics.getWidth( )/2-start.font2:getWidth("WOJAK")/2), self.slider + 1550)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("TEAM PIQUANT", (love.graphics.getWidth( )/2-start.font3:getWidth("TEAM PIQUANT")/2), self.slider + 1650)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("BRYCE DUNN", (love.graphics.getWidth( )/2-start.font2:getWidth("BRYCE DUNN")/2), self.slider + 1700)
+	love.graphics.print("BRAYDEN WATTS", (love.graphics.getWidth( )/2-start.font2:getWidth("BRAYDEN WATTS")/2), self.slider + 1750)
+	love.graphics.print("TYRONNE CRISFIELD", (love.graphics.getWidth( )/2-start.font2:getWidth("TYRONNE CRISFIELD")/2), self.slider + 1800)
+	love.graphics.print("TOBY LOWE", (love.graphics.getWidth( )/2-start.font2:getWidth("TOBY LOWE")/2), self.slider + 1850)
+	love.graphics.print("THOMAS WILTSHIRE", (love.graphics.getWidth( )/2-start.font2:getWidth("THOMAS WILTSHIRE")/2), self.slider + 1900)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("CREATED WITH", (love.graphics.getWidth( )/2-start.font3:getWidth("CREATED WITH")/2), self.slider + 2000)
+	love.graphics.setFont( start.font2 )
+	love.graphics.print("LOVE (LOVE2D)", (love.graphics.getWidth( )/2-start.font2:getWidth("LOVE (LOVE2D)")/2), self.slider + 2050)
+	love.graphics.setFont( start.font3 )
+	love.graphics.print("BROUGHT TO YOU BY", (love.graphics.getWidth( )/2-start.font3:getWidth("BROUGHT TO YOU BY")/2), self.slider + 2300)
+	love.graphics.setColor(255, 255, 225)
 	------ TEXT ------
 
-	-- Draw credits.lua debug
-	if SetDeb == true then
-		debugmode:credits()
-	end
+	------ SHAPES ------
+	-- Flash white
+	love.graphics.setColor(255, 255, 255, self.fade)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(255, 255, 255, 255)
+	------ SHAPES ------
 end
 
 return credits

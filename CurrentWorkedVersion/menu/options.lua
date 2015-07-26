@@ -1,1322 +1,1097 @@
 -- Loads gamestate script
 local Gamestate = require 'libs/hump/gamestate'
 
--- Creates options as a new gamestate
-options = Gamestate.new()
-
--- Loads changlog script
-changelog = require 'menu/changelog'
-
 -- Loads credits script
 credits = require 'menu/credits'
 
 -- Loads controls script
 controls = require 'menu/controls'
 
+-- Loads changelog script
+changelog = require 'menu/changelog'
+
+-- Loads moregames script
+moregames = require 'menu/moregames'
+
+-- Creates options as a new gamestate
+options = Gamestate.new()
+
 
 function options:init()
 
-	------ IMAGES ------
-	self.OptBG = love.graphics.newImage("images/largespacebg.png")
-	self.FPSOn = love.graphics.newImage("images/on.png")
-	self.FPSOff = love.graphics.newImage("images/off.png")
-	self.MuteOn = love.graphics.newImage("images/on.png")
-	self.MuteOff = love.graphics.newImage("images/off.png")
-	self.ScreenModeOn = love.graphics.newImage("images/on.png")
-	self.ScreenModeOff = love.graphics.newImage("images/off.png")
-	self.DebugModeOn = love.graphics.newImage("images/on.png")
-	self.DebugModeOff = love.graphics.newImage("images/off.png")
-	self.MouseLockOn = love.graphics.newImage("images/on.png")
-	self.MouseLockOff = love.graphics.newImage("images/off.png")
-	------ IMAGES ------
-
-	------ AUDIO ------
-	EnterOpt = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt1 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt1a = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt2 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt2a = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt3 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt3a = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt4 = love.audio.newSource("audio/enter.ogg")
-	self.EnterOpt4a = love.audio.newSource("audio/enter.ogg")
-	self.Select1 = love.audio.newSource("audio/sel.ogg")
-	self.Select2 = love.audio.newSource("audio/sel.ogg")
-	self.Select3 = love.audio.newSource("audio/sel.ogg")
-	self.Select4 = love.audio.newSource("audio/sel.ogg")
-	self.Select5 = love.audio.newSource("audio/sel.ogg")
-	self.Select6 = love.audio.newSource("audio/sel.ogg")
-	self.Select7 = love.audio.newSource("audio/sel.ogg")
-	self.Select8 = love.audio.newSource("audio/sel.ogg")
-	self.Select9 = love.audio.newSource("audio/sel.ogg")
-	self.Select10 = love.audio.newSource("audio/sel.ogg")
-	self.Select11 = love.audio.newSource("audio/sel.ogg")
-	self.Select1M = love.audio.newSource("audio/sel.ogg")
-	self.Select2M = love.audio.newSource("audio/sel.ogg")
-	self.Select3M = love.audio.newSource("audio/sel.ogg")
-	self.Select4M = love.audio.newSource("audio/sel.ogg")
-	self.Select5M = love.audio.newSource("audio/sel.ogg")
-	self.Select6M = love.audio.newSource("audio/sel.ogg")
-	self.Select7M = love.audio.newSource("audio/sel.ogg")
-	self.Select8M = love.audio.newSource("audio/sel.ogg")
-	self.Select9M = love.audio.newSource("audio/sel.ogg")
-	------ AUDIO ------
-
 	------ VARIABLES ------
-	-- Option menu state
-	self.FPSState = false
-	self.MuteState = false
-	self.ChgState = false
-	self.CrdState = false
-	self.WinState = false
-	self.DebState = false
-	self.MouState = false
-	self.ConState = false
-	self.BackState = false
-
 	-- FPS Button Y & X
-	self.FPSBtnY = 182
-	self.FPSBtnX = 492
+	self.fpsbtny = -240						
+	self.fpsbtnx = 492
 	
 	-- Mute Button Y & X
-	self.MuteBtnY = 297
-	self.MuteBtnX = 502
+	self.mutebtny = -180
+	self.mutebtnx = 502
+	
+	-- MouseLock Button Y & X
+	self.mouselockbtny = -120
+	self.mouselockbtnx = 507
 
-	-- Changelog Button Y & X
-	self.ChgBtnY = 412
-	self.ChgBtnX = 507
+	-- Fullscreen Button Y & X
+	self.fullscreenbtny = -60
+	self.fullscreenbtnx = 492
 
 	-- Credits Button Y & X
-	self.CrdBtnY = 527
-	self.CrdBtnX = 550
+	self.creditsbtny = 60
+	
+	-- control Button Y & X
+	self.controlsbtny = 120
+	
+	-- changelog Button Y & X
+	self.changelogbtny = 180
+	
+	-- moregames Button Y & X
+	self.moregamesbtny = 240
 
-	-- Windowed Mode Button Y & X
-	self.WinBtnY = 182
-	self.WinBtnX = 492
-
-	-- Debug Button Y & X
-	self.DebBtnY = 297
-	self.DebBtnX = 502
-
-	-- Mouse Lock Button Y & X
-	self.MouBtnY = 412
-	self.MouBtnX = 507
-
-	-- Controls Button Y & X
-	self.ConBtnY = 527
-	self.ConBtnX = 550
-
-	-- Back Button Y & X
-	self.BackBtnY = 642
-	self.BackBtnX = 584
-
-	-- Button Selecter Y & X
-	self.OptArrowY = (self.FPSBtnY)
-	self.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
+	-- Back button
+	self.backy = 0
 
 	-- FPS Selecter Y & X
-	self.FPSArrowY = 232
-	self.FPSArrowX = 665
-
-	-- FPS On & Off Button Y & X
-	self.FPSOnOffY = 232
-	self.FPSOnOffX = 647
+	self.fpsarrowy = 232
+	self.fpsarrowx = 665
 	
 	-- Mute Selecter Y & X
-	self.MuteArrowY = 347
-	self.MuteArrowX = 665
+	self.mutearrowy = 347
+	self.mutearrowx = 665
 
-	-- Mute On & Off Button Y & X
-	self.MuteOnOffY = 347
-	self.MuteOnOffX = 647
+	-- MouseLock Selecter Y & X
+	self.mouselockarrowy = 462
+	self.mouselockarrowx = 507
 
-	-- Windowed Mode Selecter Y & X
-	self.WinArrowY = 232
-	self.WinArrowX = 665
+	-- fullscreen Selecter Y & X
+	self.fullscreenarrowy = 232
+	self.fullscreenarrowx = 665
 
-	-- Debug Selecter Y & X
-	self.DebArrowY = 347
-	self.DebArrowX = 665
+	-- Button Selecter Y & X
+	self.arrowy = (self.fpsbtny)
+	self.arrowx = 650
 
-	-- Mouse Lock Selecter Y & X
-	self.MouArrowY = 462
-	self.MouArrowX = 665
+	-- Option menu states
+	self.fpsstate = false
+	self.mutestate = false
+	self.mouselockstate = false
+	self.creditsstate = false
+	self.fullscreenstate = false
+	self.controlsstate = false
+	self.changelogstate = false
+	self.moregamesstate = false
 
-	-- Mouse button areas
-	self.MouseFPSArea = false
-	self.MouseMuteArea = false
-	self.MouseChgArea = false
-	self.MouseCrdArea = false
-	self.MouseWinArea = false
-	self.MouseDebArea = false
-	self.MouseMouArea = false
-	self.MouseConArea = false
-	self.MouseBackArea = false
+	-- white flash
+	self.fade = 100
 
-	-- Mouse detection
-	self.MouseDetect = 0
-	self.MouseDetect1 = 0
-	self.MouseDetect2 = 0
-	self.MouseDetect3 = 0
-	self.MouseDetect4 = 0
-	self.MouseDetect5 = 0
-	self.MouseDetect6 = 0
-	self.MouseDetect7 = 0
-	self.MouseDetect8 = 0
-	self.MouseOnBtn = false
+	-- scale back button
+	self.scaleback = 1
 
-	-- Mouse button coords
-	self.MouseFPSY = 162
-	self.MouseMuteY = 277
-	self.MouseChgY = 392
-	self.MouseCrdY = 497
-	self.WinY = 162
-	self.DebY = 277
-	self.MouY = 392
-	self.ConY = 497
-	self.MouseBackYTop = 702
-	self.MouseBackY = 612
+	-- mouse button state
+	self.fpsstatemouse = false
+	self.mutestatemouse = false
+	self.mouselockstatemouse = false
+	self.creditsstatemouse = false
+	self.fullscreenstatemouse = false
+	self.controlsstatemouse = false
+	self.changelogstatemouse = false
+	self.moregamesstatemouse = false
+	self.backstatemouse = false
 
-	-- If its on the right side or left side
-	RightSide = false
+	-- Mouse Dectect vars for sound
+	self.mouseover = false
+	self.mouseoverback = false
+	self.mousedetect1 = 0
+	self.mousedetect2 = 0
+	self.mousedetect3 = 0
+	self.mousedetect4 = 0
+	self.mousedetect5 = 0
 	------ VARIABLES ------
 
-	-- Sets Menu font and size
-	self.OptFont = love.graphics.newFont("fonts/xen3.ttf", 50)
+	------ IMAGES ------
+	self.fullimage = love.graphics.newImage("images/menu/fullscreen.png")
+	self.fpsimage = love.graphics.newImage("images/menu/fps.png")
+	self.muteimage = love.graphics.newImage("images/menu/mute.png")
+	self.mouselockimage = love.graphics.newImage("images/menu/mouselock.png")
+	self.controlsimage = love.graphics.newImage("images/menu/controlsicon.png")
+	self.moregamesimage = love.graphics.newImage("images/menu/moregames.png")
+	self.changelogimage = love.graphics.newImage("images/menu/changelog.png")
+	self.creditsimage = love.graphics.newImage("images/menu/credits.png")
+	------ IMAGES ------
 
-	-- Sets Menu font and size
-	self.TitleFont = love.graphics.newFont("fonts/xen3.ttf", 90)
+	------ AUDIO ------
+	self.entersound1 = love.audio.newSource("audio/buttons/enter.ogg")
+	self.entersound1a = love.audio.newSource("audio/buttons/enter.ogg")
+	self.entersound2 = love.audio.newSource("audio/buttons/enter.ogg")
+	self.entersound2a = love.audio.newSource("audio/buttons/enter.ogg")
+	self.entersound3 = love.audio.newSource("audio/buttons/enter.ogg")
+	self.entersound3a = love.audio.newSource("audio/buttons/enter.ogg")
+	self.backsound = love.audio.newSource("audio/buttons/enter.ogg")
+	self.select1 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select2 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select3 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select4 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select5 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select6 = love.audio.newSource("audio/buttons/select.ogg")
+	self.clickselect1 = love.audio.newSource("audio/buttons/select.ogg")
+	self.clickselect2 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover1 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover2 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover3 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover4 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover5 = love.audio.newSource("audio/buttons/select.ogg")
+	------ AUDIO ------
 end
 
 function options:update(dt)
+
+	-- FLASH WHITE --
+	self.fade = self.fade + dt - 2
+
+	if self.fade < 0 then
+		self.fade = 0
+	end
+	-- FLASH WHITE --
+
+	-- BACKGROUND SCROLL --
+	start.bgx = start.bgx - start.bgscroll * dt
+
+	if start.bgx <= -5200 then
+		start.bgscroll = -65
+	end
+
+	if start.bgx >= 1 then
+		start.bgscroll = 65
+	end
+	-- BACKGROUND SCROLL --
+
+	-- Move options text depending on if its in menu or pasued
+	if paused == false or paused == true then
+		self.fpsbtny = -240
+		self.mutebtny = -180
+		self.mouselockbtny = -120
+		self.fullscreenbtny = -60
+		self.backy = 0
+		self.creditsbtny = 60
+		self.changelogbtny = 120
+		self.controlsbtny = 180
+		self.moregamesbtny = 240
+	end 
 	
-	-- OPTION MENU STATES
-	if options.OptArrowY == options.FPSBtnY then
-		options.FPSState = true
-		options.MuteState = false
-		options.ChgState = false
-		options.CrdState = false
-		options.WinState = false
-		options.MouState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- OPTION MENU STATES --
+	-- fps options menu state
+	if self.arrowy == self.fpsbtny then--and self.page2 == false then
+		self.arrowx = 518
+		self.fpsstate = true
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select3)
+		love.audio.stop(self.select4)
 	end
 
-	if options.OptArrowY == options.BackBtnY then
-		options.MuteState = false
-		options.FPSState = false
-		options.ChgState = false
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = true
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- mute options menu state
+	if self.arrowy < self.mouselockbtny and self.arrowy > self.fpsbtny then--and self.page2 == false then
+		self.arrowx = 518
+		self.fpsstate = false
+		self.mutestate = true
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select4)
 	end
 
-	if options.OptArrowY < options.BackBtnY and options.OptArrowY > options.ChgBtnY then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = true
-		options.WinState = false
-		options.DebState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- mouselock options menu state
+	if self.arrowy < self.fullscreenbtny and self.arrowy > self.mutebtny then--and self.page2 == false then
+		self.arrowx = 518
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = true
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select3)
 	end
 
-	if options.OptArrowY < options.CrdBtnY and options.OptArrowY > options.MuteBtnY then
-		options.ChgState = true
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- fullscreen options menu state
+	if self.arrowy == self.fullscreenbtny then--and self.page2 == false then
+		self.arrowx = 518
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = true
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select3)
+		love.audio.stop(self.select4)
 	end
 
-	if options.OptArrowY < options.ChgBtnY and options.OptArrowY > options.FPSBtnY then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = true
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- credits options menu state
+	if self.arrowy == self.creditsbtny then--and self.page2 == true then
+		self.arrowx = 410
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = true
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select3)
+		love.audio.stop(self.select4)
 	end
 
-	if options.OptArrowY == options.WinBtnY and RightSide == true then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = false
-		options.WinState = true
-		options.DebState = false
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- mute controls menu state
+	if self.arrowy < self.controlsbtny and self.arrowy > self.creditsbtny then--and self.page2 == true then
+		self.arrowx = 438
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = false
+		self.changelogstate = true
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select4)
 	end
 
-	if options.OptArrowY < options.BackBtnY and options.OptArrowY > options.MouBtnY and RightSide == true then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = false
-		options.MouState = false
-		options.ConState = true
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select8)
-		love.audio.stop(options.Select9)
+	-- mouselock changelog menu state
+	if self.arrowy < self.moregamesbtny and self.arrowy > self.changelogbtny then--and self.page2 == true then
+		self.arrowx = 428
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = true
+		self.moregamesstate = false
+		self.changelogstate = false
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select3)
+	end
+
+	-- credits moregames menu state
+	if self.arrowy == self.moregamesbtny then--and self.page2 == true then
+		self.arrowx = 458 --60
+		self.fpsstate = false
+		self.mutestate = false
+		self.fullscreenstate = false
+		self.mouselockstate = false
+		self.creditsstate = false
+		self.controlsstate = false
+		self.moregamesstate = true
+		self.changelogstate = false
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select3)
+		love.audio.stop(self.select4)
+	end
+	-- OPTION MENU STATES --
+
+	-- Make sure the arrow doesnt go past fps or credits
+	if self.arrowy < self.fpsbtny then
+		self.arrowy = self.fpsbtny
+	elseif self.arrowy > self.moregamesbtny then
+		self.arrowy = self.moregamesbtny
+	end
+
+	-- Pushes FPS arrow back if it trys to pass off else turn setfps true or false
+	if self.fpsarrowx > self.fpsbtnx then
+		self.fpsarrowx = self.fpsbtnx - 118
+	elseif self.fpsarrowx == self.fpsbtnx - 118 then
+		setfps = false
+	elseif self.fpsarrowx == self.fpsbtnx then	
+		setfps = true
+	end
+
+	-- Pushes mute arrow back if it trys to pass off else turn setmute true or false
+	if self.mutearrowx > self.mutebtnx then
+		self.mutearrowx = self.mutebtnx - 118
+	elseif self.mutearrowx == self.mutebtnx - 118 then
+		setmute = false
+	elseif self.mutearrowx == self.mutebtnx then	
+		setmute = true
+	end
+
+	-- Pushes mouselock arrow back if it trys to pass off else turn setmouselock true or false
+	if self.mouselockarrowx > self.mouselockbtnx then
+		self.mouselockarrowx = self.mouselockbtnx - 118
+	elseif self.mouselockarrowx == self.mouselockbtnx - 118 then
+		setmouselock = false
+	elseif self.mouselockarrowx == self.mouselockbtnx then	
+		setmouselock = true
+	end
+
+	-- Pushes fullscreen arrow back if it trys to pass off else turn setfullscreen true or false
+	if self.fullscreenarrowx > self.fullscreenbtnx then
+		self.fullscreenarrowx = self.fullscreenbtnx - 118
+	elseif self.fullscreenarrowx == self.fullscreenbtnx - 118 and setgamefull == true then
+		setfull = false
+		setgamefull = false
+	elseif self.fullscreenarrowx == self.fullscreenbtnx and setgamefull == false then	
+		setfull = true
+		setgamefull = true
 	end
 	
-	if options.OptArrowY < options.ConBtnY and options.OptArrowY > options.DebBtnY and RightSide == true then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = false
-		options.MouState = true
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select9)
+	-- MOUSE AREAS --
+	-- Mouse area of fps button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "DISPLAY FPS:" )/2 + self.fpsbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "DISPLAY FPS:" )/2 + self.fpsbtny) + start.font3:getHeight( "DISPLAY FPS:" ) then
+		self.fpsstatemouse = true
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.backstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.arrowx = 518
+		self.arrowy = self.fpsbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = self.mousedetect1 + 1
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	if options.OptArrowY < options.MouBtnY and options.OptArrowY > options.WinBtnY and RightSide == true then
-		options.ChgState = false
-		options.FPSState = false
-		options.MuteState = false
-		options.CrdState = false
-		options.WinState = false
-		options.DebState = true
-		options.MouState = false
-		options.ConState = false
-		options.BackState = false
-		love.audio.stop(options.Select1)
-		love.audio.stop(options.Select2)
-		love.audio.stop(options.Select3)
-		love.audio.stop(options.Select4)
-		love.audio.stop(options.Select5)
-		love.audio.stop(options.Select6)
-		love.audio.stop(options.Select7)
-		love.audio.stop(options.Select8)
+	-- Mouse area of mute button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "MUTE AUDIO:" )/2 + self.mutebtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "MUTE AUDIO:" )/2 + self.mutebtny + start.font3:getHeight( "MUTE AUDIO:" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = true
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 518
+		self.arrowy = self.mutebtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = self.mousedetect2 + 1
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	-- OPTION MENU STATES
-
-	-- Anything between the "OPTION MENU STATES" comments:
-	-- This piece of code is everything that tells the menu what state it is at
-
-
-	-- Makes sure the arrow doesnt go past back
-	if options.OptArrowY > 527 then
-		options.OptArrowY = options.BackBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 250
+	-- Mouse area of mouselock button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "WINDOW LOCK:" )/2 + self.mouselockbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "WINDOW LOCK:" )/2 + self.mouselockbtny + start.font3:getHeight( "WINDOW LOCK:" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = true
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 518
+		self.arrowy = self.mouselockbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = self.mousedetect3 + 1
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	-- Makes sure the arrow doesnt go past the left side and the right side
-	if options.OptArrowY < 642 and options.OptArrowX == (love.graphics.getWidth()/2 - 459/2) + 250 then
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) or (love.graphics.getWidth()/2 - 459/2) + 500
+	-- Mouse area of fullscreen button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) 
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "FULLSCREEN:" )/2 + self.fullscreenbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "FULLSCREEN:" )/2 + self.fullscreenbtny + start.font3:getHeight( "FULLSCREEN:" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = true
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 518
+		self.arrowy = self.fullscreenbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = self.mousedetect4 + 1
+		self.mousedetect5 = 0
 	end
 
-	-- Makes sure the arrow doesnt go past FPS
-	if options.OptArrowY < 182 then
-		options.OptArrowY = options.FPSBtnY
+	-- Mouse area of credits button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) 
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "CREDITS" )/2 + self.creditsbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "CREDITS" )/2 + self.creditsbtny + start.font3:getHeight( "CREDITS" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = true
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 410
+		self.arrowy = self.creditsbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = self.mousedetect1 + 1
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	-- Pushes FPS arrow back if it trys to pass off
-	if options.FPSArrowX > options.FPSBtnX then
-		options.FPSArrowX = options.FPSBtnX - 118
+	-- Mouse area of controls button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) 
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "CONTROLS" )/2 + self.controlsbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "CONTROLS" )/2 + self.controlsbtny + start.font3:getHeight( "CONTROLS" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = true
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 428
+		self.arrowy = self.controlsbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = self.mousedetect2 + 1
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	-- Sets FPS to Off
-	if options.FPSArrowX == options.FPSBtnX - 118 then
-		SetFPS = false
+	-- Mouse area of changelog button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) 
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "CHANGELOG" )/2 + self.changelogbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "CHANGELOG" )/2 + self.changelogbtny + start.font3:getHeight( "CHANGELOG" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = true
+		self.moregamesstatemouse = false
+		self.backstatemouse = false
+		self.arrowx = 438
+		self.arrowy = self.changelogbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = self.mousedetect3 + 1
+		self.mousedetect4 = 0
+		self.mousedetect5 = 0
 	end
 
-	-- Sets FPS to On
-	if options.FPSArrowX == options.FPSBtnX then	
-		SetFPS = true
+	-- Mouse area of moregames button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) 
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "MORE GAMES" )/2 + self.moregamesbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "MORE GAMES" )/2 + self.moregamesbtny + start.font3:getHeight( "MORE GAMES" )) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = true
+		self.backstatemouse = false
+		self.arrowx = 458
+		self.arrowy = self.moregamesbtny
+		self.mouseover = true
+		self.mouseoverback = false
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = self.mousedetect4 + 1
+		self.mousedetect5 = 0
 	end
 
-	-- Pushes Mute arrow back if it trys to pass off
-	if options.MuteArrowX > options.MuteBtnX then
-		options.MuteArrowX = options.MuteBtnX - 118
+	-- Mouse area of back button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 610 + start.font5:getWidth( "<" )) 
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - 610)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font5:getHeight( "<" )/2)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font5:getHeight( "<" )/2) + 45 then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.backstatemouse = true
+		self.mouseover = false
+		self.mouseoverback = true
+		self.scaleback = 1.2
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		self.mousedetect5 = self.mousedetect5 + 1
 	end
+	-- MOUSE AREAS --
 
-	-- Sets Mute to Off
-	if options.MuteArrowX == options.MuteBtnX - 118 then
-		SetMute = false
+	-- MOUSE OUT OF AREA --
+	-- Out of areas for the page 1 buttons
+	if love.mouse.getX() > (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360 + start.font3:getWidth( "DISPLAY FPS:" )) + 130 then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.mouseover = false
 	end
-
-	-- Sets Mute to On
-	if options.MuteArrowX == options.MuteBtnX then	
-		SetMute = true
-	end
-
-	-- Pushes Win arrow back if it trys to pass off
-	if options.WinArrowX > options.WinBtnX then
-		options.WinArrowX = options.WinBtnX - 118
-	end
-
-	-- Sets Win to Off
-	if options.WinArrowX == options.WinBtnX - 118 then
-		SetWin = true
-	end
-
-	-- Sets Win to On
-	if options.WinArrowX == options.WinBtnX then	
-		SetWin = false
-	end
-
-	-- Pushes Deb arrow back if it trys to pass off
-	if options.DebArrowX > options.DebBtnX then
-		options.DebArrowX = options.DebBtnX - 118
-	end
-
-	-- Sets Deb to Off
-	if options.DebArrowX == options.DebBtnX - 118 then
-		SetDeb = false
-	end
-
-	-- Sets Deb to On
-	if options.DebArrowX == options.DebBtnX then	
-		SetDeb = true
-	end
-
-	-- Pushes Mou arrow back if it trys to pass off
-	if options.MouArrowX > options.MouBtnX then
-		options.MouArrowX = options.MouBtnX - 118
-	end
-
-	-- Sets Mou to Off
-	if options.MouArrowX == options.MouBtnX - 118 then
-		SetMou = false
-	end
-
-	-- Sets Mou to On
-	if options.MouArrowX == options.MouBtnX then	
-		SetMou = true
-	end
-
-	-- MOUSE AUDIO ONCE
-	if options.MouseOnBtn == false then
-		options.MouseDetect = 0
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect4 = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect == 1 and SetMute == false then
-		love.audio.play(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect1 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.play(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-
-	end
-
-	if options.MouseDetect2 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.play(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect3 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.play(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect4 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.play(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect5 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.play(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect6 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.play(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect7 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.play(options.Select8M)
-		love.audio.stop(options.Select9M)
-	end
-
-	if options.MouseDetect8 == 1 and SetMute == false then
-		love.audio.stop(options.Select1M)
-		love.audio.stop(options.Select2M)
-		love.audio.stop(options.Select3M)
-		love.audio.stop(options.Select4M)
-		love.audio.stop(options.Select5M)
-		love.audio.stop(options.Select6M)
-		love.audio.stop(options.Select7M)
-		love.audio.stop(options.Select8M)
-		love.audio.play(options.Select9M)
-	end
-	-- MOUSE AUDIO ONCE
-
-	-- Anything between the "MOUSE AUDIO ONCE" comments:
-	-- Ensures that the select audio only plays once for each selection when the mouse is moving between selections
-
 	
-	-- MOUSE OUT OF AREA
-	if love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) - 250 then
-		options.MouseOnBtn = false
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2 - 360) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.mouseover = false
 	end
-
-	if love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 then
-		options.MouseOnBtn = false
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-	end
-
-	if love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) then
-		options.MouseOnBtn = false
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-	end
-
-	if love.mouse.getY() < 162 then
-		options.MouseOnBtn = false
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-	end
-
-	if love.mouse.getY() > options.MouseBackYTop then
-		options.MouseOnBtn = false
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-	end
-	-- MOUSE OUT OF AREA
-
-	-- Anything between the "MOUSE OUT OF AREA" comments:
-	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-
-
-	-- MOUSE BUTTON AREAS
 	
-	-- Mouse area of the FPS button
-	if love.mouse.getY() > options.MouseFPSY and love.mouse.getY() < options.MouseMuteY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) - 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) - 250 then
-		options.OptArrowY = options.FPSBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
-		options.MouseOnBtn = true
-		options.MouseFPSArea = true
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect = options.MouseDetect + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect4 = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = false
+	if love.mouse.getY() < (love.graphics.getHeight()/2 - start.font3:getHeight( "DISPLAY FPS:" )/2 + self.fpsbtny) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.mouseover = false
 	end
 
-	-- Mouse area of the mute button
-	if love.mouse.getY() > options.MouseMuteY and love.mouse.getY() < options.MouseChgY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) - 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) - 250 then
-		options.OptArrowY = options.MuteBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = true
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect1 = options.MouseDetect1 + 1
-		options.MouseDetect = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect4 = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = false
+	if love.mouse.getY() > (love.graphics.getHeight()/2 - start.font3:getHeight( "MORE GAMES" )/2 + self.moregamesbtny) + start.font3:getHeight( "MORE GAMES" ) then
+		self.fpsstatemouse = false
+		self.mutestatemouse = false
+		self.mouselockstatemouse = false
+		self.creditsstatemouse = false
+		self.fullscreenstatemouse = false
+		self.controlsstatemouse = false
+		self.changelogstatemouse = false
+		self.moregamesstatemouse = false
+		self.mouseover = false
 	end
 
-	-- Mouse area of the change button
-	if love.mouse.getY() > options.MouseChgY and love.mouse.getY() < options.MouseCrdY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) - 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) - 250 then
-		options.OptArrowY = options.ChgBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = true
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect2 = options.MouseDetect2 + 1
-		options.MouseDetect = 0
-		options.MouseDetect1 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect4 = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = false
+	-- Out of areas for the back button
+	if love.mouse.getX() > (love.graphics.getWidth()/2 - 610 + start.font5:getWidth( "<" )) then
+		self.backstatemouse = false
+		self.mouseoverback = false
+		self.scaleback = 1
+	end 
+	
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - 610) then
+		self.backstatemouse = false
+		self.mouseoverback = false
+		self.scaleback = 1
 	end
 
-	-- Mouse area of the credits button
-	if love.mouse.getY() > options.MouseCrdY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) - 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) - 250 then
-		options.OptArrowY = options.CrdBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = true
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect3 = options.MouseDetect3 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect = 0
-		options.MouseDetect4 = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = false
-	end
-
-	-- Mouse area of the windowed button
-	if love.mouse.getY() > options.WinY and love.mouse.getY() < options.DebY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
-		options.OptArrowY = options.WinBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = true
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect5 = options.MouseDetect5 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = true
-	end
-
-	-- Mouse area of the debug mode button
-	if love.mouse.getY() > options.DebY and love.mouse.getY() < options.MouY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
-		options.OptArrowY = options.DebBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = true
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect6 = options.MouseDetect6 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = true
-	end
-
-	-- Mouse area of the mouse lock button
-	if love.mouse.getY() > options.MouY and love.mouse.getY() < options.ConY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
-		options.OptArrowY = options.MouBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = true
-		options.MouseConArea = false
-		options.MouseDetect7 = options.MouseDetect7 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect8 = 0
-		RightSide = true
-	end
-
-	-- Mouse area of the contorls button
-	if love.mouse.getY() > options.ConY and love.mouse.getY() < options.MouseBackY and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) + 250 and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) + 250 then
-		options.OptArrowY = options.ConBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = true
-		options.MouseDetect8 = options.MouseDetect8 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		RightSide = true
-	end
-
-	-- Mouse area of the back button
-	if love.mouse.getY() > options.MouseBackY and love.mouse.getY() < options.MouseBackYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 459/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 459/2) + 459) then
-		options.OptArrowY = options.BackBtnY
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 250
-		options.MouseOnBtn = true
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = true
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseDetect4 = options.MouseDetect4 + 1
-		options.MouseDetect1 = 0
-		options.MouseDetect2 = 0
-		options.MouseDetect3 = 0
-		options.MouseDetect = 0
-		options.MouseDetect5 = 0
-		options.MouseDetect6 = 0
-		options.MouseDetect7 = 0
-		options.MouseDetect8 = 0
-		RightSide = false
-	end
-	-- MOUSE BUTTON AREAS
-
-	-- Anything between the "MOUSE BUTTON AREAS" comments:
-	-- This tells the menu if the mouse is over a certain button
-end
-
-function options:mousepressed(mx, my, button)
-
-	------ ACTIVATE BUTTONS ------
-	-- If the mouse is on FPS and return is true then move FPS On & Off arrow
-	if button == "l" and options.FPSState and options.MouseFPSArea == true then
-		options.FPSArrowX = options.FPSArrowX + 118
-	end
-
-	-- If the mouse is on Mute and return is true then move Mute On & Off arrow
-	if button == "l" and options.MuteState and options.MouseMuteArea == true then
-		options.MuteArrowX = options.MuteArrowX + 118
-	end
-
-	-- If the mouse is on Win and return is true then move Win On & Off arrow
-	if button == "l" and options.WinState and options.MouseWinArea == true then
-		options.WinArrowX = options.WinArrowX + 118
-	end
-
-	-- If the mouse is on Deb and return is true then move Deb On & Off arrow
-	if button == "l" and options.DebState and options.MouseDebArea == true then
-		options.DebArrowX = options.DebArrowX + 118
-	end
-
-	-- If the mouse is on Mou and return is true then move Mou On & Off arrow
-	if button == "l" and options.MouState and options.MouseMouArea == true then
-		options.MouArrowX = options.MouArrowX + 118
-	end
-
-	-- If the mouse is on changelog and return is true then display chnagelog
-	if button == "l" and options.ChgState and options.MouseChgArea == true then
-		Gamestate.push(changelog)
-		love.audio.play(EnterOpt)
-		love.audio.stop(EnterChg)
-	end
-
-	-- If the mouse is on back and return is true then return to the main menu
-	if button == "l" and options.BackState and options.MouseBackArea == true then
-		Gamestate.pop()
-		love.audio.play(EnterOpt)
-	end
-
-	-- If the mouse is on credits and return is true then display credits
-	if button == "l" and options.CrdState and options.MouseCrdArea == true then
-		Gamestate.push(credits)
-		love.audio.play(EnterOpt)
-		love.audio.stop(EnterCrd)
-	end
-
-	-- If the mouse is on controls and return is true then display controls
-	if button == "l" and options.ConState and options.MouseConArea == true then
-		Gamestate.push(controls)
-		love.audio.play(EnterOpt)
-	end
-	------ ACTIVATE BUTTONS ------
-
-	-- Plays audio for FPS On & Off buttons
-	if button == "l" and SetFPS and options.MouseFPSArea == true then
-		love.audio.play(options.EnterOpt1)
-		love.audio.stop(options.EnterOpt1a)
-	end
-
-	if button == "l" and SetFPS == false and options.MouseFPSArea == true then
-		love.audio.play(options.EnterOpt1a)
-		love.audio.stop(options.EnterOpt1)
+	if love.mouse.getY() < (love.graphics.getHeight()/2 - start.font5:getHeight( "<" )/2) then
+		self.backstatemouse = false
+		self.mouseoverback = false
+		self.scaleback = 1
 	end 
 
-	-- Plays audio for Win On & Off buttons
-	if button == "l" and SetWin and options.MouseWinArea == true then
-		love.audio.play(options.EnterOpt2)
-		love.audio.stop(options.EnterOpt2a)
+	if love.mouse.getY() > (love.graphics.getHeight()/2 - start.font5:getHeight( "<" )/2) + 45 then
+		self.backstatemouse = false
+		self.mouseoverback = false
+		self.scaleback = 1
+	end
+	-- MOUSE OUT OF AREA --
+
+	-- MOUSE DECTECTS --
+	if self.mouseover == false then
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		self.mousedetect4 = 0
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
+		love.audio.stop(self.mouseover4)
 	end
 
-	if button == "l" and SetWin == false and options.MouseWinArea == true then
-		love.audio.play(options.EnterOpt2a)
-		love.audio.stop(options.EnterOpt2)
+	if self.mouseoverback == false then
+		self.mousedetect5 = 0
+		love.audio.stop(self.mouseover5)
 	end
 
-	-- Plays audio for Deb On & Off buttons
-	if button == "l" and SetDeb and options.MouseDebArea == true then
-		love.audio.play(options.EnterOpt3a)
-		love.audio.stop(options.EnterOpt3)
+	if self.mousedetect1 == 1 then
+		love.audio.play(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
+		love.audio.stop(self.mouseover4)
+		love.audio.stop(self.mouseover5)
 	end
 
-	if button == "l" and SetDeb == false and options.MouseDebArea == true then
-		love.audio.play(options.EnterOpt3)
-		love.audio.stop(options.EnterOpt3a)
+	if self.mousedetect2 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.play(self.mouseover2)
+		love.audio.stop(self.mouseover3)
+		love.audio.stop(self.mouseover4)
+		love.audio.stop(self.mouseover5)
 	end
 
-	-- Plays audio for Mou On & Off buttons
-	if button == "l" and SetMou and options.MouseMouArea == true then
-		love.audio.play(options.EnterOpt4a)
-		love.audio.stop(options.EnterOpt4)
+	if self.mousedetect3 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.play(self.mouseover3)
+		love.audio.stop(self.mouseover4)
+		love.audio.stop(self.mouseover5)
 	end
 
-	if button == "l" and SetMou == false and options.MouseMouArea == true then
-		love.audio.play(options.EnterOpt4)
-		love.audio.stop(options.EnterOpt4a)
+	if self.mousedetect4 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
+		love.audio.play(self.mouseover4)
+		love.audio.stop(self.mouseover5)
 	end
+
+	if self.mousedetect5 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
+		love.audio.stop(self.mouseover4)
+		love.audio.play(self.mouseover5)
+	end
+	-- MOUSE DECTECTS --
 end
 
 function options:keypressed(key)
 	
-	-- Move mouse away from button if user tries to use arrows for selection while using the mouse
-	if key == "up" and options.MouseOnBtn == true or key == "w" and options.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
-	end
-
-	if key == "down" and options.MouseOnBtn == true or key == "s" and options.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
-	end
-
-	if key == "left" and options.MouseOnBtn == true or key == "a" and options.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
-	end
-
-	if key == "right" and options.MouseOnBtn == true or key == "d" and options.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
-	end
-
-	------ SELECT BUTTONS ------
-	-- Moves arrow up and down through option menu states
+	-- SELECT BUTTONS --
+	-- Move arrow up through options menu states
 	if key == "up" or key == "w" then
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseOnBtn = false
-		love.audio.play(options.Select1)
-		love.audio.play(options.Select2)
-		love.audio.play(options.Select3)
-		love.audio.play(options.Select4)
-		love.audio.play(options.Select5)
-		love.audio.play(options.Select6)
-		love.audio.play(options.Select7)
-		love.audio.play(options.Select8)
-		love.audio.play(options.Select9)
-		options.OptArrowY = options.OptArrowY - 115
+		love.audio.play(self.select1)
+		love.audio.play(self.select2)
+		love.audio.play(self.select3)
+		love.audio.play(self.select4)
+		self.arrowy = self.arrowy - 60
+
+		-- move arrow over the fullscreen and credits gap
+		if self.arrowy > self.fullscreenbtny and self.arrowy < self.creditsbtny then
+			self.arrowy = self.arrowy - 60
+		end
+
+		if self.mouseover == true then
+			love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
+		end 
 	end
 
+	-- Move arrow up through options menu states
 	if key == "down" or key == "s" then
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseOnBtn = false
-		love.audio.play(options.Select1)
-		love.audio.play(options.Select2)
-		love.audio.play(options.Select3)
-		love.audio.play(options.Select4)
-		love.audio.play(options.Select5)
-		love.audio.play(options.Select6)
-		love.audio.play(options.Select7)
-		love.audio.play(options.Select8)
-		love.audio.play(options.Select9)
-		options.OptArrowY = options.OptArrowY + 115
-	end
+		love.audio.play(self.select1)
+		love.audio.play(self.select2)
+		love.audio.play(self.select3)
+		love.audio.play(self.select4)
+		self.arrowy = self.arrowy + 60
 
-	-- Moves arrow left and right through option menu states
-	if key == "left" and RightSide == true or key == "a" and RightSide == true then
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2)
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseOnBtn = false
-		RightSide = false
-		love.audio.play(options.Select10)
-		love.audio.stop(options.Select11)
-	end
+		-- move arrow over the fullscreen and credits gap
+		if self.arrowy > self.fullscreenbtny and self.arrowy < self.creditsbtny then
+			self.arrowy = self.arrowy + 60
+		end
 
-	if key == "right" or key == "d" then
-		options.OptArrowX = (love.graphics.getWidth()/2 - 459/2) + 500
-		options.MouseFPSArea = false
-		options.MouseMuteArea = false
-		options.MouseChgArea = false
-		options.MouseCrdArea = false
-		options.MouseBackArea = false
-		options.MouseWinArea = false
-		options.MouseDebArea = false
-		options.MouseMouArea = false
-		options.MouseConArea = false
-		options.MouseOnBtn = false
-		RightSide = true
-		love.audio.stop(options.Select10)
-		love.audio.play(options.Select11)
+		if self.mouseover == true then
+			love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
+		end 
 	end
-	------ SELECT BUTTONS ------
+	-- SELECT BUTTONS --
 
-	------ ACTIVATE BUTTONS ------
-	-- If the arrow is on FPS and return is true then move FPS On & Off arrow
-	if key == "return" and options.FPSState == true then
-		options.FPSArrowX = options.FPSArrowX + 118
-	end
-
-	-- If the arrow is on Mute and return is true then move Mute On & Off arrow
-	if key == "return" and options.MuteState == true then
-		options.MuteArrowX = options.MuteArrowX + 118
-	end
-
-	-- If the arrow is on Win and return is true then move Win On & Off arrow
-	if key == "return" and options.WinState == true then
-		options.WinArrowX = options.WinArrowX + 118
-	end
-
-	-- If the arrow is on Deb and return is true then move Deb On & Off arrow
-	if key == "return" and options.DebState == true then
-		options.DebArrowX = options.DebArrowX + 118
-	end
-
-	-- If the arrow is on Mou and return is true then move Mou On & Off arrow
-	if key == "return" and options.MouState == true then
-		options.MouArrowX = options.MouArrowX + 118
-	end
-
-	-- If the arrow is on changelog and return is true then display chnagelog
-	if key == "return" and options.ChgState == true then
-		Gamestate.push(changelog)
-		love.audio.play(EnterOpt)
-		love.audio.stop(EnterChg)
-	end
-
-	-- If the arrow is on back and return is true then return to the main menu
-	if key == "return" and options.BackState == true then
-		Gamestate.pop()
-		love.audio.play(EnterOpt)
-	end
-
-	-- If the arrow is on credits and return is true then display credits
-	if key == "return" and options.CrdState == true then
+	-- ACTIVATE BUTTONS --
+	-- go to credits screen
+	if key == "return" and self.creditsstate == true or key == " " and self.creditsstate == true then
 		Gamestate.push(credits)
-		love.audio.play(EnterOpt)
-		love.audio.stop(EnterCrd)
+		love.audio.stop(credits.entersound)
+		love.audio.pause(start.music)
+		self.fade = 100
+
+		-- pause easteregg music if its playing
+		if start.easteregg == true then
+			love.audio.pause(start.colorgoeshere)
+		end
+		
+		-- pasue game music if its playing
+		if paused == true then
+			love.audio.pause(game.music1)
+		end
+
+		love.audio.play(credits.music)
+		credits.music:setLooping(true)
+		credits.slider = love.graphics.getHeight() + 20
 	end
 
-	-- If the arrow is on controls and return is true then display controls
-	if key == "return" and options.ConState == true then
-		Gamestate.push(controls)
-		love.audio.play(EnterOpt)
+	-- set fullscreen on or off
+	if key == "return" and self.fullscreenstate == true or key == " " and self.fullscreenstate == true then
+		self.fullscreenarrowx = self.fullscreenarrowx + 118
 	end
-	------ ACTIVATE BUTTONS ------
+
+	-- set controls on or off
+	if key == "return" and self.controlsstate == true or key == " " and self.controlsstate == true then
+		Gamestate.push(controls)
+		self.fade = 100
+	end
+
+	-- set changelog on or off
+	if key == "return" and self.changelogstate == true or key == " " and self.changelogstate == true then
+		Gamestate.push(changelog)
+		self.fade = 100
+	end
+
+	-- go to moregames screen
+	if key == "return" and self.moregamesstate == true or key == " " and self.moregamesstate == true then
+		Gamestate.push(moregames)
+		self.fade = 100
+	end
+
+	-- set fps on or off
+	if key == "return" and self.fpsstate == true or key == " " and self.fpsstate == true then
+		self.fpsarrowx = self.fpsarrowx + 118
+	end
+
+	-- set mute on or off
+	if key == "return" and self.mutestate == true or key == " " and self.mutestate == true then
+		self.mutearrowx = self.mutearrowx + 118
+	end
+
+	-- set mouselock on or off
+	if key == "return" and self.mouselockstate == true or key == " " and self.mouselockstate == true then
+		self.mouselockarrowx = self.mouselockarrowx + 118
+	end
 
 	-- Plays audio for FPS On & Off buttons
-	if key == "return" and SetFPS == true then
-		love.audio.play(options.EnterOpt1)
-		love.audio.stop(options.EnterOpt1a)
-	end
-
-	if key == "return" and SetFPS == false then
-		love.audio.play(options.EnterOpt1a)
-		love.audio.stop(options.EnterOpt1)
+	if key == "return" and setfps == true or key == " " and setfps == true then
+		love.audio.play(self.entersound1)
+		love.audio.stop(self.entersound1a)
+	elseif key == "return" and setfps == false or key == " " and setfps == false then
+		love.audio.play(self.entersound1a)
+		love.audio.stop(self.entersound1)
 	end 
 
-	-- Plays audio for Win On & Off buttons
-	if key == "return" and SetWin == true then
-		love.audio.play(options.EnterOpt2)
-		love.audio.stop(options.EnterOpt2a)
+	-- Plays audio for mouselock On & Off buttons
+	if key == "return" and setmouselock == true or key == " " and setmouselock == true then
+		love.audio.play(self.entersound2a)
+		love.audio.stop(self.entersound2)
+	elseif key == "return" and setmouselock == false or key == " " and setmouselock == false then
+		love.audio.play(self.entersound2)
+		love.audio.stop(self.entersound2a)
 	end
 
-	if key == "return" and SetWin == false then
-		love.audio.play(options.EnterOpt2a)
-		love.audio.stop(options.EnterOpt2)
+	-- Plays audio for fullscreen On & Off buttons
+	if key == "return" and setfull == true or key == " " and setfull == true then
+		love.audio.play(self.entersound3)
+		love.audio.stop(self.entersound3a)
+	elseif key == "return" and setfull == false or key == " " and setfull == false then
+		love.audio.play(self.entersound3a)
+		love.audio.stop(self.entersound3)
+	end
+	-- ACTIVATE BUTTONS --
+
+	-- Go back to the menu screen
+	if key == "escape" then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		self.fade = 100
+	end
+end
+
+function options:mousepressed(mx, my, button)
+	
+	-- ACTIVATE BUTTONS --
+	-- go to credits screen
+	if button == "l" and self.creditsstatemouse == true then
+		Gamestate.push(credits)
+		love.audio.stop(credits.entersound)
+		love.audio.pause(start.music)
+		self.fade = 100
+
+		-- pause easteregg music if its playing
+		if start.easteregg == true then
+			love.audio.pause(start.colorgoeshere)
+		end
+		
+		-- pasue game music if its playing
+		if paused == true then
+			love.audio.pause(game.music1)
+		end
+
+		love.audio.play(credits.music)
+		credits.music:setLooping(true)
+		credits.slider = love.graphics.getHeight() + 20
 	end
 
-	-- Plays audio for Deb On & Off buttons
-	if key == "return" and SetDeb == true then
-		love.audio.play(options.EnterOpt3)
-		love.audio.stop(options.EnterOpt3a)
+	-- set fullscreen on or off
+	if button == "l" and self.fullscreenstatemouse == true then
+		self.fullscreenarrowx = self.fullscreenarrowx + 118
 	end
 
-	if key == "return" and SetDeb == false then
-		love.audio.play(options.EnterOpt3a)
-		love.audio.stop(options.EnterOpt3)
+	-- set controls on or off
+	if button == "l" and self.controlsstatemouse == true then
+		Gamestate.push(controls)
+		self.fade = 100
 	end
 
-	-- Plays audio for Mou On & Off buttons
-	if key == "return" and SetMou == true then
-		love.audio.play(options.EnterOpt4)
-		love.audio.stop(options.EnterOpt4a)
+	-- set changelog on or off
+	if button == "l" and self.changelogstatemouse == true then
+		Gamestate.push(changelog)
+		self.fade = 100
 	end
 
-	if key == "return" and SetMou == false then
-		love.audio.play(options.EnterOpt4a)
-		love.audio.stop(options.EnterOpt4)
+	-- go to moregames screen
+	if button == "l" and self.moregamesstatemouse == true then
+		Gamestate.push(moregames)
+		self.fade = 100
+	end
+
+	-- set fps on or off
+	if button == "l" and self.fpsstatemouse == true then
+		self.fpsarrowx = self.fpsarrowx + 118
+	end
+
+	-- set mute on or off
+	if button == "l" and self.mutestatemouse == true then
+		self.mutearrowx = self.mutearrowx + 118
+	end
+
+	-- set mouselock on or off
+	if button == "l" and self.mouselockstatemouse == true then
+		self.mouselockarrowx = self.mouselockarrowx + 118
+	end
+
+	-- Plays audio for FPS On & Off buttons
+	if button == "l" and setfps == true and self.mouseover == true then
+		love.audio.play(self.entersound1)
+		love.audio.stop(self.entersound1a)
+	elseif button == "l" and setfps == false and self.mouseover == true then
+		love.audio.play(self.entersound1a)
+		love.audio.stop(self.entersound1)
+	end 
+
+	-- Plays audio for mouselock On & Off buttons
+	if button == "l" and setmouselock == true and self.mouseover == true then
+		love.audio.play(self.entersound2a)
+		love.audio.stop(self.entersound2)
+	elseif button == "l" and setmouselock == false and self.mouseover == true then
+		love.audio.play(self.entersound2)
+		love.audio.stop(self.entersound2a)
+	end
+
+	-- Plays audio for fullscreen On & Off buttons
+	if button == "l" and setfull == true and self.mouseover == true then
+		love.audio.play(self.entersound3)
+		love.audio.stop(self.entersound3a)
+	elseif button == "l" and setfull == false and self.mouseover == true then
+		love.audio.play(self.entersound3a)
+		love.audio.stop(self.entersound3)
+	end
+	-- ACTIVATE BUTTONS --
+
+	-- Go back to the start screen
+	if button == "r" then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		self.fade = 100
+	end
+
+	if button == "l" and self.backstatemouse == true then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		self.fade = 100
 	end
 end
 
 function options:draw()
-	
+
 	------ FILTERS ------
-	options.OptBG:setFilter( 'nearest', 'nearest' )
-	options.FPSOn:setFilter( 'nearest', 'nearest' )
-	options.FPSOff:setFilter( 'nearest', 'nearest' )
-	options.MuteOn:setFilter( 'nearest', 'nearest' )
-	options.MuteOff:setFilter( 'nearest', 'nearest' )
-	options.ScreenModeOn:setFilter( 'nearest', 'nearest' )
-	options.ScreenModeOff:setFilter( 'nearest', 'nearest' )
-	options.DebugModeOn:setFilter( 'nearest', 'nearest' )
-	options.DebugModeOff:setFilter( 'nearest', 'nearest' )
-	options.MouseLockOn:setFilter( 'nearest', 'nearest' )
-	options.MouseLockOff:setFilter( 'nearest', 'nearest' )
-	options.TitleFont:setFilter( 'nearest', 'nearest' )
-	options.OptFont:setFilter( 'nearest', 'nearest' )
-	FPSfont:setFilter( 'nearest', 'nearest' )
+	start.bg:setFilter( 'nearest', 'nearest' )
+	start.font9:setFilter( 'nearest', 'nearest' )
+	start.font3:setFilter( 'nearest', 'nearest' )
+	self.fullimage:setFilter( 'nearest', 'nearest' )
+	self.fpsimage:setFilter( 'nearest', 'nearest' )
+	self.muteimage:setFilter( 'nearest', 'nearest' )
+	self.mouselockimage:setFilter( 'nearest', 'nearest' )
+	self.moregamesimage:setFilter( 'nearest', 'nearest' )
+	self.controlsimage:setFilter( 'nearest', 'nearest' )
+	self.changelogimage:setFilter( 'nearest', 'nearest' )
+	self.creditsimage:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	------ IMAGES ------
-	love.graphics.draw(options.OptBG, -2000, -2000, 0, 2.05)
+	-- Sets image depending if in options menu or pasue
+	if paused == false then
+		love.graphics.draw(start.bg, start.bgx, 0, 0, 2.05)
+	elseif paused == true then
+		love.graphics.draw(start.bg, 0, -1000, 0, 3)
+	end
 	------ IMAGES ------
 
 	------ SHAPES ------
-	love.graphics.rectangle("fill", options.OptArrowX - 250, options.OptArrowY + 5, 29, 35 )
-	love.graphics.rectangle("fill", (options.OptArrowX + 430) - 250, options.OptArrowY + 5, 29, 35 )
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.rectangle("line", (love.graphics.getWidth()/2 - 504/2) - 250 - 50, (love.graphics.getHeight()/2 - 564/2), 504, 564 )
+	love.graphics.setColor(0, 0, 0, 100)
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 500/2) - 250 - 50, (love.graphics.getHeight()/2 - 560/2), 500, 560 )
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 28/2) - self.arrowx, (love.graphics.getHeight()/2 - 28/2) + self.arrowy + 6, 28, 10 )
+	love.graphics.setColor(255, 255, 255)
 	------ SHAPES ------
 
-	-- Tells Options to use TitleFont
-	love.graphics.setFont( options.TitleFont )
+	------ IMAGES ------
+	-- draw current setting images
+	if self.fullscreenstate == true then
+		love.graphics.draw(self.fullimage, (love.graphics.getWidth()/2 - self.fullimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.fullimage:getHeight() + 200))
+	end
 
-	------ TEXT ------
-	love.graphics.print('Options', (love.graphics.getWidth()/2 - options.TitleFont:getWidth( "Options" )/2), 45)
-	------ TEXT ------
+	if self.fpsstate == true then
+		love.graphics.draw(self.fpsimage, (love.graphics.getWidth()/2 - self.fpsimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.fpsimage:getHeight() + 200))
+	end
 
-	-- Tells Options to use OptFont
-	love.graphics.setFont( options.OptFont )
+	if self.mutestate == true then
+		love.graphics.draw(self.muteimage, (love.graphics.getWidth()/2 - self.muteimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.muteimage:getHeight() + 200))
+	end
 
-	------ TEXT ------
-	-- Left side buttons
-	love.graphics.print('Display FPS', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Display FPS" )/2) -250, options.FPSBtnY)
-	love.graphics.print('Changelog', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Changelog" )/2)-250, options.ChgBtnY)
-	love.graphics.print('Credits', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Credits" )/2)-250, options.CrdBtnY)
-	love.graphics.print('Mute Audio', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Mute Audio" )/2)-250, options.MuteBtnY)
+	if self.mouselockstate == true then
+		love.graphics.draw(self.mouselockimage, (love.graphics.getWidth()/2 - self.mouselockimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.mouselockimage:getHeight() + 200))
+	end
+
+	if self.controlsstate == true then
+		love.graphics.draw(self.controlsimage, (love.graphics.getWidth()/2 - self.controlsimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.controlsimage:getHeight() + 200))
+	end
+
+	if self.moregamesstate == true then
+		love.graphics.draw(self.moregamesimage, (love.graphics.getWidth()/2 - self.moregamesimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.moregamesimage:getHeight() + 200))
+	end
+
+	if self.changelogstate == true then
+		love.graphics.draw(self.changelogimage, (love.graphics.getWidth()/2 - self.changelogimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.changelogimage:getHeight() + 200))
+	end
+
+	if self.creditsstate == true then
+		love.graphics.draw(self.creditsimage, (love.graphics.getWidth()/2 - self.creditsimage:getWidth()/2 + 300), (love.graphics.getHeight()/2 - self.creditsimage:getHeight() + 200))
+	end
+	------ IMAGES ------
+
+	------ TEXT ------	
+	love.graphics.setFont( start.font9 )
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.print('SETTINGS', (love.graphics.getWidth()/2) + 125, (love.graphics.getHeight()/2 - start.font9:getHeight("SETTINGS") - 180))
+	love.graphics.setFont( start.font3 )
+	love.graphics.print('DISPLAY FPS:', (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2) - 360, (love.graphics.getHeight()/2 - start.font3:getHeight( "DISPLAY FPS:" )/2) + self.fpsbtny)--, 0, self.scalefps)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('MUTE AUDIO:', (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2) - 360, (love.graphics.getHeight()/2 - start.font3:getHeight( "MUTE AUDIO:" )/2) + self.mutebtny)--, 0, self.scalemute)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('WINDOW LOCK:', (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2) - 360, (love.graphics.getHeight()/2 - start.font3:getHeight( "WINDOW LOCK:" )/2) + self.mouselockbtny)--, 0, self.scalemouselock)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('FULLSCREEN:', (love.graphics.getWidth()/2 - start.font3:getWidth( "DISPLAY FPS:" )/2) - 360, (love.graphics.getHeight()/2 - start.font3:getHeight( "FULLSCREEN:" )/2) + self.fullscreenbtny)--, 0, self.scalefullscreen)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('CREDITS', (love.graphics.getWidth()/2 - start.font3:getWidth( "CREDITS" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CREDITS" )/2) + self.creditsbtny)--, 0, self.scalecredits)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('CHANGELOG', (love.graphics.getWidth()/2 - start.font3:getWidth( "CHANGELOG" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CHANGELOG" )/2) + self.changelogbtny)--, 0, self.scalechangelog)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('CONTROLS', (love.graphics.getWidth()/2 - start.font3:getWidth( "CONTROLS" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CONTROLS" )/2) + self.controlsbtny)--, 0, self.scalecontrols)
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.print('MORE GAMES', (love.graphics.getWidth()/2 - start.font3:getWidth( "MORE GAMES" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "MORE GAMES" )/2) + self.moregamesbtny)--, 0, self.scalemoregames)
+	love.graphics.setColor(255, 255, 255, 255)
 	
-	-- Right side buttons
-	love.graphics.print('Windowed Mode', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Windowed Mode" )/2) +250, options.WinBtnY)
-	love.graphics.print('Window Lock', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Window Lock" )/2)+250, options.MouBtnY)
-	love.graphics.print('Controls', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Controls" )/2)+250, options.ConBtnY)
-	love.graphics.print('Debug Mode', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Debug Mode" )/2)+250, options.DebBtnY)
+	-- changes text from on and off for fps
+	if setfps == true then
+		love.graphics.print('ON', (love.graphics.getWidth()/2 - start.font3:getWidth( "ON" )/2) - 162, (love.graphics.getHeight()/2 - start.font3:getHeight( "ON" )/2) + self.fpsbtny)
+	elseif setfps == false then
+		love.graphics.print('OFF', (love.graphics.getWidth()/2 - start.font3:getWidth( "OFF" )/2) - 150, (love.graphics.getHeight()/2 - start.font3:getHeight( "OFF" )/2) + self.fpsbtny)
+	end
 
-	-- Back button
-	love.graphics.print('Back', (love.graphics.getWidth()/2 - options.OptFont:getWidth( "Back" )/2), options.BackBtnY)
+	-- changes text from on and off for mute
+	if setmute == true then
+		love.graphics.print('ON', (love.graphics.getWidth()/2 - start.font3:getWidth( "ON" )/2) - 162, (love.graphics.getHeight()/2 - start.font3:getHeight( "ON" )/2) + self.mutebtny)
+	elseif setmute == false then
+		love.graphics.print('OFF', (love.graphics.getWidth()/2 - start.font3:getWidth( "OFF" )/2) - 150, (love.graphics.getHeight()/2 - start.font3:getHeight( "OFF" )/2) + self.mutebtny)
+	end
+
+	-- changes text from on and off for mouselock
+	if setmouselock == true then
+		love.graphics.print('ON', (love.graphics.getWidth()/2 - start.font3:getWidth( "ON" )/2) - 162, (love.graphics.getHeight()/2 - start.font3:getHeight( "ON" )/2) + self.mouselockbtny)
+	elseif setmouselock == false then
+		love.graphics.print('OFF', (love.graphics.getWidth()/2 - start.font3:getWidth( "OFF" )/2) - 150, (love.graphics.getHeight()/2 - start.font3:getHeight( "OFF" )/2) + self.mouselockbtny)
+	end
+
+	-- changes text from on and off for fullscreen
+	if setfull == true then
+		love.graphics.print('ON', (love.graphics.getWidth()/2 - start.font3:getWidth( "ON" )/2) - 162, (love.graphics.getHeight()/2 - start.font3:getHeight( "ON" )/2) + self.fullscreenbtny)
+	elseif setfull == false then
+		love.graphics.print('OFF', (love.graphics.getWidth()/2 - start.font3:getWidth( "OFF" )/2) - 150, (love.graphics.getHeight()/2 - start.font3:getHeight( "OFF" )/2) + self.fullscreenbtny)
+	end
+
+	-- draw back button
+	love.graphics.setFont( start.font5 )
+	love.graphics.print('<', (love.graphics.getWidth()/2 - 610), (love.graphics.getHeight()/2 - start.font5:getHeight( "<" )/2), 0, self.scaleback)
+	love.graphics.setColor(255, 255, 255)
 	------ TEXT ------
 
-	-- Puts the fade on the On & Off buttons for FPS
-	if SetFPS == true then
-		love.graphics.draw(options.FPSOn, (love.graphics.getWidth()/2 - options.FPSOn:getWidth()/2) - 250, 232)
-	end
-
-	if SetFPS == false then
-		love.graphics.draw(options.FPSOff, (love.graphics.getWidth()/2 - options.FPSOff:getWidth()/2) - 250, 232)
-	end
-
-	-- Puts the fade on the On & Off buttons for Mute
-	if SetMute == true then
-		love.graphics.draw(options.MuteOn, (love.graphics.getWidth()/2 - options.MuteOn:getWidth()/2) - 250, 347)
-	end
-
-	if SetMute == false then
-		love.graphics.draw(options.MuteOff, (love.graphics.getWidth()/2 - options.MuteOff:getWidth()/2) - 250, 347)
-	end
-
-	-- Puts the fade on the On & Off buttons for Win
-	if SetWin == true then
-		love.graphics.draw(options.ScreenModeOn, (love.graphics.getWidth()/2 - options.ScreenModeOn:getWidth()/2) + 250, 232)
-	end
-
-	if SetWin == false then
-		love.graphics.draw(options.ScreenModeOff, (love.graphics.getWidth()/2 - options.ScreenModeOff:getWidth()/2) + 250, 232)
-	end
-
-	-- Puts the fade on the On & Off buttons for Deb
-	if SetDeb == true then
-		love.graphics.draw(options.DebugModeOn, (love.graphics.getWidth()/2 - options.DebugModeOn:getWidth()/2) + 250, 347)
-	end
-
-	if SetDeb == false then
-		love.graphics.draw(options.DebugModeOff, (love.graphics.getWidth()/2 - options.DebugModeOff:getWidth()/2) + 250, 347)
-	end
-
-	-- Puts the fade on the On & Off buttons for Mou
-	if SetMou == true then
-		love.graphics.draw(options.MouseLockOn, (love.graphics.getWidth()/2 - options.MouseLockOn:getWidth()/2) + 250, 462)
-	end
-
-	if SetMou == false then
-		love.graphics.draw(options.MouseLockOff, (love.graphics.getWidth()/2 - options.MouseLockOff:getWidth()/2) + 250, 462)
-	end
-
-	-- Draw options.lua debug
-	if SetDeb == true then
-		debugmode:options()
-	end
+	------ SHAPES ------
+	-- White Flash
+	love.graphics.setColor(255, 255, 255, self.fade)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(255, 255, 255, 255)
+	------ SHAPES ------
 end
 
 return options

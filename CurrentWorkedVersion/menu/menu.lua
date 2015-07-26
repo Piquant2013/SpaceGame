@@ -1,497 +1,404 @@
 -- Loads gamestate script
 local Gamestate = require 'libs/hump/gamestate'
 
--- Creates menu as a new gamestate
-menu = Gamestate.new()
-
 -- Loads game script
-game = require 'game/game'
+map1 = require 'game/maps/map1' -- CHANGE
 
 -- Loads options script
 options = require 'menu/options'
+
+-- Creates menu as a new gamestate
+menu = Gamestate.new()
 
 
 function menu:init()
 
 	------ VARIABLES ------
 	-- Play Button Y & X
-	self.PlayBtnY = 392
-	self.PlayBtnX = 582
+	self.playbtny = 100
+	self.playbtnx = -280
 	
-	-- Quit Button Y & X
-	self.OptBtnY = 482
-	self.OptBtnX = 550
-
 	-- Option Button Y & X
-	self.QuitBtnY = 582
-	self.QuitBtnX = 592
+	self.optbtny = 150
+	self.optbtnx = 0
+
+	-- Quit Button Y & X
+	self.quitbtny = 200
+	self.quitbtnx = 280
 	
 	-- Button Selecter Y & X
-	self.ArrowY = (self.PlayBtnY)
-	self.ArrowX = 480
-
-	-- Backgrounds X and scroll speed
-	self.BGx = -2
-	self.Scrl = 50
+	self.arrowy = (self.playbtny)
+	self.arrowx = (self.playbtnx)
 
 	-- Menus state
-	self.PlayState = false
-	self.OptState = false
-	self.ExitState = false
+	self.playstate = false
+	self.optstate = false
+	self.exitstate = false
 
-	-- Mouse button areas
-	self.MousePlayArea = false
-	self.MouseOptArea = false
-	self.MouseQuitArea = false
+	-- mouse button state
+	self.playstatemouse = false
+	self.optstatemouse = false
+	self.exitstatemouse = false
 
-	-- Mouse detection
-	self.MouseDetect = 0
-	self.MouseDetect1 = 0
-	self.MouseDetect2 = 0
-	self.MouseOnBtn = false
+	-- Mouse Dectect vars for sound
+	self.mouseover = false
+	self.mousedetect1 = 0
+	self.mousedetect2 = 0
+	self.mousedetect3 = 0
 
-	-- Mouse button coords
-	self.MousePlayYTop = 390
-	self.MousePlayY = 450
-	self.MouseQuitY = 560
-	self.MouseQuitYTop = 630
+	-- quit vars
+	self.quitactive = false
+	self.quittimer = 0
 
-	-- Color goes here easter egg variables
-	self.EggTimer = 0
-	self.Egg = 0
-	self.EggCount = 0
-
-	-- Quit message variables
-	self.QuitTimer = 0
-	QuitActive = false
-
-	-- Resets the game play when true
-	GameReset = true
+	-- White flash vars
+	self.fade = 255
 	------ VARIABLES ------
 
-	------ IMAGES ------
-	self.MenuTitle = love.graphics.newImage("images/menutext.png")
-	self.MenuBG = love.graphics.newImage("images/menubg.png")
-	------ IMAGES ------
-
 	------ AUDIO ------
-	ColorGoesHere = love.audio.newSource("audio/colorgoeshere.ogg")
-	MenuMusic = love.audio.newSource("audio/menumusic.ogg")
-	self.Enter = love.audio.newSource("audio/enter.ogg")
-	self.Select1 = love.audio.newSource("audio/sel.ogg")
-	self.Select2 = love.audio.newSource("audio/sel.ogg")
-	self.Select3 = love.audio.newSource("audio/sel.ogg")
-	self.Select1M = love.audio.newSource("audio/sel.ogg")
-	self.Select2M = love.audio.newSource("audio/sel.ogg")
-	self.Select3M = love.audio.newSource("audio/sel.ogg")
-	love.audio.play(MenuMusic)
-	MenuMusic:setLooping(true)
-	ColorGoesHere:setLooping(true)
+	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
+	self.select1 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select2 = love.audio.newSource("audio/buttons/select.ogg")
+	self.select3 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover1 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover2 = love.audio.newSource("audio/buttons/select.ogg")
+	self.mouseover3 = love.audio.newSource("audio/buttons/select.ogg")
 	------ AUDIO ------
-
-	-- Sets Menu fonts and size
-	self.MenuFont = love.graphics.newFont("fonts/xen3.ttf", 50)
-	self.VerFont = love.graphics.newFont("fonts/xen3.ttf", 20)
-
-	-- Set mouse visibility to true
-	love.mouse.setVisible(true)
 end
 
 function menu:update(dt)
 	
-	-- MENUSTATES
-	if menu.ArrowY == menu.PlayBtnY then
-		menu.PlayState = true
-		menu.OptState = false
-		menu.ExitState = false
-		love.audio.stop(menu.Select2)
-		love.audio.stop(menu.Select3)
+	-- FLASH WHITE --
+	self.fade = self.fade + dt - 2
+
+	if self.fade < 0 then
+		self.fade = 0
+	end
+	-- FLASH WHITE --
+
+	-- BACKGROUND SCROLL --
+	start.bgx = start.bgx - start.bgscroll * dt
+
+	if start.bgx <= -5200 then
+		start.bgscroll = -65
 	end
 
-	if menu.ArrowY == menu.QuitBtnY then
-		menu.OptState = false
-		menu.PlayState = false
-		menu.ExitState = true
-		love.audio.stop(menu.Select1)
-		love.audio.stop(menu.Select3)
+	if start.bgx >= 1 then
+		start.bgscroll = 65
+	end
+	-- BACKGROUND SCROLL --
+
+	-- MENU STATES --
+	-- plays menu state
+	if self.arrowx == self.playbtnx then
+		self.arrowy = self.optbtny + 50
+		self.playstate = true
+		self.optstate = false
+		self.exitstate = false
+		love.audio.stop(self.select2)
+		love.audio.stop(self.select3)
 	end
 
-	if menu.ArrowY < menu.QuitBtnY and menu.ArrowY > menu.PlayBtnY then
-		menu.ArrowY = menu.OptBtnY
-		menu.ExitState = false
-		menu.PlayState = false
-		menu.OptState = true
-		love.audio.stop(menu.Select1)
-		love.audio.stop(menu.Select2)
+	-- Options menu state
+	if self.arrowx < self.quitbtnx and self.arrowx > self.playbtnx then
+		self.arrowy = self.optbtny + 50
+		self.exitstate = false
+		self.playstate = false
+		self.optstate = true
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select2)
 	end
-	-- MENUSTATES
 
-	-- Anything between the "MENUSATES" comments:
-	-- This piece of code is everything that tells the menu what state it is at
+	-- Quits menu state
+	if self.arrowx == self.quitbtnx then
+		self.arrowy = self.optbtny + 50
+		self.optstate = false
+		self.playstate = false
+		self.exitstate = true
+		love.audio.stop(self.select1)
+		love.audio.stop(self.select3)
+	end
+	-- MENU STATES --
 
+	-- Make sure the arrow doesnt go past play or quit
+	if self.arrowx > self.quitbtnx then
+		self.arrowx = self.quitbtnx
+	elseif self.arrowx < self.playbtnx then
+		self.arrowx = self.playbtnx
+	end
+
+	-- MOUSE AREAS --
+	-- Mouse area of play button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font8:getWidth( "PLAY" )/2 - 280 + start.font8:getWidth( "PLAY" ))
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font8:getWidth( "PLAY" )/2 - 280)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny + start.font8:getHeight( "SETTINGS" ) + 20) then
+		self.playstatemouse = true
+		self.optstatemouse = false
+		self.exitstatemouse = false
+		self.arrowx = self.playbtnx
+		self.mouseover = true
+		self.mousedetect1 = self.mousedetect1 + 1
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+	end
+
+	-- Mouse area of options button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font8:getWidth( "SETTINGS" )/2 + start.font8:getWidth( "SETTINGS" ))
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font8:getWidth( "SETTINGS" )/2)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny + start.font8:getHeight( "SETTINGS" ) + 20) then
+		self.playstatemouse = false
+		self.optstatemouse = true
+		self.exitstatemouse = false
+		self.arrowx = self.optbtnx
+		self.mouseover = true
+		self.mousedetect1 = 0
+		self.mousedetect2 = self.mousedetect2 + 1
+		self.mousedetect3 = 0
+	end
+
+	-- Mouse area of exit button
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font8:getWidth( "QUIT" )/2 + 280 + start.font8:getWidth( "QUIT" ))
+		and love.mouse.getX() > (love.graphics.getWidth()/2 - start.font8:getWidth( "QUIT" )/2 + 280)
+		and love.mouse.getY() > (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny)
+		and love.mouse.getY() < (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny + start.font8:getHeight( "SETTINGS" ) + 20) then
+		self.playstatemouse = false
+		self.optstatemouse = false
+		self.exitstatemouse = true
+		self.arrowx = self.quitbtnx
+		self.mouseover = true
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = self.mousedetect3 + 1
+	end
+	-- MOUSE AREAS --
+
+	-- MOUSE OUT OF AREA --
+	if love.mouse.getX() > (love.graphics.getWidth()/2 - start.font8:getWidth( "QUIT" )/2 + 280 + start.font8:getWidth( "QUIT" )) then
+		self.playstatemouse = false
+		self.optstatemouse = false
+		self.exitstatemouse = false
+		self.mouseover = false
+	end
 	
-	-- Makes sure the arrow doesnt go past play or quit
-	if menu.ArrowY > menu.QuitBtnY then
-		menu.ArrowY = menu.QuitBtnY
-	end
-
-	if menu.ArrowY < menu.PlayBtnY then
-		menu.ArrowY = menu.PlayBtnY
+	if love.mouse.getX() < (love.graphics.getWidth()/2 - start.font8:getWidth( "PLAY" )/2 - 280) then
+		self.playstatemouse = false
+		self.optstatemouse = false
+		self.exitstatemouse = false
+		self.mouseover = false
 	end
 	
-	-- BACKGROUND SCROLL
-	menu.BGx = menu.BGx - menu.Scrl * dt
-
-	if menu.BGx <= -5200 then
-		menu.Scrl = -65
+	if love.mouse.getY() < (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny) then
+		self.playstatemouse = false
+		self.optstatemouse = false
+		self.exitstatemouse = false
+		self.mouseover = false
 	end
 
-	if menu.BGx >= 1 then
-		menu.Scrl = 150
+	if love.mouse.getY() > (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2 + self.optbtny + start.font8:getHeight( "SETTINGS" ) + 20) then
+		self.playstatemouse = false
+		self.optstatemouse = false
+		self.exitstatemouse = false
+		self.mouseover = false
 	end
-	-- BACKGROUND SCROLL
-	
-	-- Anything between the "BACKGROUND SCROLL" comments:
-	-- This scrolls the background across the back of the screen
+	-- MOUSE OUT OF AREA --
 
-
-	-- MOUSE AUDIO ONCE
-	if menu.MouseOnBtn == false then
-		menu.MouseDetect = 0
-		menu.MouseDetect1 = 0
-		menu.MouseDetect2 = 0
-		love.audio.stop(menu.Select1M)
-		love.audio.stop(menu.Select2M)
-		love.audio.stop(menu.Select3M)
-	end
-
-	if menu.MouseDetect == 1 and SetMute == false then
-		love.audio.play(menu.Select1M)
-		love.audio.stop(menu.Select2M)
-		love.audio.stop(menu.Select3M)
+	-- MOUSE DECTECTS --
+	if self.mouseover == false then
+		self.mousedetect1 = 0
+		self.mousedetect2 = 0
+		self.mousedetect3 = 0
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
 	end
 
-	if menu.MouseDetect1 == 1 and SetMute == false then
-		love.audio.play(menu.Select2M)
-		love.audio.stop(menu.Select1M)
-		love.audio.stop(menu.Select3M)
+	if self.mousedetect1 == 1 then
+		love.audio.play(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.stop(self.mouseover3)
 	end
 
-	if menu.MouseDetect2 == 1 and SetMute == false then
-		love.audio.play(menu.Select3M)
-		love.audio.stop(menu.Select2M)
-		love.audio.stop(menu.Select1M)
-	end
-	-- MOUSE AUDIO ONCE
-	
-	-- Anything between the "MOUSE AUDIO ONCE" comments:
-	-- Ensures that the select audio only plays once for Play, Opt and Quit when the mouse is moving between selections
-
-
-	-- MOUSE OUT OF AREA
-	if love.mouse.getX() > ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		menu.MouseOnBtn = false
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-	end
-	
-	if love.mouse.getX() < (love.graphics.getWidth()/2 - 320/2) then
-		menu.MouseOnBtn = false
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-	end
-	
-	if love.mouse.getY() < menu.MousePlayYTop then
-		menu.MouseOnBtn = false
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
+	if self.mousedetect2 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.play(self.mouseover2)
+		love.audio.stop(self.mouseover3)
 	end
 
-	if love.mouse.getY() > menu.MouseQuitYTop then
-		menu.MouseOnBtn = false
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
+	if self.mousedetect3 == 1 then
+		love.audio.stop(self.mouseover1)
+		love.audio.stop(self.mouseover2)
+		love.audio.play(self.mouseover3)
 	end
-	-- MOUSE OUT OF AREA
+	-- MOUSE DECTECTS --
 
-	-- Anything between the "MOUSE OUT OF AREA" comments:
-	-- makes sure that if the mouse goes out of a button area the button area is turned back to false
-
-
-	-- MOUSE BUTTON AREAS
-	-- Mouse area of the quit button
-	if love.mouse.getY() > menu.MouseQuitY and love.mouse.getY() < menu.MouseQuitYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		menu.ArrowY = menu.QuitBtnY
-		menu.MouseOnBtn = true
-		menu.MouseQuitArea = true
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		menu.MouseDetect = menu.MouseDetect + 1
-		menu.MouseDetect1 = 0
-		menu.MouseDetect2 = 0
+	-- if fullscreens was on before you entered a game switch it back on
+	if setfull == false and setgamefull == true then
+		setfull = true
 	end
 
-	-- Mouse area of the options button
-	if love.mouse.getY() < menu.MouseQuitY and love.mouse.getY() > menu.MousePlayY and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		menu.ArrowY = menu.OptBtnY
-		menu.MouseOnBtn = true
-		menu.MouseOptArea = true
-		menu.MousePlayArea = false
-		menu.MouseQuitArea = false
-		menu.MouseDetect1 = menu.MouseDetect1 + 1
-		menu.MouseDetect = 0
-		menu.MouseDetect2 = 0
-	end
-
-	-- Mouse area of the play button
-	if love.mouse.getY() < menu.MousePlayY and love.mouse.getY() > menu.MousePlayYTop and love.mouse.getX() > (love.graphics.getWidth()/2 - 320/2) and love.mouse.getX() < ((love.graphics.getWidth()/2 - 320/2) + 320) then
-		menu.ArrowY = menu.PlayBtnY
-		menu.MouseOnBtn = true
-		menu.MousePlayArea = true
-		menu.MouseOptArea = false
-		menu.MouseQuitArea = false
-		menu.MouseDetect2 = menu.MouseDetect2 + 1
-		menu.MouseDetect = 0
-		menu.MouseDetect1 = 0
-	end
-	-- MOUSE BUTTON AREAS
-
-	-- Anything between the "MOUSE BUTTON AREAS" comments:
-	-- This tells the menu if the mouse is over a certain button
-
-
-	-- QUIT MESSAGE
-	if QuitActive == true then
+	-- QUIT MESSAGE --
+	if self.quitactive == true then
 		
 		-- Start quit timer 
-		menu.QuitTimer = menu.QuitTimer + dt
+		self.quittimer = self.quittimer + dt
 		
 		-- Deactivates the rest of the menu durring quit message
-		menu.PlayState = false
-		menu.OptState = false
-		menu.ExitState = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		menu.MouseQuitArea = false
-		menu.MouseOnBtn = false
-		SetMute = true
+		menu.playstate = false
+		menu.optstate = false
+		menu.exitstate = false
+		love.audio.setVolume(0.0)
+		setfps = false
+		self.fade = 0
 	end
 
 	-- When the message gets to the end of the quit timer quit the game
-	if menu.QuitTimer >= 2 then
+	if self.quittimer >= 2 then
 		love.event.quit()
 	end	
-	-- QUIT MESSAGE
+	-- QUIT MESSAGE --
 
-	-- Anything between the "QUIT MESSAGE" comments:
-	-- This tells the menu that if quit is activated to display the quit message for 2 seconds
-
-
-	-- COLOR GOES HERE EASTER EGG
-	if menu.Egg == true then
-		-- Activate the easter egg
-		love.audio.play(ColorGoesHere)
-		love.audio.stop(MenuMusic)
-		menu.EggTimer = 0
-		menu.EggCount = 0
-	end
-
-	-- If egg is false stop audio
-	if menu.Egg == false then
-		love.audio.stop(ColorGoesHere)
-	end
-
-	-- Starts the egg timer
-	menu.EggTimer = menu.EggTimer + dt
-
-	-- Reset timer if over a certain time
-	if menu.EggTimer > 4 then
-		menu.EggTimer = 0
-		menu.EggCount = 0
-	end
-	-- COLOR GOES HERE EASTER EGG
-end
-
-function menu:mousepressed(mx, my, button)
-
-	------ ACTIVATE BUTTONS ------
-	-- Tells menu to continue onto the game script
-	if button == "l" and menu.PlayState and menu.MousePlayArea == true then
-		
-		-- play sound effect for enter
-		love.audio.play(menu.Enter)
-		
-		-- Tells the menu script to switch to the game script
-		Gamestate.switch(game)
-
-		-- Deactivate the easter egg
-		menu.Egg = false
-		
-		-- Stops menu music and plays game music
-		love.audio.play(GameMusic)
-		GameMusic:setLooping(true)
-		love.audio.stop(MenuMusic)
-		love.audio.stop(ColorGoesHere)
-	end
-
-	-- Tells game to quit
-	if button == "l" and menu.ExitState and menu.MouseQuitArea == true then
-		QuitActive = true
-	end
-
-	-- Tells menu to continue onto the options script
-	if button == "l" and menu.OptState and menu.MouseOptArea == true then
-		
-		-- play sound effect for enter
-		love.audio.play(menu.Enter)
-		
-		-- Tells the menu script to switch to the options script
-		Gamestate.push(options)
-	end
-	------ ACTIVATE BUTTONS ------
+	-- Update easter egg
+	start:colorupdate(dt)
 end
 
 function menu:keypressed(key)
 
-	-- Move mouse away from button if user tries to use arrows for selection
-	if key == "up" and menu.MouseOnBtn == true or key == "w" and menu.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
-	end
-
-	if key == "down" and menu.MouseOnBtn == true or key == "s" and menu.MouseOnBtn == true then
-		love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 400)
-	end
-
-	------ SELECT BUTTONS ------
-	-- Moves arrow up and down through menu states
-	if key == "up" or key == "w" then
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		menu.MouseOnBtn = false
-		love.audio.play(menu.Select1)
-		love.audio.play(menu.Select2)
-		love.audio.play(menu.Select3)
-		menu.ArrowY = menu.ArrowY - 100
-	end
-
-	if key == "down" or key == "s" then
-		menu.MouseQuitArea = false
-		menu.MousePlayArea = false
-		menu.MouseOptArea = false
-		menu.MouseOnBtn = false
-		love.audio.play(menu.Select1)
-		love.audio.play(menu.Select2)
-		love.audio.play(menu.Select3)
-		menu.ArrowY = menu.ArrowY + 100
-	end
-	------ SELECT BUTTONS ------
-
-	------ ACTIVATE BUTTONS ------
-	-- Tells menu to continue onto the game script
-	if key == "return" and menu.PlayState == true then
+	-- SELECT BUTTONS --
+	-- Move arrow up through menu states
+	if key == "left" or key == "a" or key == "up" or key == "w" then
+		love.audio.play(self.select1)
+		love.audio.play(self.select2)
+		love.audio.play(self.select3)
+		self.arrowx = self.arrowx - 280
 		
-		-- play sound effect for enter
-		love.audio.play(menu.Enter)
-
-		-- Tells the menu script to switch to the game script
-		Gamestate.switch(game)
-
-		-- Deactivate the easter egg
-		menu.Egg = false
-		
-		-- Stops menu music and plays game music
-		love.audio.play(GameMusic)
-		GameMusic:setLooping(true)
-		love.audio.stop(MenuMusic)
-		love.audio.stop(ColorGoesHere)
+		if self.mouseover == true then
+			love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
+		end 
 	end
 
-	-- Tells game to quit
-	if key == "return" and menu.ExitState == true then
-		QuitActive = true
+	-- Move arrow down through menu states
+	if key == "right" or key == "d" or key == "down" or key == "s" then
+		love.audio.play(self.select1)
+		love.audio.play(self.select2)
+		love.audio.play(self.select3)
+		self.arrowx = self.arrowx + 280
+		
+		if self.mouseover == true then
+			love.mouse.setX((love.graphics.getWidth()/2 - 459/2) + 800)
+		end
+	end
+	-- SELECT BUTTONS --
+
+	-- ACTIVATE BUTTONS --
+	-- Launch game
+	if key == "return" and self.playstate == true or key == " " and self.playstate == true then
+		love.audio.play(self.entersound)
+		Gamestate.push(map1)
+		game.endless = true
+		love.audio.stop(start.music)
+		start.easteregg = false
+		love.audio.stop(start.colorgoeshere)
+		setfull = false
+		self.fade = 100
 	end
 
-	-- Tells menu to continue onto the options script
-	if key == "return" and menu.OptState == true then
-		
-		-- play sound effect for enter
-		love.audio.play(menu.Enter)
-		
-		-- Tells the menu script to switch to the options script
+	-- Quit game
+	if key == "return" and self.exitstate == true or key == " " and self.exitstate == true then
+		self.quitactive = true
+	end
+
+	-- Go to options menu
+	if key == "return" and self.optstate == true or key == " " and self.optstate == true then
+		love.audio.play(self.entersound)
 		Gamestate.push(options)
+		self.fade = 100
 	end
-	------ ACTIVATE BUTTONS ------
+	-- ACTIVATE BUTTONS --
 
-	-- SEQUENCE FOR EASTER EGG
-	-- Starts easter eggs sequence and resets it
-	if key == "c" then
-		menu.EggCount = menu.EggCount + 1
-		menu.EggTimer = 0
+	-- Keypressed for easter egg
+	start:colorkeypressed(key)
+end
+
+
+function menu:mousepressed(mx, my, button)
+
+	-- ACTIVATE BUTTONS --
+	-- Launch game
+	if button == "l" and self.playstatemouse == true then
+		love.audio.play(self.entersound)
+		Gamestate.push(map1)
+		game.endless = true
+		love.audio.stop(start.music)
+		start.easteregg = false
+		love.audio.stop(start.colorgoeshere)
+		setfull = false
+		self.fade = 100
 	end
 
-	-- Only works if pressed within time of pressing previous
-	if key == "g" and menu.EggCount == 1 and menu.EggTimer < 2 then
-		menu.EggCount = menu.EggCount + 1
+	-- Quit game
+	if button == "l" and self.exitstatemouse == true then
+		self.quitactive = true
 	end
 
-	-- Only works if pressed within time of pressing previous
-	if key == "h" and menu.EggCount == 2 and menu.EggTimer < 4 then
-		menu.Egg = true
-		menu.EggCount = 0
+	-- Go to options menu
+	if button == "l" and self.optstatemouse == true then
+		love.audio.play(self.entersound)
+		Gamestate.push(options)
+		self.fade = 100
 	end
+	-- ACTIVATE BUTTONS --
+
 end
 
 function menu:draw()
-
-	-- If QuitActive is true then draw the menu and if false undraw
-	if QuitActive == false then
-
+	
 	------ FILTERS ------
-	menu.MenuBG:setFilter( 'nearest', 'nearest' )
-	menu.MenuTitle:setFilter( 'nearest', 'nearest' )
-	menu.MenuFont:setFilter( 'nearest', 'nearest' )
-	menu.VerFont:setFilter( 'nearest', 'nearest' )
+	start.gamelogo:setFilter( 'nearest', 'nearest' )
+	start.bg:setFilter( 'nearest', 'nearest' )
+	start.font8:setFilter( 'nearest', 'nearest' )
+	start.font0:setFilter( 'nearest', 'nearest' )
+	start.font7:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
-	
-	------ IMAGES ------
-	love.graphics.draw(menu.MenuBG, menu.BGx, 0, 0, 2.05)
-	love.graphics.draw(menu.MenuTitle, (love.graphics.getWidth()/2 - menu.MenuTitle:getWidth()/2), 100)
-	------ IMAGES ------
 
-	------ SHAPES ------
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2), menu.ArrowY + 5, 29, 35 )
-	love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - 320/2) + 291, menu.ArrowY + 5, 29, 35 )
-	------ SHAPES ------
+	if self.quitactive == false then
+		
+		------ IMAGES ------
+		love.graphics.draw(start.bg, start.bgx, 0, 0, 2.05)
+		love.graphics.draw(start.gamelogo, (love.graphics.getWidth()/2 - start.gamelogo:getWidth()/2), (love.graphics.getHeight()/2 - start.gamelogo:getHeight()/2 - start.movelogo))
+		------ IMAGES ------
 
-	-- Tells Menu to use MenuFont
-	love.graphics.setFont( menu.MenuFont )
-
-	------ TEXT ------
-	love.graphics.print('Play', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Play" )/2), menu.PlayBtnY)
-	love.graphics.print('Quit', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Quit" )/2), menu.QuitBtnY)
-	love.graphics.print('Options', (love.graphics.getWidth()/2 - menu.MenuFont:getWidth( "Options" )/2), menu.OptBtnY)
-
-	-- Version text and font
-	love.graphics.setFont( menu.VerFont )
-	love.graphics.print('Pre-Alpha 0.', 10, (love.graphics.getHeight( ) - menu.VerFont:getHeight( "Pre-Alpha 0." ) - 5))
-	------ TEXT ------
-	end
-	
-	-- Draw menu.lua debug
-	if SetDeb == true then
-		debugmode:menu()
-	end
-
-	if QuitActive == true then
-	
-		-- Displays quit message
+		------ TEXT ------
+		love.graphics.setFont( start.font8 )
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.print('PLAY', (love.graphics.getWidth()/2 - start.font8:getWidth( "PLAY" )/2 - 280), (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2) + self.optbtny)
+		love.graphics.print('QUIT', (love.graphics.getWidth()/2 - start.font8:getWidth( "QUIT" )/2 + 280), (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2) + self.optbtny, 0)
+		love.graphics.print('SETTINGS', (love.graphics.getWidth()/2 - start.font8:getWidth( "SETTINGS" )/2), (love.graphics.getHeight()/2 - start.font8:getHeight( "SETTINGS" )/2) + self.optbtny, 0)
+		love.graphics.setFont( start.font0 )
+		love.graphics.print('Pre-Alpha 0.4.0', 10, (love.graphics.getHeight() - start.font0:getHeight("Pre-Alpha 0.4.0") - 10))
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.print('See You Space Cowboy...', (love.graphics.getWidth( ) - menu.VerFont:getWidth( "See You Space Cowboy..." ) - 10), (love.graphics.getHeight( ) - menu.VerFont:getHeight( "See You Space Cowboy..." ) - 10))
+		------ TEXT ------
+
+		------ SHAPES ------
+		-- Arrow
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.rectangle("fill", (love.graphics.getWidth()/2 - start.font8:getWidth( "SETTINGS" )/2) + self.arrowx + 30, (love.graphics.getHeight()/2 - 28/2) + self.arrowy, 200, 10 )
+		
+		-- White Flash
+		love.graphics.setColor(255, 255, 255, self.fade)
+		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+		love.graphics.setColor(255, 255, 255, 255)
+		------ SHAPES ------
+	end
+
+	if self.quitactive == true then
+		
+		------ TEXT ------
+		-- Displays quit message
+		love.graphics.setFont( start.font7 )
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.print('See You Space Cowboy...', (love.graphics.getWidth( ) - start.font7:getWidth( "See You Space Cowboy..." ) - 45), (love.graphics.getHeight( ) - start.font7:getHeight( "See You Space Cowboy..." ) - 40))
+		------ TEXT ------
 	end
 end
 
