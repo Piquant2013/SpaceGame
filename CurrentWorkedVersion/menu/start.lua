@@ -162,7 +162,7 @@ function start:draw()
 	love.graphics.setFont( self.font3 )
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.print('A FEW YEARS FROM NOW IN THE CURRENT GALAXY,', (love.graphics.getWidth( )/2-self.font3:getWidth("A FEW YEARS FROM NOW IN THE CURRENT GALAXY,")/2), (love.graphics.getHeight( )/2 - self.font3:getHeight( "PUSH START BUTTON" )/2 - 20))
-	love.graphics.print('BUT FAR FAR MUCH BETTER....', (love.graphics.getWidth( )/2-self.font3:getWidth("BUT FAR FAR MUCH BETTER....")/2) - 200, (love.graphics.getHeight( )/2 - self.font3:getHeight( "PUSH START BUTTON" )/2 + 30))
+	love.graphics.print('BUT FAR FAR BETTER....', (love.graphics.getWidth( )/2-self.font3:getWidth("BUT FAR FAR BETTER....")/2) - 260, (love.graphics.getHeight( )/2 - self.font3:getHeight( "PUSH START BUTTON" )/2 + 30))
 	love.graphics.setColor(255, 255, 255, 255)
 	------ TEXT ------
 end
