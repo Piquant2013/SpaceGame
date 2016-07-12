@@ -19,6 +19,7 @@ function love.load()
 	------ FILTERS ------
 
 	------ CURSOR ------
+hascursor = love.mouse.hasCursor( false )
 	crosshair = love.mouse.newCursor("images/crosshair.png", 14, 14)
 	cursor = love.mouse.newCursor("images/cursor.png", 2, 2)
 	------ CURSOR ------
