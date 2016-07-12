@@ -1,15 +1,10 @@
 -- Function run for FPS limiter
-function love.run() end -- MAYBE GET RID OF 
+function love.run() end
 
--- Loads gamestate script
+-- USING --
 Gamestate = require 'libs/hump/gamestate'
-
--- Loads logo script
 logo = require 'logo'
-
--- Loads frame limiter script
 frame_limiter = require 'libs/fpslimter'
-
 
 function love.load()
 
@@ -17,6 +12,11 @@ function love.load()
 	fpsfont = love.graphics.newFont("fonts/xen3.ttf", 15)
 	fpsfont1 = love.graphics.newFont("fonts/xen3.ttf", 20)
 	------ FONTS ------
+
+	------ FILTERS ------
+	fpsfont:setFilter( 'nearest', 'nearest' )
+	fpsfont1:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	------ CURSOR ------
 	crosshair = love.mouse.newCursor("images/crosshair.png", 14, 14)
@@ -28,14 +28,21 @@ function love.load()
 	setmute = false
 	setmouselock = true
 	setfull = false
-	setgamefull = false
 	paused = false
 	resume = false
 	gamereset = true
-	setendless = true --
+	mastervolume = 1
+	musicvolume = 1
+	sfxvolume = 1
+	musicvolumelower = 0
+	resselections = 1
+	fullscreenon = false
 	gameover = false
 	welcomescreen = true
 	------ GOLBAL VARIABLES ------
+
+	-- Set master volume
+	love.audio.setVolume(mastervolume)
 
 	-- Set system cursor
 	love.mouse.setCursor(cursor)
@@ -44,84 +51,57 @@ function love.load()
 	Gamestate.switch(logo)
 end
 
+-- Mousepressd
 function love.mousepressed(mx, my, button)
-	
-	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.mousepressed(mx, my, button)
 end
 
 function love.update(dt)
 	
 	-- Set the frame rate limit to 60
-	frame_limiter.set(60) -- MAYBE GET RID OF 
+	frame_limiter.set(60)
 
-	-- Set game audio to 0 if the options script tells mute to be true
+	-- Mute
 	if setmute == true then
 		love.audio.setVolume(0.0)
+	else
+		love.audio.setVolume(mastervolume)
 	end
 
-	-- Set game audio back to default if the options script tells mute to be false
-	if setmute == false then
-		love.audio.setVolume(1.0)
-	end
-
-	-- Locks the cursor to the screen
+	-- Mouselock
 	if setmouselock == true then
 		love.mouse.setGrabbed( true )
-	elseif setmouselock == false then
+	else
 		love.mouse.setGrabbed( false )
 	end
 
-	-- Set game fullscreen
-	if setfull == true then
-		love.window.setFullscreen(true, "desktop")
-	elseif setfull == false then
-		love.window.setFullscreen(false, "desktop")
-	end
-
-	-- Sets up each individual script to use its own love.update, love.load, etc
+	-- Update for game
 	Gamestate.update(dt)
 end
 
+-- Keyreleased
 function love.keyreleased(key)
-	
-	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.keyreleased(key)
 end
 
+-- Keypressed
 function love.keypressed(key)
-	
-	-- Sets up each individual script to use its own love.update, love.load, etc
 	Gamestate.keypressed(key)
 end
 
 function love.draw()
 
-	------ FILTERS ------
-	fpsfont:setFilter( 'nearest', 'nearest' )
-	fpsfont1:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
-
-	-- Sets up each individual script to use its own love.update, love.load, etc
+	-- Draw for game
 	Gamestate.draw()
-
-	-- Set font for fps and mute
-	love.graphics.setFont( fpsfont1 )
 	
-	-- Displays FPS if the options script tells FPS to be true
+	-- Display FPS
 	if setfps == true then
+		love.graphics.setFont( fpsfont1 )
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.print("FPS: " .. love.timer.getFPS(), (love.graphics.getWidth( ) - fpsfont1:getWidth( "FPS: " .. love.timer.getFPS()) - 20), 5)
-		love.graphics.setColor(255, 255, 255)
-	end
-
-	-- Displays "Mute: ON" if the options script tells mute to be true 
-	if setmute == true then
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.print("MUTE: ON", (love.graphics.getWidth( ) - fpsfont1:getWidth( "Mute: ON" ) - 120), 5)
 		love.graphics.setColor(255, 255, 255)
 	end
 end
 
 -- Run frame limter
-frame_limiter.run() -- MAYBE GET RID OF 
+frame_limiter.run()

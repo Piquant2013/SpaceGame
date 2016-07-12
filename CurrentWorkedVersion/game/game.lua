@@ -36,22 +36,25 @@ function game:init()
 	-- Camera
 	self.Cam = camera(plyr.x, plyr.y, 2.5)
 
-	-- Flashing text vars
-	self.flashbutton = true
-	self.buttonflash = 0
-
 	-- white flash
 	self.fade = 100
 	------ VARIABLES ------
+
+
+
+	self.lefthud = love.graphics.newImage("images/hud/lefthud.png")
+	self.hotbar = love.graphics.newImage("images/hud/hotbar.png")
+	self.righthud = love.graphics.newImage("images/hud/righthud.png")
+
+
 
 	------ AUDIO ------
 	self.music1 = love.audio.newSource("audio/music/game.ogg")
 	self.music2 = love.audio.newSource("audio/music/credits.ogg")
 	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
-	self.pickupsound = love.audio.newSource("audio/weapons/pickup.ogg")
 	------ AUDIO ------
 end
-
+--[[
 function playercollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 
 	local other
@@ -132,23 +135,24 @@ function playercollisionstopped(dt, shape_a, shape_b)
 end
 
 function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
-	playercollision(dt, shape_a, shape_b, mtv_x, mtv_y)
+	--playercollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 end
 
 function collision_stop(dt, shape_a, shape_b, mtv_x, mtv_y)
-	playercollisionstopped(dt, shape_a, shape_b)
+	--playercollisionstopped(dt, shape_a, shape_b)
 end
-
+--]]
 function game:keypressed(key)
 
 	-- dissmiss the welcome message for endless mode
-  	if key == "return" and welcomescreen == true and self.endless == true or key == " " and welcomescreen == true and self.endless == true then
+  	if key == "return" and welcomescreen == true and self.endless == true or key == "space" and welcomescreen == true and self.endless == true then
   		welcomescreen = false
   		setendless = false
   		love.audio.play(self.entersound)
 		love.audio.play(self.music1)
 		self.music1:setVolume(1.0)
 		self.music1:setLooping(true)
+		self.fade = 100
   	end
 
   	-- Pause the game
@@ -163,14 +167,18 @@ end
 function game:mousepressed(mx, my, button)
 
 	-- dissmiss the welcome message for endless mode
-  	if button == "l" and welcomescreen == true and self.endless == true then
+  	if button == 1 and welcomescreen == true and self.endless == true then
   		welcomescreen = false
   		setendless = false
   		love.audio.play(self.entersound)
 		love.audio.play(self.music1)
 		self.music1:setVolume(1.0)
 		self.music1:setLooping(true)
+		self.fade = 100
   	end
+
+  	-- load crpistol mouse input
+	crpistol:shooting(mx, my, button)
 end
 
 function game:update(dt)
@@ -207,6 +215,9 @@ function game:update(dt)
 	player:health(dt)
 	Collider:update(dt)
 
+	-- update the gun
+	crpistol:update(dt)
+
     -- if game is paused switch to the pause screen
 	if paused == true then
 		Gamestate.push(pause)
@@ -221,23 +232,49 @@ function love.focus(f)
 			paused = true
 			resume = false
    			love.mouse.setCursor(cursor)
-   			self.fade = 100
+   			game.fade = 100
    		end 
 	end
 end
 
-function game:draw()
+function game:drawhud()
 	
 	------ FILTERS ------
+	start.font0:setFilter( 'nearest', 'nearest' )
 	start.font1:setFilter( 'nearest', 'nearest' )
 	start.font2:setFilter( 'nearest', 'nearest' )
 	start.font3:setFilter( 'nearest', 'nearest' )
+	start.font4:setFilter( 'nearest', 'nearest' )
+	start.font5:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
+
+	if welcomescreen == false then
+		love.graphics.draw(self.lefthud, 8, (love.graphics.getHeight() - 69))
+		love.graphics.draw(self.hotbar, (love.graphics.getWidth()/2 - self.hotbar:getWidth()/2), (love.graphics.getHeight() - 60))
+		love.graphics.draw(self.righthud, (love.graphics.getWidth() - 270), (love.graphics.getHeight() - 126))
+
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.rectangle("line", 9, (love.graphics.getHeight()/2 - 604/2) - 40, 125, 604 )
+		love.graphics.setColor(0, 0, 0, 200)
+		love.graphics.rectangle("fill", 10, (love.graphics.getHeight()/2 - 600/2) - 40, 123, 600 )
+		love.graphics.setColor(255, 255, 255, 255)
+	end
+end
+
+function game:drawwelcome()
+	
+	------ FILTERS ------
+	start.font0:setFilter( 'nearest', 'nearest' )
+	start.font1:setFilter( 'nearest', 'nearest' )
+	start.font2:setFilter( 'nearest', 'nearest' )
+	start.font3:setFilter( 'nearest', 'nearest' )
+	start.font4:setFilter( 'nearest', 'nearest' )
+	start.font5:setFilter( 'nearest', 'nearest' )
 	------ FILTERS ------
 
 	------ TEXT ------
 	-- draw the welcome text and background for endless mode
 	 if welcomescreen == true and self.endless == true then
-    	
     	love.graphics.draw(start.bg, 0, -1000, 0, 3)
     	love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.rectangle("line", (love.graphics.getWidth()/2 - 904/2), (love.graphics.getHeight()/2 - 304/2), 904, 304 )
@@ -267,6 +304,38 @@ function game:draw()
 	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 	love.graphics.setColor(255, 255, 255, 255)
 	------ SHAPES ------
+end
+
+function game:draw()
+	
+	------ FILTERS ------
+	start.font0:setFilter( 'nearest', 'nearest' )
+	start.font1:setFilter( 'nearest', 'nearest' )
+	start.font2:setFilter( 'nearest', 'nearest' )
+	start.font3:setFilter( 'nearest', 'nearest' )
+	start.font4:setFilter( 'nearest', 'nearest' )
+	start.font5:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
+
+	-- bullet
+	crpistol:bulletdraw()
+
+	-- Aim
+	crpistol:aimdraw()
+
+	-- player (red flash when player is hurt)
+	if player.flashred == true then
+		love.graphics.setColor(255, 57, 0)
+		player:draw()
+		love.graphics.setColor(255, 255, 255)
+	elseif player.flashred == false then
+		love.graphics.setColor(255, 255, 255)
+		player:draw()
+		love.graphics.setColor(255, 255, 255)
+	end
+
+	-- pistol
+	crpistol:draw()
 end
 
 return game

@@ -1,16 +1,14 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
-
--- Loads start script
 start = require 'menu/start'
 
--- Creates logo as a new gamestate
+-- This gamestate
 logo = Gamestate.new()
 
 
 function logo:init()
 	
-	-- Set mouse visibility to false for the logo screen
+	-- Set mouse visibility
 	love.mouse.setVisible(false)
 	
 	------ VARIABLES ------
@@ -19,12 +17,18 @@ function logo:init()
 	self.fadein  = 3
 	self.display = 3
 	self.fadeout = 5
+	self.skip = false
 	------ VARIABLES ------
 	
 	------ IMAGES ------
 	self.image = love.graphics.newImage("images/teamlogo.png")
 	self.bg = love.graphics.newImage("images/bg-logo.png")
 	------ IMAGES ------
+
+	------ FILTERS ------
+	self.image:setFilter( 'nearest', 'nearest' )
+	self.bg:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	------ AUDIO ------
 	self.chime = love.audio.newSource("audio/teamchime.ogg")
@@ -34,7 +38,7 @@ end
 
 function logo:update(dt)
 	
-	-- Set audio to a lower volume for the games logo sound
+	-- Set audio volume
 	love.audio.setVolume(0.5)
 
 	-- Start logo timer
@@ -49,28 +53,14 @@ function logo:update(dt)
 		self.alpha = 1
 	end
 
-	-- unloads logo script, moves to the start script and sets volume back to default
+	-- Move to start screen
 	if  self.timer >= 8 then
 		Gamestate.switch(start)
 		love.audio.setVolume(1.0)
-	end	
-end
+	end
 
-function logo:keypressed(key)
-	
-	-- Skips to start script if pressed
-	if key == "return" or "escape" or " " then
-		Gamestate.switch(start)
-		love.graphics.setColor(255, 255, 255)
-		love.audio.stop(self.chime)
-		love.audio.setVolume(1.0)
-	end 
-end
-
-function logo:mousepressed(mx, my, button)
-
-	-- Skips to start script if click
-	if button == "l" then
+	-- Skip
+	if self.skip == true then
 		Gamestate.switch(start)
 		love.graphics.setColor(255, 255, 255)
 		love.audio.stop(self.chime)
@@ -78,14 +68,24 @@ function logo:mousepressed(mx, my, button)
 	end
 end
 
+function logo:keypressed(key)
+	
+	-- Skip if key press
+	if key == "return" or "escape" or "space" then
+		self.skip = true
+	end 
+end
+
+function logo:mousepressed(mx, my, button)
+	
+	-- Skip if click
+	if button == 1 or 2 then
+		self.skip = true
+	end
+end
 
 function logo:draw()
 	
-	------ FILTERS ------
-	self.image:setFilter( 'nearest', 'nearest' )
-	self.bg:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
-
 	-- Draw logo and background
 	love.graphics.setColor(255, 255, 255, self.alpha * 255)
 	love.graphics.draw(self.bg, 0, 0, 0, 1.1)

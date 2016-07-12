@@ -260,20 +260,20 @@ function pause:keypressed(key)
  
  	-- ACTIVATE BUTTONS --
 	-- Resume the game
-	if key == "return" and self.resumestate == true or key == " " and self.resumestate == true then
+	if key == "return" and self.resumestate == true or key == "space" and self.resumestate == true then
 		love.audio.play(self.entersound)
 		resume = true
 	end
 
 	-- Go to options menu
-	if key == "return" and self.optionsstate == true or key == " " and self.optionsstate == true then
+	if key == "return" and self.optionsstate == true or key == "space" and self.optionsstate == true then
 		love.audio.play(self.entersound)
 		Gamestate.push(options)
 		self.fade = 100
 	end
   
   	-- Go to the main menu
-	if key == "return" and self.mainmenustate == true or key == " " and self.mainmenustate == true then
+	if key == "return" and self.mainmenustate == true or key == "space" and self.mainmenustate == true then
 		love.audio.play(self.entersound)
 		setendless = true
 		gamereset = true
@@ -298,20 +298,20 @@ end
 function pause:mousepressed(mx, my, button)
  
 	-- Resume the game
-	if button == "l" and self.resumestatemouse == true then
+	if button == 1 and self.resumestatemouse == true then
 		love.audio.play(self.entersound)
 		resume = true
 	end
 
 	-- Go to options menu
-	if button == "l" and self.optionsstatemouse == true then
+	if button == 1 and self.optionsstatemouse == true then
 		love.audio.play(self.entersound)
 		Gamestate.push(options)
 		self.fade = 100
 	end
   
   	-- Go to the main menu
-	if button == "l" and self.mainmenustatemouse == true then
+	if button == 1 and self.mainmenustatemouse == true then
 		love.audio.play(self.entersound)
 		setendless = true
 		gamereset = true
@@ -327,7 +327,7 @@ function pause:mousepressed(mx, my, button)
 	end
 
 	-- Resume game
-	if button == 'r' then
+	if button == 2 then
 		resume = true
 	end
 end

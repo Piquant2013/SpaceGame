@@ -1,15 +1,15 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
 
--- changelog credits as a new gamestate
+-- This gamestate
 changelog = Gamestate.new()
-
 
 function changelog:init()
 
 	------ VARIABLES ------
 	-- white flash
 	self.fade = 100
+	self.backpressed = false
 	------ VARIABLES ------
 
 	------ AUDIO ------
@@ -18,31 +18,22 @@ function changelog:init()
 	------ AUDIO ------
 end
 
-function changelog:keypressed(key)
-	
-	-- Takes you back to the main menu
-	if key == "escape" or key == "return" or key == " " then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		self.fade = 100
-	end
-end
-
-function changelog:mousepressed(mx, my, button)
-
-	-- Go back to the start screen
-	if button == "l" or button == "r" then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		self.fade = 100
-	end
-end
-
 function changelog:update(dt)
 
-	-- FLASH WHITE --
+	-- Set volume for audio
+	self.entersound:setVolume(sfxvolume)
+	self.backsound:setVolume(sfxvolume)
+
+	-- Takes you back to the main menu
+	if self.backpressed == true then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		self.fade = 100
+		self.backpressed = false
+	end
+
+		-- FLASH WHITE --
 	self.fade = self.fade + dt - 2
 
 	if self.fade < 0 then
@@ -63,13 +54,23 @@ function changelog:update(dt)
 	-- BACKGROUND SCROLL --
 end
 
-function changelog:draw()
+function changelog:keypressed(key)
 	
-	------ FILTERS ------
-	start.bg:setFilter( 'nearest', 'nearest' )
-	start.font9:setFilter( 'nearest', 'nearest' )
-	start.font0:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
+	-- Takes you back to the main menu
+	if key == "escape" or key == "return" or key == "space" then
+		self.backpressed = true
+	end
+end
+
+function changelog:mousepressed(mx, my, button)
+
+	-- Go back to the start screen
+	if button == 1 or button == 2 then
+		self.backpressed = true
+	end
+end
+
+function changelog:draw()
 
 	------ IMAGE ------
 	if paused == false then

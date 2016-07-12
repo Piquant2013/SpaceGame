@@ -36,7 +36,7 @@ end
 
 function crpistol:shooting(mx, my, button)
 
-	if button == "l" and self.cooldown <= 0 and gameover == false and welcomescreen == false then
+	if button == 1 and self.cooldown <= 0 and gameover == false and welcomescreen == false then
 		
 		-- rotates and shoots towards the crosshair if the crosshair is more then 20 pixels away from the player
 		if (mx1 > (plyr.x + 20) or (mx1 < (plyr.x - 20 ))) or (my1 > (plyr.y + 20 ) or (my1 < (plyr.y - 20 ))) then
@@ -70,9 +70,9 @@ function crpistol:shooting(mx, my, button)
 	end
 
 	-- turn aim on and off
-	if button == "r" and gameover == false and welcomescreen == false and self.aimassist == false then
+	if button == 2 and gameover == false and welcomescreen == false and self.aimassist == false then
 		self.aimassist = true
-	elseif button == "r" and gameover == false and welcomescreen == false and self.aimassist == true then
+	elseif button == 2 and gameover == false and welcomescreen == false and self.aimassist == true then
 		self.aimassist = false
 	end
 end
@@ -85,7 +85,7 @@ function crpistol:update(dt)
 	-- keep gun with the player and set crosshair
 	crp.x = plyr.x
     crp.y = plyr.y
-	love.mouse.setCursor(crosshair)
+	love.mouse.setCursor(crosshair) -- MOVE
 	 	
 	for i, o in ipairs(self.bullets) do
 
@@ -124,6 +124,10 @@ function crpistol:bulletdraw()
 end
 
 function crpistol:aimdraw()
+
+	------ FILTERS ------
+	crp.aim:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	-- Draw the aim assist for when the mouse is away from the player
 	if (mx1 > (plyr.x + 20) or (mx1 < (plyr.x - 20 ))) or (my1 > (plyr.y + 20 ) or (my1 < (plyr.y - 20 ))) then

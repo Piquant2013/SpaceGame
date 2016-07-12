@@ -1,20 +1,24 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
 
--- Controls credits as a new gamestate
+-- This gamestate
 controls = Gamestate.new()
-
 
 function controls:init()
 	
 	------ VARIABLES ------
 	-- white flash
 	self.fade = 100
+	self.backpressed = false
 	------ VARIABLES ------
 
 	------ IMAGES ------
 	self.image = love.graphics.newImage("images/menu/controls.png")
 	------ IMAGES ------
+
+	------ FILTERS ------
+	self.image:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	------ AUDIO ------
 	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
@@ -22,29 +26,20 @@ function controls:init()
 	------ AUDIO ------
 end
 
-function controls:keypressed(key)
-	
-	-- Takes you back to the main menu
-	if key == "escape" or key == "return" or key == " " then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		self.fade = 100
-	end
-end
-
-function controls:mousepressed(mx, my, button)
-
-	-- Go back to the start screen
-	if button == "l" or button == "r" then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		self.fade = 100
-	end
-end
-
 function controls:update(dt)
+
+	-- Set volume for audio
+	self.entersound:setVolume(sfxvolume)
+	self.backsound:setVolume(sfxvolume)
+
+	-- Takes you back to the main menu
+	if self.backpressed == true then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		self.fade = 100
+		self.backpressed = false
+	end
 
 	-- FLASH WHITE --
 	self.fade = self.fade + dt - 2
@@ -68,14 +63,24 @@ function controls:update(dt)
 
 end
 
+function controls:keypressed(key)
+	
+	-- Takes you back to the main menu
+	if key == "escape" or key == "return" or key == "space" then
+		self.backpressed = true
+	end
+end
+
+function controls:mousepressed(mx, my, button)
+
+	-- Go back to the start screen
+	if button == 1 or button == 2 then
+		self.backpressed = true
+	end
+end
+
 function controls:draw()
 	
-	------ FILTERS ------
-	start.bg:setFilter( 'nearest', 'nearest' )
-	self.image:setFilter( 'nearest', 'nearest' )
-	start.font9:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
-
 	------ IMAGE ------
 	if paused == false then
 		love.graphics.draw(start.bg, start.bgx, 0, 0, 2.05)

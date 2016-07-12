@@ -1,30 +1,22 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
-
--- Loads menu script
 menu = require 'menu/menu'
 
--- Creates start as a new gamestate
+-- This gamestate
 start = Gamestate.new()
 
 
 function start:init()
 
 	------ VARIABLES ------
-	-- logo
 	self.movelogo = 128
-
-	-- Color goes here easter egg variables
 	self.eggtimer = 0
 	self.easteregg = false
 	self.eggcount = 0
-
-	-- Backgrounds x and scroll speed
 	self.bgx = -2
 	self.bgscroll = 50
-
-	-- skip timer
 	self.skiptimer = 0
+	self.entermenu = false
 	------ VARIABLES ------
 
 	------ IMAGES ------
@@ -44,6 +36,21 @@ function start:init()
 	self.font8 = love.graphics.newFont("fonts/xen3.ttf", 60) --80
 	self.font9 = love.graphics.newFont("fonts/xen3.ttf", 80) --90
 	------ FONTS ------
+
+	------ FILTERS ------
+	self.gamelogo:setFilter( 'nearest', 'nearest' )
+	self.bg:setFilter( 'nearest', 'nearest' )
+	self.font0:setFilter( 'nearest', 'nearest' )
+	self.font1:setFilter( 'nearest', 'nearest' )
+	self.font2:setFilter( 'nearest', 'nearest' )
+	self.font3:setFilter( 'nearest', 'nearest' )
+	self.font4:setFilter( 'nearest', 'nearest' )
+	self.font5:setFilter( 'nearest', 'nearest' )
+	self.font6:setFilter( 'nearest', 'nearest' )
+	self.font7:setFilter( 'nearest', 'nearest' )
+	self.font8:setFilter( 'nearest', 'nearest' )
+	self.font9:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 	
 	------ AUDIO ------
 	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
@@ -51,21 +58,19 @@ function start:init()
 	self.colorgoeshere = love.audio.newSource("audio/music/colorgoeshere.ogg")
 	------ AUDIO ------
 
-	-- play menu music and set to loop
+	-- Play music
 	love.audio.play(self.music)
 	self.music:setLooping(true)
 
-	-- Set mouse visibility to true
+	-- Set mouse visibility
 	love.mouse.setVisible(true)
 end
 
 function start:update(dt)
 
 	--- SKIP TEXT ---
-	-- start skip timer
 	self.skiptimer = self.skiptimer + dt
 	
-	-- skip times
 	if self.skiptimer > 4 then
 		Gamestate.push(menu)
 		paused = false
@@ -76,6 +81,14 @@ function start:update(dt)
 	end
 	--- SKIP TEXT ---
 
+	-- Skip to menu
+	if self.entermenu == true then
+		Gamestate.push(menu)
+		love.audio.play(self.entersound)
+		paused = false
+		self.entermenu = false
+	end
+
 	-- Update easter egg
 	start:colorupdate(dt)
 end
@@ -83,7 +96,6 @@ end
 function start:colorupdate(dt)
 
 -- COLOR GOES HERE EASTER EGG --
-	-- Activate the easter egg
 	if self.easteregg == true then
 		love.audio.play(self.colorgoeshere)
 		love.audio.stop(self.music)
@@ -91,15 +103,12 @@ function start:colorupdate(dt)
 		self.eggcount = 0
 	end
 
-	-- If egg is false stop audio
 	if self.easteregg == false then
 		love.audio.stop(self.colorgoeshere)
 	end
 
-	-- Starts the egg timer
 	self.eggtimer = self.eggtimer + dt
 
-	-- Reset timer if over a certain time
 	if self.eggtimer > 4 then
 		self.eggtimer = 0
 		self.eggcount = 0
@@ -110,18 +119,15 @@ end
 function start:colorkeypressed(key)
 
 	-- SEQUENCE FOR EASTER EGG --
-	-- Starts easter eggs sequence and resets it
 	if key == "c" then
 		self.eggcount = self.eggcount + 1
 		self.eggtimer = 0
 	end
 
-	-- Only works if pressed within time of pressing previous
 	if key == "g" and self.eggcount == 1 and self.eggtimer < 2 then
 		self.eggcount = self.eggcount + 1
 	end
 
-	-- Only works if pressed within time of pressing previous
 	if key == "h" and self.eggcount == 2 and self.eggtimer < 4 then
 		self.easteregg = true
 		self.eggcount = 0
@@ -131,32 +137,23 @@ end
 
 function start:keypressed(key)
 
-	-- move onto the menu script
-	if key == " " or key == "return" or key == "esc" then
-		Gamestate.push(menu)
-		love.audio.play(self.entersound)
-		paused = false
+	-- Move on to menu
+	if key == "space" or key == "return" or key == "esc" then
+		self.entermenu = true
 	end
 
-	-- Keypressed for easter egg
 	start:colorkeypressed(key)
 end
 
 function start:mousepressed(mx, my, button)
 
-	-- move onto the menu script
-	if button == "l" or button == "r" then
-		Gamestate.push(menu)
-		love.audio.play(self.entersound)
-		paused = false
+	-- Move on to menu
+	if button == 1 or button == 2 then
+		self.entermenu = true
 	end
 end
 
 function start:draw()
-
-	------ FILTERS ------
-	self.font3:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
 
 	------ TEXT ------
 	love.graphics.setFont( self.font3 )

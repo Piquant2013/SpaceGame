@@ -1,18 +1,16 @@
--- Game config stuff
 function love.conf(t)
     
-    -- Love2d version
-    t.version = "0.9.2"  
-    
-    -- Title on game window
+    -- Version and title
+    t.version = "0.10.1"
     t.window.title = "Space Game (Pre-Alpha 0.4.0)"
-
-    -- Game icon
+    
+    -- Application icon
     t.window.icon = "images/gameicon.png"
-
-    -- Games window width
+    
+    -- Default resoultion
     t.window.width = 1280
-
-    -- Games window height
-    t.window.height = 720   
+    t.window.height = 720
+    
+    -- ID
+    t.identity = "SpaceGame" 
 end

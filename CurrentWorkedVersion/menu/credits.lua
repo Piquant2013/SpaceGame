@@ -1,9 +1,8 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
 
--- Creates credits as a new gamestate
+-- This gamestate
 credits = Gamestate.new()
-
 
 function credits:init()
 	
@@ -13,64 +12,24 @@ function credits:init()
 	
 	-- white flash
 	self.fade = 100
+	self.backpressed = false
 	------ VARIABLES ------
 
 	------ AUDIO ------
 	self.music = love.audio.newSource("audio/music/credits.ogg")
 	self.entersound = love.audio.newSource("audio/buttons/enter.ogg")
 	self.backsound = love.audio.newSource("audio/buttons/enter.ogg")
+
+	-- set volume
+	self.music:setVolume(musicvolume)
 	------ AUDIO ------
 end
 
-function credits:keypressed(key)
-	
-	-- Takes you back to the main menu
-	if key == "escape" or key == "return" or key == " " then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		love.audio.stop(self.music)
-		self.fade = 100
-		
-		-- resume game music if its playing or play music if its not and not in pause
-		if paused == false then
-			love.audio.resume(start.music)
-		elseif paused == true then
-			love.audio.resume(game.music1)
-		end
-
-		-- resume easteregg music if its paused
-		if start.easteregg == true then
-			love.audio.resume(start.colorgoeshere)
-		end
-	end
-end
-
-function credits:mousepressed(mx, my, button)
-
-	-- Takes you back to the main menu
-	if button == "l" or button == "r" then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		love.audio.stop(options.entersound1)
-		love.audio.stop(self.music)
-		self.fade = 100
-		
-		-- resume game music if its playing or play music if its not and not in pause
-		if paused == false then
-			love.audio.resume(start.music)
-		elseif paused == true then
-			love.audio.resume(game.music1)
-		end
-
-		-- resume easteregg music if its paused
-		if start.easteregg == true then
-			love.audio.resume(start.colorgoeshere)
-		end
-	end
-end
-
 function credits:update(dt)
+
+	-- Set volume for audio
+	self.entersound:setVolume(sfxvolume)
+	self.backsound:setVolume(sfxvolume)
 
 	-- FLASH WHITE --
 	self.fade = self.fade + dt - 2
@@ -88,16 +47,48 @@ function credits:update(dt)
 		self.fade = 100
 	end
 	-- SCROLL CREDITS --
+
+	-- Takes you back to the main menu
+	if self.backpressed == true then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		love.audio.stop(options.entersound1)
+		love.audio.stop(self.music)
+		self.fade = 100
+		
+		-- resume game music if its playing or play music if its not and not in pause
+		if paused == false then
+			love.audio.resume(start.music)
+		elseif paused == true then
+			love.audio.resume(game.music1)
+		end
+
+		-- resume easteregg music if its paused
+		if start.easteregg == true then
+			love.audio.resume(start.colorgoeshere)
+		end
+
+		self.backpressed = false
+	end
+end
+
+function credits:keypressed(key)
+	
+	-- Takes you back to the main menu
+	if key == "escape" or key == "return" or key == "space" then
+		self.backpressed = true
+	end
+end
+
+function credits:mousepressed(mx, my, button)
+
+	-- Takes you back to the main menu
+	if button == 1 or button == 2 then
+		self.backpressed = true
+	end
 end
 
 function credits:draw()
-	
-	------ FILTERS ------
-	start.gamelogo:setFilter( 'nearest', 'nearest' )
-	start.bg:setFilter( 'nearest', 'nearest' )
-	logo.image:setFilter( 'nearest', 'nearest' )
-	start.font3:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
 
 	love.graphics.setColor(16, 16, 16)
 	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())

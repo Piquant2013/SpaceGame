@@ -1,19 +1,12 @@
--- Loads gamestate script
+-- USING --
 local Gamestate = require 'libs/hump/gamestate'
-
--- Loads credits script
 credits = require 'menu/credits'
-
--- Loads controls script
 controls = require 'menu/controls'
-
--- Loads changelog script
 changelog = require 'menu/changelog'
-
--- Loads moregames script
 moregames = require 'menu/moregames'
+advanced = require 'menu/advanced'
 
--- Creates options as a new gamestate
+-- This gamestate
 options = Gamestate.new()
 
 
@@ -106,6 +99,14 @@ function options:init()
 	self.mousedetect3 = 0
 	self.mousedetect4 = 0
 	self.mousedetect5 = 0
+
+	-- button pressed vars
+	self.advancedpressed = false
+	self.controlspressed = false
+	self.creditspressed = false
+	self.moregamespressed = false
+	self.changelogpressed = false
+	self.backpressed = false
 	------ VARIABLES ------
 
 	------ IMAGES ------
@@ -118,6 +119,17 @@ function options:init()
 	self.changelogimage = love.graphics.newImage("images/menu/changelog.png")
 	self.creditsimage = love.graphics.newImage("images/menu/credits.png")
 	------ IMAGES ------
+
+	------ FILTERS ------
+	self.fullimage:setFilter( 'nearest', 'nearest' )
+	self.fpsimage:setFilter( 'nearest', 'nearest' )
+	self.muteimage:setFilter( 'nearest', 'nearest' )
+	self.mouselockimage:setFilter( 'nearest', 'nearest' )
+	self.moregamesimage:setFilter( 'nearest', 'nearest' )
+	self.controlsimage:setFilter( 'nearest', 'nearest' )
+	self.changelogimage:setFilter( 'nearest', 'nearest' )
+	self.creditsimage:setFilter( 'nearest', 'nearest' )
+	------ FILTERS ------
 
 	------ AUDIO ------
 	self.entersound1 = love.audio.newSource("audio/buttons/enter.ogg")
@@ -144,6 +156,21 @@ function options:init()
 end
 
 function options:update(dt)
+
+	-- Set volume for audio
+	self.entersound1:setVolume(sfxvolume)
+	self.backsound:setVolume(sfxvolume)
+	self.select1:setVolume(sfxvolume)
+	self.select2:setVolume(sfxvolume)
+	self.select3:setVolume(sfxvolume)
+	self.select4:setVolume(sfxvolume)
+	self.clickselect1:setVolume(sfxvolume)
+	self.clickselect2:setVolume(sfxvolume)
+	self.mouseover1:setVolume(sfxvolume)
+	self.mouseover2:setVolume(sfxvolume)
+	self.mouseover3:setVolume(sfxvolume)
+	self.mouseover4:setVolume(sfxvolume)
+	self.mouseover5:setVolume(sfxvolume)
 
 	-- FLASH WHITE --
 	self.fade = self.fade + dt - 2
@@ -716,6 +743,68 @@ function options:update(dt)
 		love.audio.play(self.mouseover5)
 	end
 	-- MOUSE DECTECTS --
+
+	-- ACTIVATE BUTTONS --
+	-- switch advancded script
+	--if self.changelogpressed == true then
+		--Gamestate.push(changelog)
+		--self.fade = 100
+		--self.changelogpressed = false
+	--end
+
+	-- set controls on or off
+	if self.controlspressed == true then
+		Gamestate.push(controls)
+		self.fade = 100
+		self.controlspressed = false
+	end
+
+	-- go to moregames screen
+	if self.moregamespressed == true then
+		Gamestate.push(moregames)
+		self.fade = 100
+		self.moregamespressed = false
+	end
+
+	-- go to credits screen
+	if self.creditspressed == true then
+		Gamestate.push(credits)
+		love.audio.stop(credits.entersound)
+		love.audio.pause(start.music)
+		self.fade = 100
+
+		-- pause easteregg music if its playing
+		if start.easteregg == true then
+			love.audio.pause(start.colorgoeshere)
+		end
+		
+		-- pasue game music if its playing
+		if paused == true then
+			love.audio.pause(game.music1)
+		end
+
+		love.audio.play(credits.music)
+		credits.music:setLooping(true)
+		credits.slider = love.graphics.getHeight() + 20
+		self.creditspressed = false
+	end
+
+	-- go to moregames screen
+	if self.advancedpressed == true then
+		Gamestate.push(advanced)
+		self.fade = 100
+		self.moregamespressed = false
+		self.advancedpressed = false
+	end
+
+	-- Go back to the menu screen
+	if self.backpressed == true then
+		Gamestate.pop()
+		love.audio.play(self.backsound)
+		self.fade = 100
+		self.backpressed = false
+	end
+	-- ACTIVATE BUTTONS --
 end
 
 function options:keypressed(key)
@@ -723,10 +812,14 @@ function options:keypressed(key)
 	-- SELECT BUTTONS --
 	-- Move arrow up through options menu states
 	if key == "up" or key == "w" then
-		love.audio.play(self.select1)
-		love.audio.play(self.select2)
-		love.audio.play(self.select3)
-		love.audio.play(self.select4)
+		
+		if self.fpsstate == false then
+			love.audio.play(self.select1)
+			love.audio.play(self.select2)
+			love.audio.play(self.select3)
+			love.audio.play(self.select4)
+		end
+
 		self.arrowy = self.arrowy - 60
 
 		-- move arrow over the fullscreen and credits gap
@@ -741,10 +834,14 @@ function options:keypressed(key)
 
 	-- Move arrow up through options menu states
 	if key == "down" or key == "s" then
-		love.audio.play(self.select1)
-		love.audio.play(self.select2)
-		love.audio.play(self.select3)
-		love.audio.play(self.select4)
+		
+		if self.moregamesstate == false then
+			love.audio.play(self.select1)
+			love.audio.play(self.select2)
+			love.audio.play(self.select3)
+			love.audio.play(self.select4)
+		end
+		
 		self.arrowy = self.arrowy + 60
 
 		-- move arrow over the fullscreen and credits gap
@@ -760,88 +857,69 @@ function options:keypressed(key)
 
 	-- ACTIVATE BUTTONS --
 	-- go to credits screen
-	if key == "return" and self.creditsstate == true or key == " " and self.creditsstate == true then
-		Gamestate.push(credits)
-		love.audio.stop(credits.entersound)
-		love.audio.pause(start.music)
-		self.fade = 100
-
-		-- pause easteregg music if its playing
-		if start.easteregg == true then
-			love.audio.pause(start.colorgoeshere)
-		end
-		
-		-- pasue game music if its playing
-		if paused == true then
-			love.audio.pause(game.music1)
-		end
-
-		love.audio.play(credits.music)
-		credits.music:setLooping(true)
-		credits.slider = love.graphics.getHeight() + 20
+	if key == "return" and self.creditsstate == true or key == "space" and self.creditsstate == true then
+		self.creditspressed = true
 	end
 
 	-- set fullscreen on or off
-	if key == "return" and self.fullscreenstate == true or key == " " and self.fullscreenstate == true then
-		self.fullscreenarrowx = self.fullscreenarrowx + 118
+	if key == "return" and self.fullscreenstate == true or key == "space" and self.fullscreenstate == true then
+		--self.fullscreenarrowx = self.fullscreenarrowx + 118
 	end
 
 	-- set controls on or off
-	if key == "return" and self.controlsstate == true or key == " " and self.controlsstate == true then
-		Gamestate.push(controls)
-		self.fade = 100
+	if key == "return" and self.controlsstate == true or key == "space" and self.controlsstate == true then
+		self.controlspressed = true
 	end
 
 	-- set changelog on or off
-	if key == "return" and self.changelogstate == true or key == " " and self.changelogstate == true then
-		Gamestate.push(changelog)
-		self.fade = 100
+	if key == "return" and self.changelogstate == true or key == "space" and self.changelogstate == true then
+		--self.changelogpressed = true
+		self.advancedpressed = true
 	end
 
 	-- go to moregames screen
-	if key == "return" and self.moregamesstate == true or key == " " and self.moregamesstate == true then
-		Gamestate.push(moregames)
-		self.fade = 100
+	if key == "return" and self.moregamesstate == true or key == "space" and self.moregamesstate == true then
+		self.moregamespressed = true
 	end
 
 	-- set fps on or off
-	if key == "return" and self.fpsstate == true or key == " " and self.fpsstate == true then
+	if key == "return" and self.fpsstate == true or key == "space" and self.fpsstate == true then
 		self.fpsarrowx = self.fpsarrowx + 118
 	end
 
 	-- set mute on or off
-	if key == "return" and self.mutestate == true or key == " " and self.mutestate == true then
+	if key == "return" and self.mutestate == true or key == "space" and self.mutestate == true then
 		self.mutearrowx = self.mutearrowx + 118
 	end
 
 	-- set mouselock on or off
-	if key == "return" and self.mouselockstate == true or key == " " and self.mouselockstate == true then
+	if key == "return" and self.mouselockstate == true or key == "space" and self.mouselockstate == true then
 		self.mouselockarrowx = self.mouselockarrowx + 118
 	end
 
 	-- Plays audio for FPS On & Off buttons
-	if key == "return" and setfps == true or key == " " and setfps == true then
+	if key == "return" and setfps == true or key == "space" and setfps == true then
 		love.audio.play(self.entersound1)
 		love.audio.stop(self.entersound1a)
-	elseif key == "return" and setfps == false or key == " " and setfps == false then
+	elseif key == "return" and setfps == false or key == "space" and setfps == false then
 		love.audio.play(self.entersound1a)
 		love.audio.stop(self.entersound1)
 	end 
 
 	-- Plays audio for mouselock On & Off buttons
-	if key == "return" and setmouselock == true or key == " " and setmouselock == true then
+	if key == "return" and setmouselock == true or key == "space" and setmouselock == true then
 		love.audio.play(self.entersound2a)
 		love.audio.stop(self.entersound2)
-	elseif key == "return" and setmouselock == false or key == " " and setmouselock == false then
+	elseif key == "return" and setmouselock == false or key == "space" and setmouselock == false then
 		love.audio.play(self.entersound2)
 		love.audio.stop(self.entersound2a)
 	end
 
 	-- Plays audio for fullscreen On & Off buttons
-	if key == "return" and setfull == true or key == " " and setfull == true then
+	if key == "return" and setfull == true or key == "space" and setfull == true then
 		love.audio.play(self.entersound3)
 		love.audio.stop(self.entersound3a)
-	elseif key == "return" and setfull == false or key == " " and setfull == false then
+	elseif key == "return" and setfull == false or key == "space" and setfull == false then
 		love.audio.play(self.entersound3a)
 		love.audio.stop(self.entersound3)
 	end
@@ -849,9 +927,7 @@ function options:keypressed(key)
 
 	-- Go back to the menu screen
 	if key == "escape" then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		self.fade = 100
+		self.backpressed = true
 	end
 end
 
@@ -859,122 +935,85 @@ function options:mousepressed(mx, my, button)
 	
 	-- ACTIVATE BUTTONS --
 	-- go to credits screen
-	if button == "l" and self.creditsstatemouse == true then
-		Gamestate.push(credits)
-		love.audio.stop(credits.entersound)
-		love.audio.pause(start.music)
-		self.fade = 100
-
-		-- pause easteregg music if its playing
-		if start.easteregg == true then
-			love.audio.pause(start.colorgoeshere)
-		end
-		
-		-- pasue game music if its playing
-		if paused == true then
-			love.audio.pause(game.music1)
-		end
-
-		love.audio.play(credits.music)
-		credits.music:setLooping(true)
-		credits.slider = love.graphics.getHeight() + 20
+	if button == 1 and self.creditsstatemouse == true then
+		self.creditspressed = true
 	end
 
 	-- set fullscreen on or off
-	if button == "l" and self.fullscreenstatemouse == true then
-		self.fullscreenarrowx = self.fullscreenarrowx + 118
+	if button == 1 and self.fullscreenstatemouse == true then
+		--self.fullscreenarrowx = self.fullscreenarrowx + 118
 	end
 
 	-- set controls on or off
-	if button == "l" and self.controlsstatemouse == true then
-		Gamestate.push(controls)
-		self.fade = 100
+	if button == 1 and self.controlsstatemouse == true then
+		self.controlspressed = true
 	end
 
 	-- set changelog on or off
-	if button == "l" and self.changelogstatemouse == true then
-		Gamestate.push(changelog)
-		self.fade = 100
+	if button == 1 and self.changelogstatemouse == true then
+		--self.changelogpressed = true
+		self.advancedpressed = true
 	end
 
 	-- go to moregames screen
-	if button == "l" and self.moregamesstatemouse == true then
-		Gamestate.push(moregames)
-		self.fade = 100
+	if button == 1 and self.moregamesstatemouse == true then
+		self.moregamespressed = true
 	end
 
 	-- set fps on or off
-	if button == "l" and self.fpsstatemouse == true then
+	if button == 1 and self.fpsstatemouse == true then
 		self.fpsarrowx = self.fpsarrowx + 118
 	end
 
 	-- set mute on or off
-	if button == "l" and self.mutestatemouse == true then
+	if button == 1 and self.mutestatemouse == true then
 		self.mutearrowx = self.mutearrowx + 118
 	end
 
 	-- set mouselock on or off
-	if button == "l" and self.mouselockstatemouse == true then
+	if button == 1 and self.mouselockstatemouse == true then
 		self.mouselockarrowx = self.mouselockarrowx + 118
 	end
 
 	-- Plays audio for FPS On & Off buttons
-	if button == "l" and setfps == true and self.mouseover == true then
+	if button == 1 and setfps == true and self.mouseover == true then
 		love.audio.play(self.entersound1)
 		love.audio.stop(self.entersound1a)
-	elseif button == "l" and setfps == false and self.mouseover == true then
+	elseif button == 1 and setfps == false and self.mouseover == true then
 		love.audio.play(self.entersound1a)
 		love.audio.stop(self.entersound1)
 	end 
 
 	-- Plays audio for mouselock On & Off buttons
-	if button == "l" and setmouselock == true and self.mouseover == true then
+	if button == 1 and setmouselock == true and self.mouseover == true then
 		love.audio.play(self.entersound2a)
 		love.audio.stop(self.entersound2)
-	elseif button == "l" and setmouselock == false and self.mouseover == true then
+	elseif button == 1 and setmouselock == false and self.mouseover == true then
 		love.audio.play(self.entersound2)
 		love.audio.stop(self.entersound2a)
 	end
 
 	-- Plays audio for fullscreen On & Off buttons
-	if button == "l" and setfull == true and self.mouseover == true then
+	if button == 1 and setfull == true and self.mouseover == true then
 		love.audio.play(self.entersound3)
 		love.audio.stop(self.entersound3a)
-	elseif button == "l" and setfull == false and self.mouseover == true then
+	elseif button == 1 and setfull == false and self.mouseover == true then
 		love.audio.play(self.entersound3a)
 		love.audio.stop(self.entersound3)
 	end
 	-- ACTIVATE BUTTONS --
 
 	-- Go back to the start screen
-	if button == "r" then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		self.fade = 100
+	if button == 2 then
+		self.backpressed = true
 	end
 
-	if button == "l" and self.backstatemouse == true then
-		Gamestate.pop()
-		love.audio.play(self.backsound)
-		self.fade = 100
+	if button == 1 and self.backstatemouse == true then
+		self.backpressed = true
 	end
 end
 
 function options:draw()
-
-	------ FILTERS ------
-	start.bg:setFilter( 'nearest', 'nearest' )
-	start.font9:setFilter( 'nearest', 'nearest' )
-	start.font3:setFilter( 'nearest', 'nearest' )
-	self.fullimage:setFilter( 'nearest', 'nearest' )
-	self.fpsimage:setFilter( 'nearest', 'nearest' )
-	self.muteimage:setFilter( 'nearest', 'nearest' )
-	self.mouselockimage:setFilter( 'nearest', 'nearest' )
-	self.moregamesimage:setFilter( 'nearest', 'nearest' )
-	self.controlsimage:setFilter( 'nearest', 'nearest' )
-	self.changelogimage:setFilter( 'nearest', 'nearest' )
-	self.creditsimage:setFilter( 'nearest', 'nearest' )
-	------ FILTERS ------
 
 	------ IMAGES ------
 	-- Sets image depending if in options menu or pasue
@@ -1045,7 +1084,7 @@ function options:draw()
 	love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.print('CREDITS', (love.graphics.getWidth()/2 - start.font3:getWidth( "CREDITS" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CREDITS" )/2) + self.creditsbtny)--, 0, self.scalecredits)
 	love.graphics.setColor(255, 255, 255, 255)
-	love.graphics.print('CHANGELOG', (love.graphics.getWidth()/2 - start.font3:getWidth( "CHANGELOG" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CHANGELOG" )/2) + self.changelogbtny)--, 0, self.scalechangelog)
+	love.graphics.print('ADVANCED', (love.graphics.getWidth()/2 - start.font3:getWidth( "ADVANCED" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CHANGELOG" )/2) + self.changelogbtny)--, 0, self.scalechangelog)
 	love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.print('CONTROLS', (love.graphics.getWidth()/2 - start.font3:getWidth( "CONTROLS" )/2) - 300, (love.graphics.getHeight()/2 - start.font3:getHeight( "CONTROLS" )/2) + self.controlsbtny)--, 0, self.scalecontrols)
 	love.graphics.setColor(255, 255, 255, 255)

@@ -8,12 +8,6 @@ player = Gamestate.new()
 function player:initialize()
 
 	------ VARIABLES ------
-	-- Player damage and health
-	self.hurttimer = 0
-	self.flashred = false
-	self.autoheal = false
-	self.maxhealth = 100
-
 	-- Players weapon position
 	self.weapony = 0
 	self.weaponx = 0
@@ -43,42 +37,6 @@ function player:initialize()
 end
 
 function player:health(dt)
-
-	-- Player death
-	if plyr.health <= 0 then
-		plyr.health = 0
-		gameover = true
-	end
-
-	-- AUTO HEAL --
-	if player.autoheal == true then
-
-		-- start the hurt timer
-		player.hurttimer = player.hurttimer + dt
-
-		-- flash red is player is hurt
-  		if plyr.hurt == true then
-    		player.hurttimer = 0
-    		player.flashred = true
-  		end
-
-  		-- Stop the flashing
-  		if player.hurttimer > 0.3 then
-   		 	player.flashred = false
-  		end
-
-  		-- Autoheal the player if hasnt been hurt for 4secs
-  		if player.hurttimer > 3 and plyr.hurt == false then
-    		plyr.health = plyr.health + 0.3
-  		end
-
-  		-- stop player health at 100
-  		if plyr.health > self.maxhealth then
-    		plyr.health = self.maxhealth
-   		 	player.hurttimer = 0
-  		end
-  	end
-  	-- AUTO HEAL --
 end
 
 function player:movement(dt)
